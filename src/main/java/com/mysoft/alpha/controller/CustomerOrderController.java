@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -157,5 +158,13 @@ public class CustomerOrderController {
          
          return coList;
      }    
+    
+    @PostMapping("/api/admin/content/uploadFileProcess")
+    public Result uploadFileProcess(@RequestBody Map<Object,Object> map) {
+    	
+    	System.out.println("map="+map);
+    	return ResultFactory.buildSuccessResult("处理成功");
+    	
+    }
     
 }
