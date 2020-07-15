@@ -55,7 +55,7 @@ public class ShiroConfiguration {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(getWJRealm());
+        securityManager.setRealm(getMyRealm());
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
@@ -63,7 +63,7 @@ public class ShiroConfiguration {
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey("ALPHA_MYSOFT".getBytes());
+        cookieRememberMeManager.setCipherKey("ALPHAMYSOFTBUILD".getBytes());
         return cookieRememberMeManager;
     }
 
@@ -75,10 +75,10 @@ public class ShiroConfiguration {
     }
 
     @Bean
-    public MyRealm getWJRealm() {
-        MyRealm wjRealm = new MyRealm();
-        wjRealm.setCredentialsMatcher(hashedCredentialsMatcher());
-        return wjRealm;
+    public MyRealm getMyRealm() {
+        MyRealm myRealm = new MyRealm();
+        myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return myRealm;
     }
 
     @Bean

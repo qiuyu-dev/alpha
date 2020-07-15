@@ -52,6 +52,7 @@ public class CustomerOrderService {
     	for(CustomerOrder customerOrder : CustomerOrderList) {
         	customerOrderDAO.save(customerOrder);
     	}
+   	 redisService.delete(CUSTOMER_ORDER_LIST);
     }
     
     public void deleteById(int id) {
