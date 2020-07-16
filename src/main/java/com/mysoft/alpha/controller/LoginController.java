@@ -57,6 +57,8 @@ public class LoginController {
                 return ResultFactory.buildSuccessResult("注册成功");
             case 2:
                 return ResultFactory.buildFailResult("用户已存在");
+            case 3:
+            	return ResultFactory.buildFailResult("组织机构代码已存在");                
         }
         return ResultFactory.buildFailResult("未知错误");
     }

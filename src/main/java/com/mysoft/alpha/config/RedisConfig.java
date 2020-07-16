@@ -19,8 +19,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-@EnableCaching
-@Configuration
+//@EnableCaching
+//@Configuration
 public class RedisConfig extends CachingConfigurerSupport {
     public static final String REDIS_KEY_DATABASE="alpha";
 

@@ -60,6 +60,10 @@ public class User {
      */
     @Email(message = "请输入正确的邮箱")
     private String email;
+    
+    private String crop;//公司名称
+    
+    private String orgcode;//组织机构代码
 
     /**
      * User status.
@@ -127,6 +131,22 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+    public String getCrop() {
+		return crop;
+	}
+
+	public void setCrop(String crop) {
+		this.crop = crop;
+	}
+
+	public String getOrgcode() {
+		return orgcode;
+	}
+
+	public void setOrgcode(String orgcode) {
+		this.orgcode = orgcode;
+	}
 
 	public boolean isEnabled() {
 		return enabled;
@@ -147,7 +167,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", salt=" + salt + ", name="
-				+ name + ", phone=" + phone + ", email=" + email + ", enabled=" + enabled + ", roles=" + roles + "]";
+				+ name + ", phone=" + phone + ", email=" + email +", crop=" + crop+ ", orgcode=" + orgcode + ", enabled=" + enabled + ", roles=" + roles + "]";
 	}
 
 }
