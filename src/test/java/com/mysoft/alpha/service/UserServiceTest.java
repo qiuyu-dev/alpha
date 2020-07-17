@@ -14,12 +14,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.mysoft.alpha.dao.CompanyDAO;
 import com.mysoft.alpha.dao.UserDAO;
 import com.mysoft.alpha.dto.UserDTO;
 import com.mysoft.alpha.entity.AdminRole;
+import com.mysoft.alpha.entity.Company;
 import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.model.RegisterForm;
 import com.mysoft.alpha.service.AdminRoleService;
 import com.mysoft.alpha.service.UserService;
+import com.mysoft.alpha.service.impl.UserServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +38,11 @@ public class UserServiceTest {
     @Mock
     private UserDAO userDAO;
     @Mock
+    private CompanyDAO companyDAO;
+    @Mock
     private AdminRoleService adminRoleService;
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     List<User> users = new ArrayList<>();
     List<AdminRole> roles = new ArrayList<>();
@@ -63,12 +69,13 @@ public class UserServiceTest {
 
     @Test
     public void testRegister_Normal() {
-        User testUser = User.builder()
-                .username("utest").password("123").name("测试用户").email("123@456.com").phone("12312312312").build();
-
+        User user = User.builder()
+                .username("utest").password("123").name("测试用户").email("123@456.com").phone("12312312312").crop("test").orgcode("123").build();
+                
         when(userDAO.save(any(User.class))).thenAnswer(i ->  i.getArguments()[0]);
+        when(companyDAO.save(any(Company.class))).thenAnswer(i ->  i.getArguments()[0]);
 
-        Assert.assertThat(userService.register(testUser), is(1));
+        Assert.assertThat(userService.register(user), is(1));
     }
 
     @Test

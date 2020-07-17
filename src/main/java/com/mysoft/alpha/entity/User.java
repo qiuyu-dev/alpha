@@ -1,11 +1,14 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,9 +64,17 @@ public class User {
     @Email(message = "请输入正确的邮箱")
     private String email;
     
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id",nullable = false)
+    @JsonIgnore
+    @JsonIgnoreProperties
+    private Company company;
+        
     private String crop;//公司名称
     
     private String orgcode;//组织机构代码
+    
+    private Date createTime;//创建时间
 
     /**
      * User status.
@@ -164,10 +175,20 @@ public class User {
 		this.roles = roles;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", salt=" + salt + ", name="
-				+ name + ", phone=" + phone + ", email=" + email +", crop=" + crop+ ", orgcode=" + orgcode + ", enabled=" + enabled + ", roles=" + roles + "]";
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 }

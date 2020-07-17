@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.model.RegisterForm;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
 import com.mysoft.alpha.service.UserService;
@@ -48,17 +49,31 @@ public class LoginController {
     }
 
     @PostMapping("/api/register")
-    public Result register(@RequestBody User user) {
-        int status = userService.register(user);
+    public Result register(@RequestBody RegisterForm registerForm) {
+        int status = userService.register(registerForm);
         switch (status) {
-            case 0:
-                return ResultFactory.buildFailResult("用户名和密码不能为空");
             case 1:
                 return ResultFactory.buildSuccessResult("注册成功");
             case 2:
                 return ResultFactory.buildFailResult("用户已存在");
             case 3:
-            	return ResultFactory.buildFailResult("组织机构代码已存在");                
+            	return ResultFactory.buildFailResult("组织机构代码不能为空");
+            case 4:
+            	return ResultFactory.buildFailResult("组织机构代码已存在");
+            case 5:
+            	return ResultFactory.buildFailResult("公司名称不能为空"); 
+            case 6:
+            	return ResultFactory.buildFailResult("请选择公司类型"); 
+            case 7:
+            	return ResultFactory.buildFailResult("用户不能为空");
+            case 8:
+            	return ResultFactory.buildFailResult("密码不能为空");             	
+            case 9:
+            	return ResultFactory.buildFailResult("姓名不能为空");  
+            case 10:
+            	return ResultFactory.buildFailResult("联系电话不能为空");   
+            case 11:
+            	return ResultFactory.buildFailResult("email不能为空");               	
         }
         return ResultFactory.buildFailResult("未知错误");
     }
