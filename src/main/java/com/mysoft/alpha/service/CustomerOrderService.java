@@ -2,17 +2,23 @@ package com.mysoft.alpha.service;
 
 import java.util.List;
 
-import com.mysoft.alpha.entity.CustomerOrder;
+import com.mysoft.alpha.entity.CustomerProductExcelDetail;
+import com.mysoft.alpha.entity.CustomerProductExcelMst;
 
 public interface CustomerOrderService {
    
-    public List<CustomerOrder> list();
+    public List<CustomerProductExcelMst> findCustomerProductExcelMstList();
+    
+    public List<CustomerProductExcelDetail> findCustomerProductExcelDetailList();
 
-    public void addOrUpdate(CustomerOrder customerOrder);
+    public CustomerProductExcelMst addOrUpdateCustomerProductExcelMst(CustomerProductExcelMst customerProductExcelMst);
     
-    public void saveAll(List<CustomerOrder> CustomerOrderList);
+    public CustomerProductExcelDetail addOrUpdateCustomerProductExcelDetail(CustomerProductExcelDetail customerProductExcelDetail);
     
-    public void deleteById(int id);
+    public void saveAllCustomerProductExcelDetail(List<CustomerProductExcelDetail> customerProductExcelDetailList);
     
-    public void deleteByIds(Integer[] ids);
+    public void deleteCustomerProductExcelDetailById(int id);
+    
+    public void deleteCustomerProductExcelDetailByIds(Integer[] ids);    
+    
 }

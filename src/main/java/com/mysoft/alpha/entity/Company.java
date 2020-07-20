@@ -37,11 +37,13 @@ public class Company {
     
     private int ctype;//公司类型
     
-    private String phone;//联系电话
+    private String phonenum;//联系电话
     
     private boolean enabled;//是否可用
     
     private Date createTime;//创建时间
+    
+    private String operator;// 操作者
 
 	public int getId() {
 		return id;
@@ -75,12 +77,12 @@ public class Company {
 		this.ctype = ctype;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getPhonenum() {
+		return phonenum;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPhonenum(String phonenum) {
+		this.phonenum = phonenum;
 	}
 
 	public boolean isEnabled() {
@@ -99,11 +101,12 @@ public class Company {
 		this.createTime = createTime;
 	}
 
-	@Override
-	public String toString() {
-		return "Company [id=" + id + ", code=" + code + ", name=" + name + ", ctype=" + ctype + ", phone=" + phone
-				+ ", enabled=" + enabled + ", createTime=" + createTime + "]";
+	public String getOperator() {
+		return operator;
 	}
 
-   
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+	
 }

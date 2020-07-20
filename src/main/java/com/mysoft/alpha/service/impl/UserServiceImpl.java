@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public int register(User user) {
         String username = user.getUsername();
         String name = user.getName();
-        String phone = user.getPhone();
+        String phonenum = user.getPhonenum();
         String email = user.getEmail();
         String password = user.getPassword();
 
@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         name = HtmlUtils.htmlEscape(name);
         user.setName(name);
-        phone = HtmlUtils.htmlEscape(phone);
-        user.setPhone(phone);
+        phonenum = HtmlUtils.htmlEscape(phonenum);
+        user.setPhonenum(phonenum);
         email = HtmlUtils.htmlEscape(email);
         user.setEmail(email);
         user.setEnabled(true);        
@@ -176,24 +176,22 @@ public class UserServiceImpl implements UserService {
         name = HtmlUtils.htmlEscape(name);
         user.setName(name);
         phone = HtmlUtils.htmlEscape(phone);
-        user.setPhone(phone);
+        user.setPhonenum(phone);
         email = HtmlUtils.htmlEscape(email);
         user.setEmail(email);
-        crop = HtmlUtils.htmlEscape(crop);
-        user.setCrop(crop);
-        orgcode = HtmlUtils.htmlEscape(orgcode);
-        user.setOrgcode(orgcode);
         user.setEnabled(true);        
-        user.setCreateTime(new Date());       
+        user.setCreateTime(new Date());
+        user.setOperator(username);
         
         //保存公司信息
         Company company = new Company();
         company.setCode(orgcode);
         company.setName(crop);
-        company.setPhone(phone);
+        company.setPhonenum(phone);
         company.setCtype(ctype);
         company.setEnabled(true);
-        company.setCreateTime(new Date());        
+        company.setCreateTime(new Date());
+        company.setOperator(username);
        Company companyR = companyDAO.save(company);
        user.setCompany(companyR);//存入关联id
         
@@ -227,7 +225,7 @@ public class UserServiceImpl implements UserService {
     public void editUser(User user) {
         User userInDB = userDAO.findByUsername(user.getUsername());
         userInDB.setName(user.getName());
-        userInDB.setPhone(user.getPhone());
+        userInDB.setPhonenum(user.getPhonenum());
         userInDB.setEmail(user.getEmail());
         userDAO.save(userInDB);
         adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());

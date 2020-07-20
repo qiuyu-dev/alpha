@@ -1,15 +1,29 @@
 package com.mysoft.alpha.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * User entity.
@@ -54,7 +68,7 @@ public class User {
     /**
      * Phone number.
      */
-    private String phone;
+    private String phonenum;
 
     /**
      * Email address.
@@ -69,12 +83,10 @@ public class User {
     @JsonIgnore
     @JsonIgnoreProperties
     private Company company;
-        
-    private String crop;//公司名称
-    
-    private String orgcode;//组织机构代码
-    
+ 
     private Date createTime;//创建时间
+    
+    private String operator;//操作者
 
     /**
      * User status.
@@ -127,12 +139,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getPhonenum() {
+		return phonenum;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPhonenum(String phonenum) {
+		this.phonenum = phonenum;
 	}
 
 	public String getEmail() {
@@ -143,22 +155,7 @@ public class User {
 		this.email = email;
 	}
 	
-    public String getCrop() {
-		return crop;
-	}
-
-	public void setCrop(String crop) {
-		this.crop = crop;
-	}
-
-	public String getOrgcode() {
-		return orgcode;
-	}
-
-	public void setOrgcode(String orgcode) {
-		this.orgcode = orgcode;
-	}
-
+   
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -190,6 +187,14 @@ public class User {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}	
 
 }
 

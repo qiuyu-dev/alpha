@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.mysoft.alpha.cache.CacheKeyManager;
-import com.mysoft.alpha.dao.CustomerOrderDAO;
-import com.mysoft.alpha.entity.CustomerOrder;
+import com.mysoft.alpha.dao.CustomerProductExcelDetailDAO;
+import com.mysoft.alpha.dao.CustomerProductExcelMstDAO;
+import com.mysoft.alpha.entity.CustomerProductExcelDetail;
+import com.mysoft.alpha.entity.CustomerProductExcelMst;
 import com.mysoft.alpha.service.CustomerOrderService;
 import com.mysoft.alpha.util.BaseCache;
 
@@ -18,58 +20,73 @@ import com.mysoft.alpha.util.BaseCache;
 public class CustomerOrderServiceImpl implements CustomerOrderService {
 
 	@Autowired
-	private CustomerOrderDAO customerOrderDAO;
-    
+	private CustomerProductExcelMstDAO customerProductExcelMstDAO;
+
+	@Autowired
+	private CustomerProductExcelDetailDAO customerProductExcelDetailDAO;
+
 	@Autowired
 	private BaseCache baseCache;
-    
-    @SuppressWarnings("unchecked")
-	public List<CustomerOrder> list(){
-    	List<CustomerOrder> list = null;
-    	try {
-    		Object cacheObj = baseCache.getTenMinuteCache().get(	CacheKeyManager.CUSTOMERORDER_KEY, () -> {
-    			List<CustomerOrder> customerOrderlist = customerOrderDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
-    			System.out.println("从数据库里面查客户单列表");
-    			return customerOrderlist;
-    			});
-    		
-        	if (cacheObj instanceof List) {
-        		list = (List<CustomerOrder>)cacheObj;
-        		return list;
-        	}
-    		
-    	}catch(Exception e) {
-    		e.printStackTrace();
-    	}  
-    	return list;
-    }
 
-    public void addOrUpdate(CustomerOrder customerOrder) {
-    	baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
-        if(StringUtils.isEmpty(customerOrder.getId()) && StringUtils.isEmpty(customerOrder.getState())) {
-        	customerOrder.setState("1");//默认状态        	
-        }
-        customerOrderDAO.save(customerOrder);
-    }
-    
-    @Transactional
-    public void saveAll(List<CustomerOrder> customerOrderList) {
-    	baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
-    	customerOrderDAO.saveAll(customerOrderList);
-//    	for(CustomerOrder customerOrder : customerOrderList) {
-//        	customerOrderDAO.save(customerOrder);
-//    	}
+	public CustomerProductExcelDetail addOrUpdateCustomerProductExcelDetail(
+			CustomerProductExcelDetail customerProductExcelDetail) {
+		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+		if (StringUtils.isEmpty(customerProductExcelDetail.getId())
+				&& StringUtils.isEmpty(customerProductExcelDetail.getStatus())) {
+			customerProductExcelDetail.setStatus("1");// 默认状态
+		}
+		return customerProductExcelDetailDAO.save(customerProductExcelDetail);
+	}
 
-    }
-    
-    public void deleteById(int id) {
-    	baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
-        customerOrderDAO.deleteById(id);
-    }
-    
-    @Transactional
-    public void deleteByIds(Integer[] ids ) {
-    	baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
-        customerOrderDAO.deleteAllByIdIn(ids);
-    }
+	public void deleteCustomerProductExcelDetailById(int id) {
+		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+		customerProductExcelDetailDAO.deleteById(id);
+	}
+
+	@Transactional
+	public void deleteCustomerProductExcelDetailByIds(Integer[] ids) {
+		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+		customerProductExcelDetailDAO.deleteAllByIdIn(ids);
+	}
+
+	@Override
+	public List<CustomerProductExcelMst> findCustomerProductExcelMstList() {
+		return customerProductExcelMstDAO.findAll();
+	}
+
+	@Override
+	public List<CustomerProductExcelDetail> findCustomerProductExcelDetailList() {
+		List<CustomerProductExcelDetail> list = null;
+		try {
+			Object cacheObj = baseCache.getTenMinuteCache().get(CacheKeyManager.CUSTOMERORDER_KEY, () -> {
+				List<CustomerProductExcelDetail> customerProductExcelDetailList = customerProductExcelDetailDAO
+						.findAll(Sort.by(Sort.Direction.DESC, "id"));
+				System.out.println("从数据库里面查客户单列表");
+				return customerProductExcelDetailList;
+			});
+
+			if (cacheObj instanceof List) {
+				list = (List<CustomerProductExcelDetail>) cacheObj;
+				return list;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Transactional
+	@Override
+	public void saveAllCustomerProductExcelDetail(List<CustomerProductExcelDetail> customerProductExcelDetailList) {
+		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+		customerProductExcelDetailDAO.saveAll(customerProductExcelDetailList);
+
+	}
+
+	@Override
+	public CustomerProductExcelMst addOrUpdateCustomerProductExcelMst(CustomerProductExcelMst customerProductExcelMst) {
+		return customerProductExcelMstDAO.save(customerProductExcelMst);
+	}
+
 }

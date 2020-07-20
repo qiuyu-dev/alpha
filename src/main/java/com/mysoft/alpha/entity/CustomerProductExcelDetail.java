@@ -2,29 +2,36 @@ package com.mysoft.alpha.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.ToString;
 
-//客户单
 @Data
 @Entity
-@Table(name = "customer_order")
+@Table(name = "cp_excel_detail")
 @ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class CustomerOrder {
+public class CustomerProductExcelDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    
+    @Column(name = "row_num")
+    private int rowNum;//excel 行号
     
     @Column(name = "seq_number")
     private String seqNumber;//序号
@@ -65,8 +72,30 @@ public class CustomerOrder {
     @Column(name="remark")
     private String remark;//备注
     
-    @Column(name="state")
-    private String state;//状态 1新增 2通过 3未通过 4修改
+    @Column(name="explanation")
+    private String explanation;//系统说明
+    
+    @Column(name="status")
+    private String status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
+    
+    @Column(name="create_time")
+    private Date createTime;//创建时间
+    
+    @Column(name="operator")
+    private String operator;// 操作者
+    
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "cp_excel_mst_id",nullable = false)
+    private CustomerProductExcelMst cpExcelMst;
+    
+    @Column(name="customer_id")
+    private int customerId;//客户id
+    
+    @Column(name="company_id")
+    private int companyId;//企业id
+    
+    @Column(name="product_id")
+    private int productId;//产品id
 
 	public int getId() {
 		return id;
@@ -180,21 +209,11 @@ public class CustomerOrder {
 		this.remark = remark;
 	}
 
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-
-	@Override
-	public String toString() {
-		return "CustomerOrder [id=" + id + ", seqNumber=" + seqNumber + ", policyNumber=" + policyNumber + ", product="
-				+ product + ", insuredName=" + insuredName + ", certificateType=" + certificateType + ", phonenum="
-				+ phonenum + ", insuredId=" + insuredId + ", effectiveDate=" + effectiveDate + ", closingDate="
-				+ closingDate + ", sex=" + sex + ", age=" + age + ", location=" + location + ", remark=" + remark
-				+ ", state=" + state + "]";
-	}   
-    
 }

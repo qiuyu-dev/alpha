@@ -37,6 +37,7 @@ public class LoginController {
             User user = userService.findByUsername(username);
         	System.out.println("subject.isRemembered()="+subject.isRemembered());
         	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
+        	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
             if (!user.isEnabled()) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }

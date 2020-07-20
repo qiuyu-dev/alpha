@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
 
@@ -30,6 +31,11 @@ public class DefaultExceptionHandler {
 
         if (e instanceof UnauthorizedException) {
             message = "权限认证失败";
+        }
+        
+        if (e instanceof CustomException) {
+        	CustomException customException = (CustomException) e;
+        	return ResultFactory.buildFailResult(customException.getMsg());
         }
 
         return ResultFactory.buildFailResult(message);

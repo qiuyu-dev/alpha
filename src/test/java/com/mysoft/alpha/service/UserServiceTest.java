@@ -70,7 +70,7 @@ public class UserServiceTest {
     @Test
     public void testRegister_Normal() {
         User user = User.builder()
-                .username("utest").password("123").name("测试用户").email("123@456.com").phone("12312312312").crop("test").orgcode("123").build();
+                .username("utest").password("123").name("测试用户").email("123@456.com").phonenum("12312312312").build();
                 
         when(userDAO.save(any(User.class))).thenAnswer(i ->  i.getArguments()[0]);
         when(companyDAO.save(any(Company.class))).thenAnswer(i ->  i.getArguments()[0]);
@@ -81,7 +81,7 @@ public class UserServiceTest {
     @Test
     public void testResetPassword_Normal() {
         User testUser = User.builder()
-                .username("utest").password("123456").name("测试用户").email("123@456.com").phone("12312312312").build();
+                .username("utest").password("123456").name("测试用户").email("123@456.com").phonenum("12312312312").build();
 
         when(userDAO.findByUsername("utest")).thenReturn(testUser);
         when(userDAO.save(any(User.class))).thenAnswer(i ->  i.getArguments()[0]);

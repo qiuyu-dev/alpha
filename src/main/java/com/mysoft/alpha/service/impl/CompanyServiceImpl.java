@@ -1,5 +1,7 @@
 package com.mysoft.alpha.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,16 @@ public class CompanyServiceImpl implements CompanyService {
 	public boolean isExistCode(String code) {
 		Company company = companyDAO.findByCode(code);
 		return null != company;
+	}
+
+	@Override
+	public List<Company> findAllCompany() {
+		return companyDAO.findAll();
+	}
+
+	@Override
+	public Company findById(Integer id) {
+		return companyDAO.getOne(id);
 	}
 
 }
