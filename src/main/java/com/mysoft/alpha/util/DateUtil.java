@@ -70,4 +70,15 @@ public class DateUtil {
 		}
 		return null;
 	}
+	
+	public static String getCurrentDate() {
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			String dt = df.format(new Date());
+			return dt;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 }
