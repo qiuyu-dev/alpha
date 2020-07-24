@@ -23,6 +23,7 @@ import com.mysoft.alpha.entity.CustomerEnterprise;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
+import com.mysoft.alpha.service.BatchFeeService;
 import com.mysoft.alpha.service.CustomerEnterpriseService;
 import com.mysoft.alpha.service.PurchaseOrderService;
 import com.mysoft.alpha.service.UserService;
@@ -35,6 +36,9 @@ public class PurchaseOrderController {
 	
 	@Autowired
 	PurchaseOrderService purchaseOrderService;
+	
+	@Autowired
+	BatchFeeService batchFeeService;
 	
 	@Autowired
     UserService userService;
@@ -154,4 +158,26 @@ public class PurchaseOrderController {
         }
         return null;
     }    
+    
+    @GetMapping("/api/batchfee/list")
+    public Result listBatchFee() {
+        return ResultFactory.buildSuccessResult(batchFeeService.findAllBatchFee());
+    }
+    
+    @PostMapping("/api/admin/content/purchaseorder/payconfirm")
+    public Result payConfirm(@RequestBody Map<String,String> map) {
+    	String operator = SecurityUtils.getSubject().getPrincipal().toString();
+    	String id = map.get("id").toString();
+    	String receivable = map.get("receivable") != null?map.get("receivable").toString():"";
+    	String confirmRemark = map.get("confirmRemark") != null?map.get("confirmRemark").toString():"";
+    	BatchFee batchFee = batchFeeService.findBatchFeeById(Integer.parseInt(id));
+    	batchFee.setReceivable(Integer.parseInt(receivable));
+    	batchFee.setConfirmRemark(confirmRemark);
+    	batchFee.setCreateTime(new Date());
+    	batchFee.setStatus(1);//1已确认
+    	batchFee.setOperator(operator);
+    	batchFeeService.addOrUpdateBatchFee(batchFee);
+    	
+    	return ResultFactory.buildSuccessResult("确认成功");    
+    }
 }
