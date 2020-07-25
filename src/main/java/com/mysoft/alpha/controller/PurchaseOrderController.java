@@ -2,8 +2,10 @@ package com.mysoft.alpha.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,12 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mysoft.alpha.entity.BatchFee;
+import com.mysoft.alpha.entity.BatchFeeDetail;
 import com.mysoft.alpha.entity.CustomerEnterprise;
+import com.mysoft.alpha.entity.CustomerProduct;
+import com.mysoft.alpha.entity.Product;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
+import com.mysoft.alpha.service.BatchFeeDetailService;
 import com.mysoft.alpha.service.BatchFeeService;
 import com.mysoft.alpha.service.CustomerEnterpriseService;
+import com.mysoft.alpha.service.CustomerProductService;
+import com.mysoft.alpha.service.ProductService;
 import com.mysoft.alpha.service.PurchaseOrderService;
 import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
@@ -41,7 +49,18 @@ public class PurchaseOrderController {
 	BatchFeeService batchFeeService;
 	
 	@Autowired
+	ProductService productService;
+	
+	@Autowired
+	BatchFeeDetailService batchFeeDetailService;
+	
+	@Autowired
+	CustomerProductService customerProductService;
+	
+	@Autowired
     UserService userService;
+	
+	
 	
     @GetMapping("/api/customerenterprise/list")
     public Result listCustomerEnterprise() {
@@ -177,6 +196,25 @@ public class PurchaseOrderController {
     	batchFee.setStatus(1);//1已确认
     	batchFee.setOperator(operator);
     	batchFeeService.addOrUpdateBatchFee(batchFee);
+    	
+    	List<Product> productList = productService.findByCompanyId(batchFee.getPayId());
+    	List<BatchFeeDetail> batchFeeDetailList = batchFeeDetailService.findBybatchNumber(batchFee.getBatchNumber());
+    	List<CustomerProduct> customerProductList = new ArrayList<CustomerProduct>();
+    	for(BatchFeeDetail batchFeeDetail: batchFeeDetailList) {
+    		CustomerProduct customerProduct = new CustomerProduct();
+    		customerProduct.setCcId(batchFeeDetail.getCeId());
+    		customerProduct.setCompanyId(batchFee.getPayId());
+    		customerProduct.setBeginTime(batchFee.getBeginTime());
+    		customerProduct.setEndTime(batchFee.getEndTime());
+    		customerProduct.setStatus(6);
+    		customerProduct.setOperator(operator);
+    		customerProduct.setCreateTime(new Date());
+    		for(Product product : productList) {
+    			customerProduct.setProductId(product.getId());
+    			customerProductList.add(customerProduct);
+    		}   		
+    	}  	
+    	customerProductService.saveAllCustomerProduct(customerProductList);
     	
     	return ResultFactory.buildSuccessResult("确认成功");    
     }

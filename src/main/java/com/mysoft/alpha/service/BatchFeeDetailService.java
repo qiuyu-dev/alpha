@@ -13,5 +13,7 @@ public interface BatchFeeDetailService {
 	public void deleteBatchFeeDetailById(int id);
 	
 	public BatchFeeDetail findBatchFeeDetailById(int id);
+	
+	public List<BatchFeeDetail> findBybatchNumber(String batchNumber);
 
 }
