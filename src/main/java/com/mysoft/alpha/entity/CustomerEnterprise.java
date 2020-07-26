@@ -23,6 +23,11 @@ import java.util.Date;
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 public class CustomerEnterprise  implements Serializable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @Id 主键列
 	 * @GeneratedValue(strategy = GenerationType.IDENTITY) 主键生成策略
 	 * @Column(name = "id") 列名
@@ -60,11 +65,11 @@ public class CustomerEnterprise  implements Serializable {
     @Column(name = "sex")
     private String sex;
     
-    @Column(name = "begin_time")
-    private Date beginTime;
+    @Column(name = "effective_date")
+    private Date effectiveDate;
     
-    @Column(name = "end_time")
-    private Date endTime;
+    @Column(name = "closing_date")
+    private Date closingDate;
     
     @Column(name = "cestatus")
     private int cestatus;//状态,1，新增，2已核实，3未通过，4、延续，
@@ -167,20 +172,20 @@ public class CustomerEnterprise  implements Serializable {
 		this.sex = sex;
 	}
 
-	public Date getBeginTime() {
-		return beginTime;
+	public Date getEffectiveDate() {
+		return effectiveDate;
 	}
 
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public Date getClosingDate() {
+		return closingDate;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setClosingDate(Date closingDate) {
+		this.closingDate = closingDate;
 	}
 
 	public int getCestatus() {
@@ -268,8 +273,8 @@ public class CustomerEnterprise  implements Serializable {
 		sb.append(", location='").append(location).append('\'');
 		sb.append(", age=").append(age);
 		sb.append(", sex='").append(sex).append('\'');
-		sb.append(", beginTime=").append(beginTime);
-		sb.append(", endTime=").append(endTime);
+		sb.append(", effectiveDate=").append(effectiveDate);
+		sb.append(", closingDate=").append(closingDate);
 		sb.append(", cestatus=").append(cestatus);
 		sb.append(", fromType=").append(fromType);
 		sb.append(", fromId=").append(fromId);

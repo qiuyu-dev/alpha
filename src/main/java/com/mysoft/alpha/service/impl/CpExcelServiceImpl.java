@@ -88,8 +88,8 @@ public class CpExcelServiceImpl implements CpExcelService {
                     newCustomerEnterprise.setLocation(cPExcelDetail.getLocation());
                     newCustomerEnterprise.setAge(cPExcelDetail.getAge());
                     newCustomerEnterprise.setSex(cPExcelDetail.getSex());
-                    newCustomerEnterprise.setBeginTime(cPExcelDetail.getEffectiveDate());
-                    newCustomerEnterprise.setEndTime(cPExcelDetail.getClosingDate());
+                    newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
+                    newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
                     newCustomerEnterprise.setCestatus(1);
                     newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
                     newCustomerEnterprise.setFromId(cPExcelMst.getFromId());

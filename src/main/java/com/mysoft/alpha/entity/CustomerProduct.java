@@ -32,11 +32,11 @@ public class CustomerProduct {
     @Column(name = "policy_number")
     private String policyNumber;
     
-    @Column(name = "begin_time")
-    private Date beginTime;
+    @Column(name = "effective_date")
+    private Date effectiveDate;
     
-    @Column(name = "end_time")
-    private Date endTime;
+    @Column(name = "closing_date")
+    private Date closingDate;
     
     @Column(name = "status")
     private int status;
@@ -99,20 +99,20 @@ public class CustomerProduct {
 		this.policyNumber = policyNumber;
 	}
 
-	public Date getBeginTime() {
-		return beginTime;
+	public Date getEffectiveDate() {
+		return effectiveDate;
 	}
 
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public Date getClosingDate() {
+		return closingDate;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setClosingDate(Date closingDate) {
+		this.closingDate = closingDate;
 	}
 
 	public int getStatus() {
@@ -174,7 +174,7 @@ public class CustomerProduct {
 	@Override
 	public String toString() {
 		return "CustomerProduct [id=" + id + ", ccId=" + ccId + ", companyId=" + companyId + ", productId=" + productId
-				+ ", policyNumber=" + policyNumber + ", beginTime=" + beginTime + ", endTime=" + endTime + ", status="
+				+ ", policyNumber=" + policyNumber + ", effectiveDate=" + effectiveDate + ", closingDate=" + closingDate + ", status="
 				+ status + ", seqNumber=" + seqNumber + ", fromType=" + fromType + ", fromId=" + fromId + ", remark="
 				+ remark + ", operator=" + operator + ", createTime=" + createTime + "]";
 	}

@@ -135,8 +135,8 @@ public class PurchaseOrderController {
         System.out.println("ids=" + ids);
         String price = map.get("price");
         String prepayment = map.get("prepayment");
-        String beginTime = map.get("beginTime");
-        String endTime = map.get("endTime");
+        String effectiveDate = map.get("effectiveDate");
+        String closingDate = map.get("closingDate");
         String payTime = map.get("payTime");
         String remark = map.get("remark");
         String payImg = map.get("payImg");
@@ -147,8 +147,8 @@ public class PurchaseOrderController {
         batchFeeMst.setFtype(1);//1付费，-1扣费
         batchFeeMst.setPayType(2);//2企业
         batchFeeMst.setPayId(Integer.parseInt(cid));//付费来源id
-        batchFeeMst.setBeginTime(DateUtil.convertToDate(beginTime));
-        batchFeeMst.setEndTime(DateUtil.convertToDate(endTime));
+        batchFeeMst.setEffectiveDate(DateUtil.convertToDate(effectiveDate));
+        batchFeeMst.setClosingDate(DateUtil.convertToDate(closingDate));
         batchFeeMst.setEffectiveNumber(Integer.parseInt(effectiveNumber));//有效数
         batchFeeMst.setPrice(Integer.parseInt(price));
         batchFeeMst.setPrepayment(Integer.parseInt(prepayment));
@@ -222,8 +222,8 @@ public class PurchaseOrderController {
     		CustomerProduct customerProduct = new CustomerProduct();
     		customerProduct.setCcId(batchFeeDetail.getCeId());
     		customerProduct.setCompanyId(batchFeeMst.getPayId());
-    		customerProduct.setBeginTime(batchFeeMst.getBeginTime());
-    		customerProduct.setEndTime(batchFeeMst.getEndTime());
+    		customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
+    		customerProduct.setClosingDate(batchFeeMst.getClosingDate());
     		customerProduct.setStatus(6);
     		customerProduct.setOperator(operator);
     		customerProduct.setCreateTime(new Date());

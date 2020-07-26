@@ -53,13 +53,13 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
 	@Override
 	public List<CustomerProductExcelDetail> findCustomerProductExcelDetailList() {
-		List<CustomerProductExcelDetail> list = null;
+//		List<CustomerProductExcelDetail> list = null;
 //		try {
 //			Object cacheObj = baseCache.getTenMinuteCache().get(CacheKeyManager.CUSTOMERORDER_KEY, () -> {
 				List<CustomerProductExcelDetail> customerProductExcelDetailList = customerProductExcelDetailDAO
 						.findAll(Sort.by(Sort.Direction.DESC, "id"));
 				System.out.println("从数据库里面查客户单列表");
-//				return customerProductExcelDetailList;
+				return customerProductExcelDetailList;
 //			});
 //
 //			if (cacheObj instanceof List) {
@@ -70,7 +70,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		return list;
+//		return list;
 	}
 
 	@Transactional

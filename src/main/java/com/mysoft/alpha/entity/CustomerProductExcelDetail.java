@@ -24,7 +24,12 @@ import java.util.Date;
 //@ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 public class CustomerProductExcelDetail implements Serializable {
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;

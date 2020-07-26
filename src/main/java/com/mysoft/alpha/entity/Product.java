@@ -1,5 +1,6 @@
 package com.mysoft.alpha.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,8 +18,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "product")
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class Product {
-    @Id
+public class Product  implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;

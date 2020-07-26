@@ -8,84 +8,84 @@ import java.util.Date;
 
 /**
  *
- *  entity
- *  class 数据对象类
- *  Serializable 序列化用于网络传输
- *  创建空构造函数
- *  get，set
- *  tostring
+ * entity class 数据对象类 Serializable 序列化用于网络传输 创建空构造函数 get，set tostring
  */
 @Entity
 @Table(name = "batch_fee_mst")
-@JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
+@JsonIgnoreProperties({ "handler", "hibernateLazyInitializer" })
 public class BatchFeeMst implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
+
 	@Column(name = "batch_number")
-	private String batchNumber;//批号 P
-	
+	private String batchNumber;// 批号 P
+
 	@Column(name = "ftype")
-	private int ftype;//类型 1付费 -1 扣费
+	private int ftype;// 类型 1付费 -1 扣费
 
 	@Column(name = "pay_type")
-	private int payType;//付费来源类型
-	
+	private int payType;// 付费来源类型
+
 	@Column(name = "pay_id")
-	private int payId;//付费来源
-	
+	private int payId;// 付费来源
+
 	@Column(name = "charge_type")
-	private int chargeType;//收费来源类型
-	
+	private int chargeType;// 收费来源类型
+
 	@Column(name = "chage_id")
-	private int chargeId;//收费来源id
-	
-	@Column(name = "begin_time")
-	private Date beginTime;
-	
-	@Column(name = "end_time")
-	private Date endTime;
-	
+	private int chargeId;// 收费来源id
+
+	@Column(name = "effective_date")
+	private Date effectiveDate;
+
+	@Column(name = "closing_date")
+	private Date closingDate;
+
 	@Column(name = "btype")
-	private int btype;//付费类型 1客户-公司 2 客户-产品
-	
+	private int btype;// 付费类型 1客户-公司 2 客户-产品
+
 	@Column(name = "effective_number")
-	private int effectiveNumber;//有效数
-	
+	private int effectiveNumber;// 有效数
+
 	@Column(name = "price")
-	private int price;//单价
-	
+	private int price;// 单价
+
 	@Column(name = "prepayment")
-	private int prepayment;//应付款
-	
+	private int prepayment;// 应付款
+
 	@Column(name = "receivable")
-	private int receivable;//应收款
-	
+	private int receivable;// 应收款
+
 	@Column(name = "pay_img")
-	private String payImg;//付费凭证图片
-	
+	private String payImg;// 付费凭证图片
+
 	@Column(name = "pay_time")
-	private Date payTime;//付费时间
-	
+	private Date payTime;// 付费时间
+
 	@Column(name = "remark")
-	private String remark;//备注
-	
+	private String remark;// 备注
+
 	@Column(name = "seq_number")
-	private int seqNumber;//顺序号
-	
+	private int seqNumber;// 顺序号
+
 	@Column(name = "operator")
 	private String operator;
-	
+
 	@Column(name = "create_time")
 	private Date createTime;
-	
+
 	@Column(name = "status")
-	private int status;//状态
-	
+	private int status;// 状态
+
 	@Column(name = "confirm_remark")
-	private String confirmRemark;//确认备注
+	private String confirmRemark;// 确认备注
 
 	public BatchFeeMst() {
 	}
@@ -146,20 +146,20 @@ public class BatchFeeMst implements Serializable {
 		this.chargeId = chargeId;
 	}
 
-	public Date getBeginTime() {
-		return beginTime;
+	public Date getEffectiveDate() {
+		return effectiveDate;
 	}
 
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public Date getClosingDate() {
+		return closingDate;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setClosingDate(Date closingDate) {
+		this.closingDate = closingDate;
 	}
 
 	public int getBtype() {
@@ -269,16 +269,12 @@ public class BatchFeeMst implements Serializable {
 	@Override
 	public String toString() {
 		return "BatchFee [id=" + id + ", batchNumber=" + batchNumber + ", ftype=" + ftype + ", payType=" + payType
-				+ ", payId=" + payId + ", chargeType=" + chargeType + ", chargeId=" + chargeId + ", beginTime="
-				+ beginTime + ", endTime=" + endTime + ", btype=" + btype + ", effectiveNumber=" + effectiveNumber
-				+ ", price=" + price + ", prepayment=" + prepayment + ", receivable=" + receivable + ", payImg="
-				+ payImg + ", payTime=" + payTime + ", remark=" + remark + ", seqNumber=" + seqNumber + ", operator="
-				+ operator + ", createTime=" + createTime + ", status=" + status + ", confirmRemark=" + confirmRemark
-				+ "]";
+				+ ", payId=" + payId + ", chargeType=" + chargeType + ", chargeId=" + chargeId + ", effectiveDate="
+				+ effectiveDate + ", closingDate=" + closingDate + ", btype=" + btype + ", effectiveNumber="
+				+ effectiveNumber + ", price=" + price + ", prepayment=" + prepayment + ", receivable=" + receivable
+				+ ", payImg=" + payImg + ", payTime=" + payTime + ", remark=" + remark + ", seqNumber=" + seqNumber
+				+ ", operator=" + operator + ", createTime=" + createTime + ", status=" + status + ", confirmRemark="
+				+ confirmRemark + "]";
 	}
-	
-	
-	
-	
-	
+
 }
