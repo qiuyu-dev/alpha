@@ -1,5 +1,6 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.config.AlphaConfig;
 import com.mysoft.alpha.entity.Company;
 import com.mysoft.alpha.entity.CustomerProductExcelDetail;
 import com.mysoft.alpha.entity.CustomerProductExcelMst;
@@ -51,6 +52,9 @@ public class CustomerOrderController {
 
     @Autowired
     CpExcelService cpExcelService;
+    
+    @Autowired
+    AlphaConfig alphaConfig;
 
     @GetMapping("/share/customerorder/list")
     public Result listCustomerOrders() {
@@ -136,16 +140,12 @@ public class CustomerOrderController {
     @PostMapping("/share/uploadFile")
     @Transactional
     public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file) {
-        System.out.println("map=" + map);
         String cid = map.get("cid");
-        String folder = "upload/file";
-        String fileURL = "http://localhost:8443/api/file/";
+        String folder = alphaConfig.getUploadFolder();
+        String fileURL = alphaConfig.getFileUrl();
         String oriFileName = file.getOriginalFilename();
         String suffix = oriFileName.substring(oriFileName.lastIndexOf('.'));
         String prefix = oriFileName.substring(0, oriFileName.lastIndexOf('.'));
-        //        System.out.println(
-        //                "file =" + file.getOriginalFilename() + " ,len =" + file.getOriginalFilename().length() + ",prefix=" +
-        //                        prefix + ",suffix=" + suffix);
         File uploadFileFolder = new File(folder);
         File localFile = new File(uploadFileFolder, prefix + System.currentTimeMillis() + suffix);
         if (!localFile.getParentFile().exists())
@@ -210,7 +210,7 @@ public class CustomerOrderController {
         cpExcelDetail.setCompanyId(companyId);
         try {
         	 Row row = sheet.getRow(i);
-			 cpExcelDetail.setRowNum(row.getRowNum());
+			 cpExcelDetail.setRowNum(row.getRowNum() + 1);//记录数据从第二行开始
 
 			 Cell c0 = row.getCell(0);
 			 cpExcelDetail.setSeqNumber(c0.getStringCellValue());
@@ -264,5 +264,5 @@ public class CustomerOrderController {
 
         return cpExcelDetail;
     }
-
+    
 }

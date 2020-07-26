@@ -1,5 +1,6 @@
 package com.mysoft.alpha.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.*;
@@ -8,6 +9,9 @@ import com.mysoft.alpha.interceptor.LoginInterceptor;
 
 @SpringBootConfiguration
 public class MyWebConfigurer implements WebMvcConfigurer {
+	
+	@Autowired
+    AlphaConfig alphaConfig;
 	
 //    @Bean
 //    public LoginInterceptor getLoginIntercepter() {
@@ -37,7 +41,7 @@ public class MyWebConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/api/file/**").addResourceLocations("file:" + "D:/upload/file");
+        registry.addResourceHandler("/api/file/**").addResourceLocations("file:" + alphaConfig.getUploadFolder());
     }
 
 }

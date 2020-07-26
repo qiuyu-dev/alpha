@@ -1,5 +1,6 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.config.AlphaConfig;
 import com.mysoft.alpha.entity.BatchFeeDetail;
 import com.mysoft.alpha.entity.BatchFeeMst;
 import com.mysoft.alpha.entity.CustomerEnterprise;
@@ -55,6 +56,9 @@ public class PurchaseOrderController {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+    AlphaConfig alphaConfig;
 
     //    @GetMapping("/api/customerenterprise/list")
     @GetMapping("/share/customerenterprise/list")
@@ -168,14 +172,11 @@ public class PurchaseOrderController {
     //    @PostMapping("/api/admin/content/purchaseorder/uploadFile")
     @PostMapping("/section/purchaseorder/uploadFile")
     public String payImgUpload(@RequestParam("file") MultipartFile file) {
-        String folder = "D:/upload/file/pay";
-        String fileURL = "http://localhost:8443/api/file/";
+        String folder = alphaConfig.getUploadFolder() +"/pay";
+        String fileURL = alphaConfig.getFileUrl();
         String oriFileName = file.getOriginalFilename();
         String suffix = oriFileName.substring(oriFileName.lastIndexOf('.'));
         String prefix = oriFileName.substring(0, oriFileName.lastIndexOf('.'));
-        System.out.println(
-                "file =" + file.getOriginalFilename() + " ,len =" + file.getOriginalFilename().length() + ",prefix=" +
-                        prefix + ",suffix=" + suffix);
         File uploadFileFolder = new File(folder);
         File localFile = new File(uploadFileFolder, prefix + System.currentTimeMillis() + suffix);
         if (!localFile.getParentFile().exists())
