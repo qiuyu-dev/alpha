@@ -1,12 +1,18 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.entity.BatchFeeDetail;
 import com.mysoft.alpha.entity.BatchFeeMst;
 import com.mysoft.alpha.entity.CustomerEnterprise;
+import com.mysoft.alpha.entity.CustomerProduct;
+import com.mysoft.alpha.entity.Product;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
+import com.mysoft.alpha.service.BatchFeeDetailService;
 import com.mysoft.alpha.service.BatchFeeMstService;
 import com.mysoft.alpha.service.CustomerEnterpriseService;
+import com.mysoft.alpha.service.CustomerProductService;
+import com.mysoft.alpha.service.ProductService;
 import com.mysoft.alpha.service.PurchaseOrderService;
 import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
@@ -19,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -34,7 +42,16 @@ public class PurchaseOrderController {
     PurchaseOrderService purchaseOrderService;
 
     @Autowired
-    BatchFeeMstService BatchFeeMstService;
+    BatchFeeMstService batchFeeMstService;
+    
+    @Autowired
+    BatchFeeDetailService batchFeeDetailService;
+    
+    @Autowired
+    ProductService productService;
+    
+    @Autowired
+    CustomerProductService customerProductService;
 
     @Autowired
     UserService userService;
@@ -178,7 +195,7 @@ public class PurchaseOrderController {
     //    @GetMapping("/api/BatchFeeMst/list")
     @GetMapping("/share/batchFeeMst/list")
     public Result listBatchFeeMst() {
-        return ResultFactory.buildSuccessResult(BatchFeeMstService.findAllBatchFeeMst());
+        return ResultFactory.buildSuccessResult(batchFeeMstService.findAllBatchFeeMst());
     }
 
     //    @PostMapping("/api/admin/content/purchaseorder/payconfirm")
@@ -189,13 +206,32 @@ public class PurchaseOrderController {
         String id = map.get("id");
         String receivable = map.get("receivable") != null ? map.get("receivable") : "";
         String confirmRemark = map.get("confirmRemark") != null ? map.get("confirmRemark") : "";
-        BatchFeeMst BatchFeeMst = BatchFeeMstService.findBatchFeeMstById(Integer.parseInt(id));
-        BatchFeeMst.setReceivable(Integer.parseInt(receivable));
-        BatchFeeMst.setConfirmRemark(confirmRemark);
-        BatchFeeMst.setCreateTime(new Date());
-        BatchFeeMst.setStatus(1);//1已确认
-        BatchFeeMst.setOperator(operator);
-        BatchFeeMstService.addOrUpdateBatchFeeMst(BatchFeeMst);
+        BatchFeeMst batchFeeMst = batchFeeMstService.findBatchFeeMstById(Integer.parseInt(id));
+        batchFeeMst.setReceivable(Integer.parseInt(receivable));
+        batchFeeMst.setConfirmRemark(confirmRemark);
+        batchFeeMst.setCreateTime(new Date());
+        batchFeeMst.setStatus(1);//1已确认
+        batchFeeMst.setOperator(operator);
+        batchFeeMstService.addOrUpdateBatchFeeMst(batchFeeMst);
+        
+        List<Product> productList = productService.findByCompanyId(batchFeeMst.getPayId());
+    	List<BatchFeeDetail> batchFeeDetailList = batchFeeDetailService.findBybatchNumber(batchFeeMst.getBatchNumber());
+    	List<CustomerProduct> customerProductList = new ArrayList<CustomerProduct>();
+    	for(BatchFeeDetail batchFeeDetail: batchFeeDetailList) {
+    		CustomerProduct customerProduct = new CustomerProduct();
+    		customerProduct.setCcId(batchFeeDetail.getCeId());
+    		customerProduct.setCompanyId(batchFeeMst.getPayId());
+    		customerProduct.setBeginTime(batchFeeMst.getBeginTime());
+    		customerProduct.setEndTime(batchFeeMst.getEndTime());
+    		customerProduct.setStatus(6);
+    		customerProduct.setOperator(operator);
+    		customerProduct.setCreateTime(new Date());
+    		for(Product product : productList) {
+    			customerProduct.setProductId(product.getId());
+    			customerProductList.add(customerProduct);
+    		}   		
+    	}  	
+    	customerProductService.saveAllCustomerProduct(customerProductList);
 
         return ResultFactory.buildSuccessResult("确认成功");
     }

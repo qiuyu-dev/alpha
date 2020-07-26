@@ -14,4 +14,6 @@ public interface BatchFeeDetailService {
 	
 	public BatchFeeDetail findBatchFeeDetailById(int id);
 
+	public List<BatchFeeDetail> findBybatchNumber(String batchNumber);
+	
 }
