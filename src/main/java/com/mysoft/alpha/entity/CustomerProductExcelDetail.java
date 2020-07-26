@@ -1,40 +1,39 @@
 package com.mysoft.alpha.entity;
 
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
-import lombok.ToString;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
-@Data
+
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+
+//@Data
 @Entity
 @Table(name = "cp_excel_detail")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class CustomerProductExcelDetail {
+public class CustomerProductExcelDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    
-    @Column(name = "row_num")
+
+	@Column(name = "row_num")
     private int rowNum;//excel 行号
     
     @Column(name = "seq_number")
-    private String seqNumber;//序号
+    private int seqNumber;//序号
     
     @Column(name = "policy_number")
     private String policyNumber;//保单号
@@ -76,17 +75,20 @@ public class CustomerProductExcelDetail {
     private String explanation;//系统说明
     
     @Column(name="status")
-    private String status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
+    private Integer status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
     
     @Column(name="create_time")
     private Date createTime;//创建时间
     
     @Column(name="operator")
     private String operator;// 操作者
-    
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "cp_excel_mst_id",nullable = false)
-    private CustomerProductExcelMst cpExcelMst;
+
+	@Column(name="cp_excel_mst_id")
+	private int cpExcelMstId;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cp_excel_mst_id",insertable = false,updatable = false)
+     private CustomerProductExcelMst cpExcelMst;
     
     @Column(name="customer_id")
     private int customerId;//客户id
@@ -97,6 +99,9 @@ public class CustomerProductExcelDetail {
     @Column(name="product_id")
     private int productId;//产品id
 
+	public CustomerProductExcelDetail() {
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -105,11 +110,19 @@ public class CustomerProductExcelDetail {
 		this.id = id;
 	}
 
-	public String getSeqNumber() {
+	public int getRowNum() {
+		return rowNum;
+	}
+
+	public void setRowNum(int rowNum) {
+		this.rowNum = rowNum;
+	}
+
+	public int getSeqNumber() {
 		return seqNumber;
 	}
 
-	public void setSeqNumber(String seqNumber) {
+	public void setSeqNumber(int seqNumber) {
 		this.seqNumber = seqNumber;
 	}
 
@@ -209,11 +222,106 @@ public class CustomerProductExcelDetail {
 		this.remark = remark;
 	}
 
-	public String getStatus() {
+	public String getExplanation() {
+		return explanation;
+	}
+
+	public void setExplanation(String explanation) {
+		this.explanation = explanation;
+	}
+
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public CustomerProductExcelMst getCpExcelMst() {
+		return cpExcelMst;
+	}
+
+	public void setCpExcelMst(CustomerProductExcelMst cpExcelMst) {
+		this.cpExcelMst = cpExcelMst;
+	}
+
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public int getCpExcelMstId() {
+		return cpExcelMstId;
+	}
+
+	public void setCpExcelMstId(int cpExcelMstId) {
+		this.cpExcelMstId = cpExcelMstId;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("CustomerProductExcelDetail{");
+		sb.append("id=").append(id);
+		sb.append(", rowNum=").append(rowNum);
+		sb.append(", seqNumber=").append(seqNumber);
+		sb.append(", policyNumber='").append(policyNumber).append('\'');
+		sb.append(", product='").append(product).append('\'');
+		sb.append(", insuredName='").append(insuredName).append('\'');
+		sb.append(", certificateType='").append(certificateType).append('\'');
+		sb.append(", phonenum='").append(phonenum).append('\'');
+		sb.append(", insuredId='").append(insuredId).append('\'');
+		sb.append(", effectiveDate=").append(effectiveDate);
+		sb.append(", closingDate=").append(closingDate);
+		sb.append(", sex='").append(sex).append('\'');
+		sb.append(", age=").append(age);
+		sb.append(", location='").append(location).append('\'');
+		sb.append(", remark='").append(remark).append('\'');
+		sb.append(", explanation='").append(explanation).append('\'');
+		sb.append(", status=").append(status);
+		sb.append(", createTime=").append(createTime);
+		sb.append(", operator='").append(operator).append('\'');
+		sb.append(", cpExcelMstId=").append(cpExcelMstId);
+		sb.append(", cpExcelMst=").append(cpExcelMst);
+		sb.append(", customerId=").append(customerId);
+		sb.append(", companyId=").append(companyId);
+		sb.append(", productId=").append(productId);
+		sb.append('}');
+		return sb.toString();
 	}
 }

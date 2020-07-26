@@ -1,6 +1,7 @@
 package com.mysoft.alpha.filter;
 
-import lombok.extern.log4j.Log4j2;
+import com.mysoft.alpha.service.AdminPermissionService;
+import com.mysoft.alpha.util.SpringContextUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.PathMatchingFilter;
@@ -10,16 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import com.mysoft.alpha.service.AdminPermissionService;
-import com.mysoft.alpha.util.SpringContextUtils;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
-@Log4j2
+//@Log4j2
 public class URLPathMatchingFilter extends PathMatchingFilter {
 	 private static final Logger log = LoggerFactory.getLogger(URLPathMatchingFilter.class);
     @Autowired

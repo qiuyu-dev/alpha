@@ -8,17 +8,29 @@ import com.mysoft.alpha.result.ResultFactory;
 import com.mysoft.alpha.service.AdminMenuService;
 
 @RestController
+@RequestMapping("/api/admin/v1/pri/menu")
 public class MenuController {
     @Autowired
     AdminMenuService adminMenuService;
 
-    @GetMapping("/api/menu")
+    @GetMapping("/menu")
     public Result menu() {
         return ResultFactory.buildSuccessResult(adminMenuService.getMenusByCurrentUser());
     }
 
-    @GetMapping("/api/admin/role/menu")
-    public Result listAllMenus() {
-        return ResultFactory.buildSuccessResult(adminMenuService.getMenusByRoleId(1));
+    @GetMapping("/listbyroleid")
+    public Result listAllMenusByRoledId(@RequestParam int rid) {
+        return ResultFactory.buildSuccessResult(adminMenuService.getMenusByRoleId(rid));
     }
+
+    @GetMapping("/list")
+    public Result listAllMenus() {
+        return ResultFactory.buildSuccessResult(adminMenuService.findAll());
+    }
+    
+    @GetMapping("/currentuser")
+    public Result currentuser() {
+        return ResultFactory.buildSuccessResult(adminMenuService.getMenusByCurrentUser());
+    }    
+
 }

@@ -1,25 +1,27 @@
 package com.mysoft.alpha.entity;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
-import lombok.ToString;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
-@Data
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+//@Data
 @Entity
 @Table(name = "batch_fee_detail")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class BatchFeeDetail {
+public class BatchFeeDetail implements Serializable {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -43,4 +45,77 @@ public class BatchFeeDetail {
 	@Column(name = "create_time")
 	private Date createTime;
 
+
+	public BatchFeeDetail() {
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(String batchNumber) {
+		this.batchNumber = batchNumber;
+	}
+
+	public int getCeId() {
+		return ceId;
+	}
+
+	public void setCeId(int ceId) {
+		this.ceId = ceId;
+	}
+
+	public String getCpIdArray() {
+		return cpIdArray;
+	}
+
+	public void setCpIdArray(String cpIdArray) {
+		this.cpIdArray = cpIdArray;
+	}
+
+	public int getEffectiveNumber() {
+		return effectiveNumber;
+	}
+
+	public void setEffectiveNumber(int effectiveNumber) {
+		this.effectiveNumber = effectiveNumber;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("BatchFeeDetail{");
+		sb.append("id=").append(id);
+		sb.append(", batchNumber='").append(batchNumber).append('\'');
+		sb.append(", ceId=").append(ceId);
+		sb.append(", cpIdArray='").append(cpIdArray).append('\'');
+		sb.append(", effectiveNumber=").append(effectiveNumber);
+		sb.append(", operator='").append(operator).append('\'');
+		sb.append(", createTime=").append(createTime);
+		sb.append('}');
+		return sb.toString();
+	}
 }

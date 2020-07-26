@@ -1,17 +1,27 @@
 package com.mysoft.alpha.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Data
+
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+//@Data
 @Entity
 @Table(name = "admin_permission")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class AdminPermission {
+public class AdminPermission  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,6 +41,9 @@ public class AdminPermission {
      * The path which triggers permission check.
      */
     private String url;
+
+	public AdminPermission() {
+	}
 
 	public int getId() {
 		return id;
@@ -66,8 +79,12 @@ public class AdminPermission {
 
 	@Override
 	public String toString() {
-		return "AdminPermission [id=" + id + ", name=" + name + ", desc_=" + desc_ + ", url=" + url + "]";
+		final StringBuffer sb = new StringBuffer("AdminPermission{");
+		sb.append("id=").append(id);
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", desc_='").append(desc_).append('\'');
+		sb.append(", url='").append(url).append('\'');
+		sb.append('}');
+		return sb.toString();
 	}
-    
-    
 }

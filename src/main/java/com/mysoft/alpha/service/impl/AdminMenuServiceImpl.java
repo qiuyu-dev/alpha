@@ -1,12 +1,5 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.mysoft.alpha.dao.AdminMenuDAO;
 import com.mysoft.alpha.entity.AdminMenu;
 import com.mysoft.alpha.entity.AdminRoleMenu;
@@ -16,6 +9,12 @@ import com.mysoft.alpha.service.AdminMenuService;
 import com.mysoft.alpha.service.AdminRoleMenuService;
 import com.mysoft.alpha.service.AdminUserRoleService;
 import com.mysoft.alpha.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminMenuServiceImpl implements AdminMenuService {
@@ -30,6 +29,16 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
 	@Autowired
 	AdminRoleMenuService adminRoleMenuService;
+
+	public List<AdminMenu> findAll(){
+
+		List<Integer> menuIds = adminMenuDAO.findAll().stream().map(AdminMenu::getId)
+													.collect(Collectors.toList());
+		List<AdminMenu> menus = adminMenuDAO.findAllById(menuIds);
+		handleMenus(menus);
+		return menus;
+//		return adminMenuDAO.findAll();
+			}
 
 	public List<AdminMenu> getAllByParentId(int parentId) {
 		return adminMenuDAO.findAllByParentId(parentId);

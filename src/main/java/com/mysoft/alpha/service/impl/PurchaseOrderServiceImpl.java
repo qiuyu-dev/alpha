@@ -1,30 +1,29 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.Date;
-
+import com.mysoft.alpha.entity.BatchFeeDetail;
+import com.mysoft.alpha.entity.BatchFeeMst;
+import com.mysoft.alpha.service.BatchFeeDetailService;
+import com.mysoft.alpha.service.BatchFeeMstService;
+import com.mysoft.alpha.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysoft.alpha.entity.BatchFee;
-import com.mysoft.alpha.entity.BatchFeeDetail;
-import com.mysoft.alpha.service.BatchFeeDetailService;
-import com.mysoft.alpha.service.BatchFeeService;
-import com.mysoft.alpha.service.PurchaseOrderService;
+import java.util.Date;
 
 @Service
 public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Autowired
-	BatchFeeService batchFeeService;
+    BatchFeeMstService batchFeeMstService;
 	
 	@Autowired
 	BatchFeeDetailService batchFeeDetailService;
 	 
 	@Transactional
 	@Override
-	public void batchFeeFormProcess(BatchFee batchFee,String ids) {
-		batchFeeService.addOrUpdateBatchFee(batchFee);
+	public void batchFeeMstFormProcess(BatchFeeMst batchFee, String ids) {
+		batchFeeMstService.addOrUpdateBatchFeeMst(batchFee);
 		String[] idArray = ids.split(",");
 		for(String id:idArray) {
 			 BatchFeeDetail batchFeeDetail = new BatchFeeDetail();

@@ -1,16 +1,21 @@
 package com.mysoft.alpha.dto;
 
-import lombok.Data;
-import lombok.ToString;
-
-import java.util.List;
-
 import com.mysoft.alpha.dto.base.OutputConverter;
 import com.mysoft.alpha.entity.AdminRole;
 import com.mysoft.alpha.entity.User;
 
-@Data
-@ToString
+import java.util.List;
+
+//@Data
+//@ToString
+/**
+ *
+ *  dto
+ *  class 输出对象类
+ *  get，set
+ *  tostring
+ *
+ */
 public class UserDTO implements OutputConverter<UserDTO, User> {
 
     private int id;
@@ -85,10 +90,15 @@ public class UserDTO implements OutputConverter<UserDTO, User> {
 
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + id + ", username=" + username + ", name=" + name + ", phone=" + phone + ", email="
-				+ email + ", enabled=" + enabled + ", roles=" + roles + "]";
+		final StringBuffer sb = new StringBuffer("UserDTO{");
+		sb.append("id=").append(id);
+		sb.append(", username='").append(username).append('\'');
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", phone='").append(phone).append('\'');
+		sb.append(", email='").append(email).append('\'');
+		sb.append(", enabled=").append(enabled);
+		sb.append(", roles=").append(roles);
+		sb.append('}');
+		return sb.toString();
 	}
-    
-    
-
 }

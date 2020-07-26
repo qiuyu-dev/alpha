@@ -1,26 +1,33 @@
 package com.mysoft.alpha.entity;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
-import lombok.ToString;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 
-@Data
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+
 @Entity
 @Table(name = "customer_enterprise")
-@ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class CustomerEnterprise {
+public class CustomerEnterprise  implements Serializable {
+	/**
+	 * @Id 主键列
+	 * @GeneratedValue(strategy = GenerationType.IDENTITY) 主键生成策略
+	 * @Column(name = "id") 列名
+	 * 最好使用包装数据类型Integer等
+	 */
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -45,7 +52,7 @@ public class CustomerEnterprise {
     private String location;
     
     @Column(name = "age")
-    private String age;
+    private Integer age;
     
     @Column(name = "sex")
     private String sex;
@@ -74,12 +81,17 @@ public class CustomerEnterprise {
     @Column(name = "operator")
     private String operator;
     
-    @Column(name = "create_time")
+
+	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
+	@Column(name = "create_time",insertable = false)
     private Date createTime;
     
     @Column(name = "reson")
     private String reson;
-    
+
+	public CustomerEnterprise() {
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -136,11 +148,11 @@ public class CustomerEnterprise {
 		this.location = location;
 	}
 
-	public String getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(String age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
@@ -192,6 +204,21 @@ public class CustomerEnterprise {
 		this.fromId = fromId;
 	}
 
+	public int getCpemId() {
+		return cpemId;
+	}
+
+	public void setCpemId(int cpemId) {
+		this.cpemId = cpemId;
+	}
+
+	public int getCpedId() {
+		return cpedId;
+	}
+
+	public void setCpedId(int cpedId) {
+		this.cpedId = cpedId;
+	}
 
 	public String getOperator() {
 		return operator;
@@ -208,22 +235,6 @@ public class CustomerEnterprise {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-    
-    public int getCpemId() {
-		return cpemId;
-	}
-
-	public void setCpemId(int cpemId) {
-		this.cpemId = cpemId;
-	}
-
-	public int getCpedId() {
-		return cpedId;
-	}
-
-	public void setCpedId(int cpedId) {
-		this.cpedId = cpedId;
-	}
 
 	public String getReson() {
 		return reson;
@@ -231,6 +242,31 @@ public class CustomerEnterprise {
 
 	public void setReson(String reson) {
 		this.reson = reson;
-	}    
+	}
 
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("CustomerEnterprise{");
+		sb.append("id=").append(id);
+		sb.append(", certificateType='").append(certificateType).append('\'');
+		sb.append(", insuredId='").append(insuredId).append('\'');
+		sb.append(", cname='").append(cname).append('\'');
+		sb.append(", phonenum='").append(phonenum).append('\'');
+		sb.append(", eid=").append(eid);
+		sb.append(", location='").append(location).append('\'');
+		sb.append(", age=").append(age);
+		sb.append(", sex='").append(sex).append('\'');
+		sb.append(", beginTime=").append(beginTime);
+		sb.append(", endTime=").append(endTime);
+		sb.append(", cestatus=").append(cestatus);
+		sb.append(", fromType=").append(fromType);
+		sb.append(", fromId=").append(fromId);
+		sb.append(", cpemId=").append(cpemId);
+		sb.append(", cpedId=").append(cpedId);
+		sb.append(", operator='").append(operator).append('\'');
+		sb.append(", createTime=").append(createTime);
+		sb.append(", reson='").append(reson).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

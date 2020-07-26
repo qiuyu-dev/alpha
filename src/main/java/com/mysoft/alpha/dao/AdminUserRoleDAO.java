@@ -9,4 +9,7 @@ import java.util.List;
 public interface AdminUserRoleDAO extends JpaRepository<AdminUserRole,Integer> {
     List<AdminUserRole> findAllByUid(int uid);
     void deleteAllByUid(int uid);
+
+    @Override
+    <S extends AdminUserRole> S save(S s);
 }

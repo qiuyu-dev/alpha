@@ -1,17 +1,26 @@
 package com.mysoft.alpha.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Data
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+//@Data
 @Entity
 @Table(name = "admin_user_role")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class AdminUserRole {
+public class AdminUserRole implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,6 +35,9 @@ public class AdminUserRole {
      * Role id.
      */
     private int rid;
+
+	public AdminUserRole() {
+	}
 
 	public int getId() {
 		return id;
@@ -53,8 +65,11 @@ public class AdminUserRole {
 
 	@Override
 	public String toString() {
-		return "AdminUserRole [id=" + id + ", uid=" + uid + ", rid=" + rid + "]";
+		final StringBuffer sb = new StringBuffer("AdminUserRole{");
+		sb.append("id=").append(id);
+		sb.append(", uid=").append(uid);
+		sb.append(", rid=").append(rid);
+		sb.append('}');
+		return sb.toString();
 	}
-    
-    
 }

@@ -1,29 +1,28 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.model.RegisterForm;
+import com.mysoft.alpha.result.Result;
+import com.mysoft.alpha.result.ResultFactory;
+import com.mysoft.alpha.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
-import com.mysoft.alpha.entity.User;
-import com.mysoft.alpha.model.RegisterForm;
-import com.mysoft.alpha.result.Result;
-import com.mysoft.alpha.result.ResultFactory;
-import com.mysoft.alpha.service.UserService;
-
-import javax.validation.Valid;
-
 @RestController
+@RequestMapping("/api")
 public class LoginController {
 
     @Autowired
     UserService userService;
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public Result login(@RequestBody User requestUser) {
         String username = requestUser.getUsername();
         username = HtmlUtils.htmlEscape(username);
@@ -38,7 +37,7 @@ public class LoginController {
         	System.out.println("subject.isRemembered()="+subject.isRemembered());
         	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
         	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
-            if (!user.isEnabled()) {
+            if (user.getEnabled().equals("0")) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }
             return ResultFactory.buildSuccessResult(username);
@@ -49,8 +48,12 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
+    @Transactional
     public Result register(@RequestBody RegisterForm registerForm) {
+
+        System.out.println("register");
+
         int status = userService.register(registerForm);
         switch (status) {
             case 1:
@@ -79,14 +82,14 @@ public class LoginController {
         return ResultFactory.buildFailResult("未知错误");
     }
 
-    @GetMapping("/api/logout")
+    @GetMapping("/logout")
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return ResultFactory.buildSuccessResult("成功登出");
     }
 
-    @GetMapping("/api/authentication")
+    @GetMapping("/authentication")
     public String authentication() {
         return "身份认证成功";
     }

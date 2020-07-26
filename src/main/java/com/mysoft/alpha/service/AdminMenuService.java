@@ -1,13 +1,13 @@
 package com.mysoft.alpha.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.mysoft.alpha.entity.AdminMenu;
 
-@Service
+import java.util.List;
+
+
 public interface AdminMenuService {
+
+    public List<AdminMenu> findAll();
 
     public List<AdminMenu> getAllByParentId(int parentId);
 

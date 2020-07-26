@@ -1,8 +1,8 @@
 package com.mysoft.alpha.service;
 
-import com.mysoft.alpha.entity.BatchFee;
+import com.mysoft.alpha.entity.BatchFeeMst;
 
 public interface PurchaseOrderService {
-	public void batchFeeFormProcess(BatchFee batchFee,String ids);
+	public void batchFeeMstFormProcess(BatchFeeMst batchFeeMst, String ids);
 
 }

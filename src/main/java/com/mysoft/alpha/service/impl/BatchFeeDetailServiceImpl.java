@@ -35,9 +35,6 @@ public class BatchFeeDetailServiceImpl implements BatchFeeDetailService {
 		return batchFeeDetailDAO.getOne(id);
 	}
 
-	@Override
-	public List<BatchFeeDetail> findBybatchNumber(String batchNumber) {
-		return batchFeeDetailDAO.findBybatchNumber(batchNumber);
-	}
+
 
 }

@@ -1,20 +1,17 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-
+import com.mysoft.alpha.dao.CustomerProductExcelDetailDAO;
+import com.mysoft.alpha.dao.CustomerProductExcelMstDAO;
+import com.mysoft.alpha.entity.CustomerProductExcelDetail;
+import com.mysoft.alpha.entity.CustomerProductExcelMst;
+import com.mysoft.alpha.service.CustomerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.mysoft.alpha.cache.CacheKeyManager;
-import com.mysoft.alpha.dao.CustomerProductExcelDetailDAO;
-import com.mysoft.alpha.dao.CustomerProductExcelMstDAO;
-import com.mysoft.alpha.entity.CustomerProductExcelDetail;
-import com.mysoft.alpha.entity.CustomerProductExcelMst;
-import com.mysoft.alpha.service.CustomerOrderService;
-import com.mysoft.alpha.util.BaseCache;
+import java.util.List;
 
 @Service
 public class CustomerOrderServiceImpl implements CustomerOrderService {
@@ -24,28 +21,28 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
 	@Autowired
 	private CustomerProductExcelDetailDAO customerProductExcelDetailDAO;
-
-	@Autowired
-	private BaseCache baseCache;
+//
+//	@Autowired
+//	private BaseCache baseCache;
 
 	public CustomerProductExcelDetail addOrUpdateCustomerProductExcelDetail(
 			CustomerProductExcelDetail customerProductExcelDetail) {
-		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+//		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
 		if (StringUtils.isEmpty(customerProductExcelDetail.getId())
 				&& StringUtils.isEmpty(customerProductExcelDetail.getStatus())) {
-			customerProductExcelDetail.setStatus("1");// 默认状态
+			customerProductExcelDetail.setStatus(1);// 默认状态
 		}
 		return customerProductExcelDetailDAO.save(customerProductExcelDetail);
 	}
 
 	public void deleteCustomerProductExcelDetailById(int id) {
-		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+//		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
 		customerProductExcelDetailDAO.deleteById(id);
 	}
 
 	@Transactional
 	public void deleteCustomerProductExcelDetailByIds(Integer[] ids) {
-		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+//		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
 		customerProductExcelDetailDAO.deleteAllByIdIn(ids);
 	}
 
@@ -57,29 +54,29 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 	@Override
 	public List<CustomerProductExcelDetail> findCustomerProductExcelDetailList() {
 		List<CustomerProductExcelDetail> list = null;
-		try {
-			Object cacheObj = baseCache.getTenMinuteCache().get(CacheKeyManager.CUSTOMERORDER_KEY, () -> {
+//		try {
+//			Object cacheObj = baseCache.getTenMinuteCache().get(CacheKeyManager.CUSTOMERORDER_KEY, () -> {
 				List<CustomerProductExcelDetail> customerProductExcelDetailList = customerProductExcelDetailDAO
 						.findAll(Sort.by(Sort.Direction.DESC, "id"));
 				System.out.println("从数据库里面查客户单列表");
-				return customerProductExcelDetailList;
-			});
-
-			if (cacheObj instanceof List) {
-				list = (List<CustomerProductExcelDetail>) cacheObj;
-				return list;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//				return customerProductExcelDetailList;
+//			});
+//
+//			if (cacheObj instanceof List) {
+//				list = (List<CustomerProductExcelDetail>) cacheObj;
+//				return list;
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return list;
 	}
 
 	@Transactional
 	@Override
 	public void saveAllCustomerProductExcelDetail(List<CustomerProductExcelDetail> customerProductExcelDetailList) {
-		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
+//		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
 		customerProductExcelDetailDAO.saveAll(customerProductExcelDetailList);
 
 	}

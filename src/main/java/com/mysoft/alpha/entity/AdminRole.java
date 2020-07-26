@@ -1,20 +1,32 @@
 package com.mysoft.alpha.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 @Entity
 @Table(name = "admin_role")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class AdminRole {
+public class AdminRole   implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,6 +35,7 @@ public class AdminRole {
     /**
      * Role name.
      */
+    @Column(name = "name")
     private String name;
 
     /**
@@ -34,7 +47,8 @@ public class AdminRole {
     /**
      * Role status.
      */
-    private boolean enabled;
+    @Column(name = "enabled")
+    private int enabled;
 
 
     /**
@@ -48,6 +62,13 @@ public class AdminRole {
      */
     @Transient
     private List<AdminMenu> menus;
+
+	public AdminRole() {
+	}
+
+	public AdminRole(String name) {
+		this.name = name;
+	}
 
 	public int getId() {
 		return id;
@@ -73,15 +94,15 @@ public class AdminRole {
 		this.nameZh = nameZh;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public int getEnabled() {
+        return enabled;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
+    }
 
-	public List<AdminPermission> getPerms() {
+    public List<AdminPermission> getPerms() {
 		return perms;
 	}
 
@@ -97,10 +118,16 @@ public class AdminRole {
 		this.menus = menus;
 	}
 
-	@Override
-	public String toString() {
-		return "AdminRole [id=" + id + ", name=" + name + ", nameZh=" + nameZh + ", enabled=" + enabled + ", perms="
-				+ perms + ", menus=" + menus + "]";
-	}      
-    
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("AdminRole{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", nameZh='").append(nameZh).append('\'');
+        sb.append(", enabled=").append(enabled);
+        sb.append(", perms=").append(perms);
+        sb.append(", menus=").append(menus);
+        sb.append('}');
+        return sb.toString();
+    }
 }

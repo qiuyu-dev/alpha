@@ -1,18 +1,30 @@
 package com.mysoft.alpha.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@Data
+
+
+/**
+ *
+ *  entity
+ *  class 数据对象类
+ *  Serializable 序列化用于网络传输
+ *  创建空构造函数
+ *  get，set
+ *  tostring
+ */
+
+//@Data
 @Entity
 @Table(name = "admin_menu")
-@ToString
+//@ToString
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class AdminMenu {
+public class AdminMenu implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -53,6 +65,9 @@ public class AdminMenu {
      */
     @Transient
     private List<AdminMenu> children;
+
+	public AdminMenu() {
+	}
 
 	public int getId() {
 		return id;
@@ -120,9 +135,16 @@ public class AdminMenu {
 
 	@Override
 	public String toString() {
-		return "AdminMenu [id=" + id + ", path=" + path + ", name=" + name + ", nameZh=" + nameZh + ", iconCls="
-				+ iconCls + ", component=" + component + ", parentId=" + parentId + ", children=" + children + "]";
+		final StringBuffer sb = new StringBuffer("AdminMenu{");
+		sb.append("id=").append(id);
+		sb.append(", path='").append(path).append('\'');
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", nameZh='").append(nameZh).append('\'');
+		sb.append(", iconCls='").append(iconCls).append('\'');
+		sb.append(", component='").append(component).append('\'');
+		sb.append(", parentId=").append(parentId);
+		sb.append(", children=").append(children);
+		sb.append('}');
+		return sb.toString();
 	}
-    
-    
 }
