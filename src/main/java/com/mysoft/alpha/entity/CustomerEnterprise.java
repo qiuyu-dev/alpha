@@ -34,7 +34,7 @@ public class CustomerEnterprise  implements Serializable {
     private int id;
 	
 	 @Column(name = "cp_excel_detail_id")
-	 private String cpExcelDetailId;
+	 private int cpExcelDetailId;
 	
     @Column(name = "certificate_type")
     private String certificateType;
@@ -247,11 +247,11 @@ public class CustomerEnterprise  implements Serializable {
 		this.reson = reson;
 	}
 	
-	public String getCpExcelDetailId() {
+	public int getCpExcelDetailId() {
 		return cpExcelDetailId;
 	}
 
-	public void setCpExcelDetailId(String cpExcelDetailId) {
+	public void setCpExcelDetailId(int cpExcelDetailId) {
 		this.cpExcelDetailId = cpExcelDetailId;
 	}
 
