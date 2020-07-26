@@ -32,7 +32,10 @@ public class CustomerEnterprise  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    
+	
+	 @Column(name = "cp_excel_detail_id")
+	 private String cpExcelDetailId;
+	
     @Column(name = "certificate_type")
     private String certificateType;
     
@@ -243,11 +246,20 @@ public class CustomerEnterprise  implements Serializable {
 	public void setReson(String reson) {
 		this.reson = reson;
 	}
+	
+	public String getCpExcelDetailId() {
+		return cpExcelDetailId;
+	}
+
+	public void setCpExcelDetailId(String cpExcelDetailId) {
+		this.cpExcelDetailId = cpExcelDetailId;
+	}
 
 	@Override
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("CustomerEnterprise{");
 		sb.append("id=").append(id);
+		sb.append(", cpExcelDetailId='").append(cpExcelDetailId).append('\'');
 		sb.append(", certificateType='").append(certificateType).append('\'');
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", cname='").append(cname).append('\'');
