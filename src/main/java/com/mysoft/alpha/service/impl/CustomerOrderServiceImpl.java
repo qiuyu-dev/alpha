@@ -30,7 +30,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 //		baseCache.getTenMinuteCache().invalidate(CacheKeyManager.CUSTOMERORDER_KEY);
 		if (StringUtils.isEmpty(customerProductExcelDetail.getId())
 				&& StringUtils.isEmpty(customerProductExcelDetail.getStatus())) {
-			customerProductExcelDetail.setStatus(1);// 默认状态
+			customerProductExcelDetail.setStatus("1");// 默认状态
 		}
 		return customerProductExcelDetailDAO.save(customerProductExcelDetail);
 	}

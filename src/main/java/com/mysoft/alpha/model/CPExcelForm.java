@@ -7,7 +7,7 @@ public class CPExcelForm {
 	private int mstId;
 	private int detailId;
 	private int rowNum;// excel 行号
-	private int seqNumber;// 序号
+	private String seqNumber;// 序号
 	private String policyNumber;// 保单号
 	private String product;// 产品
 	private String insuredName;// 被保险人姓名
@@ -42,7 +42,7 @@ public class CPExcelForm {
 	public CPExcelForm() {
 	}
 
-	public CPExcelForm(int mstId, int detailId, int seqNumber, String policyNumber, String product, String insuredName,
+	public CPExcelForm(int mstId, int detailId, String seqNumber, String policyNumber, String product, String insuredName,
 			String certificateType, String phone, String insuredId, Date effectiveDate, Date closingDate, String remark,
 			String explanation, String status, Date createTime, String operator, int toType, int toId,
 			String fileName) {
@@ -91,11 +91,11 @@ public class CPExcelForm {
 		this.rowNum = rowNum;
 	}
 
-	public int getSeqNumber() {
+	public String getSeqNumber() {
 		return seqNumber;
 	}
 
-	public void setSeqNumber(int seqNumber) {
+	public void setSeqNumber(String seqNumber) {
 		this.seqNumber = seqNumber;
 	}
 

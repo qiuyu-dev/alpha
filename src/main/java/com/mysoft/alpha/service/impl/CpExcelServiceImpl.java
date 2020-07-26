@@ -103,7 +103,7 @@ public class CpExcelServiceImpl implements CpExcelService {
                 }
                 //对应明细确认客户-企业如果有记录，修改Excel明细说明
                 else {
-                    cPExcelDetail.setStatus(-2);
+                    cPExcelDetail.setStatus("-2");
                     cPExcelDetail.setExplanation(
                             "原因：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName() + "，第" +
                                     cPExcelDetail.getRowNum() + "行");

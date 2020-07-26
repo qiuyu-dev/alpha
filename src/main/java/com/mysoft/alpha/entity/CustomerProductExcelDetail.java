@@ -33,7 +33,7 @@ public class CustomerProductExcelDetail implements Serializable {
     private int rowNum;//excel 行号
     
     @Column(name = "seq_number")
-    private int seqNumber;//序号
+    private String seqNumber;//序号
     
     @Column(name = "policy_number")
     private String policyNumber;//保单号
@@ -75,7 +75,7 @@ public class CustomerProductExcelDetail implements Serializable {
     private String explanation;//系统说明
     
     @Column(name="status")
-    private Integer status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
+    private String status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
     
     @Column(name="create_time")
     private Date createTime;//创建时间
@@ -118,11 +118,11 @@ public class CustomerProductExcelDetail implements Serializable {
 		this.rowNum = rowNum;
 	}
 
-	public int getSeqNumber() {
+	public String getSeqNumber() {
 		return seqNumber;
 	}
 
-	public void setSeqNumber(int seqNumber) {
+	public void setSeqNumber(String seqNumber) {
 		this.seqNumber = seqNumber;
 	}
 
@@ -230,11 +230,11 @@ public class CustomerProductExcelDetail implements Serializable {
 		this.explanation = explanation;
 	}
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
