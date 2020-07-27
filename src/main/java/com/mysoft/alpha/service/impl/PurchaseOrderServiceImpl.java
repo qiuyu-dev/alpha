@@ -15,25 +15,26 @@ import java.util.Date;
 public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Autowired
-    BatchFeeMstService batchFeeMstService;
-	
+	BatchFeeMstService batchFeeMstService;
+
 	@Autowired
 	BatchFeeDetailService batchFeeDetailService;
-	 
+
 	@Transactional
 	@Override
 	public void batchFeeMstFormProcess(BatchFeeMst batchFee, String ids) {
-		batchFeeMstService.addOrUpdateBatchFeeMst(batchFee);
+		BatchFeeMst mstNew = batchFeeMstService.addOrUpdateBatchFeeMst(batchFee);
 		String[] idArray = ids.split(",");
-		for(String id:idArray) {
-			 BatchFeeDetail batchFeeDetail = new BatchFeeDetail();
-//			 batchFeeDetail.setBatchNumber(batchFee.getBatchNumber());
-			 batchFeeDetail.setCeId(Integer.parseInt(id));
-			 batchFeeDetail.setEffectiveNumber(1);
-			 batchFeeDetail.setCreateTime(new Date());
-			 batchFeeDetail.setOperator(batchFee.getOperator());
-			 batchFeeDetailService.addOrUpdateBatchFeeDetail(batchFeeDetail);
-		}  	
+		for (String id : idArray) {
+			BatchFeeDetail batchFeeDetail = new BatchFeeDetail();
+			// batchFeeDetail.setBatchNumber(batchFee.getBatchNumber());
+			batchFeeDetail.setCeId(Integer.parseInt(id));
+			batchFeeDetail.setEffectiveNumber(1);
+			batchFeeDetail.setCreateTime(new Date());
+			batchFeeDetail.setOperator(batchFee.getOperator());
+			batchFeeDetail.setBatchFeeMst(mstNew);
+			batchFeeDetailService.addOrUpdateBatchFeeDetail(batchFeeDetail);
+		}
 
 	}
 
