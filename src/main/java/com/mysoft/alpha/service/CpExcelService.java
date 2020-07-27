@@ -10,4 +10,6 @@ public interface CpExcelService {
 
     public List<CustomerProductExcelMst> findCpExcelByUser(String username);
 
+    public void updateCpExcelDetailStatusById(int cpExcelDetailId,int status);
+
 }

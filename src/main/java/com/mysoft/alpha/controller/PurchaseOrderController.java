@@ -1,21 +1,11 @@
 package com.mysoft.alpha.controller;
 
 import com.mysoft.alpha.config.AlphaConfig;
-import com.mysoft.alpha.entity.BatchFeeDetail;
-import com.mysoft.alpha.entity.BatchFeeMst;
-import com.mysoft.alpha.entity.CustomerEnterprise;
-import com.mysoft.alpha.entity.CustomerProduct;
-import com.mysoft.alpha.entity.Product;
-import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.entity.*;
+import com.mysoft.alpha.model.CPExcelForm;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
-import com.mysoft.alpha.service.BatchFeeDetailService;
-import com.mysoft.alpha.service.BatchFeeMstService;
-import com.mysoft.alpha.service.CustomerEnterpriseService;
-import com.mysoft.alpha.service.CustomerProductService;
-import com.mysoft.alpha.service.ProductService;
-import com.mysoft.alpha.service.PurchaseOrderService;
-import com.mysoft.alpha.service.UserService;
+import com.mysoft.alpha.service.*;
 import com.mysoft.alpha.util.DateUtil;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/admin/v1/pri/po")
@@ -44,32 +31,41 @@ public class PurchaseOrderController {
 
     @Autowired
     BatchFeeMstService batchFeeMstService;
-    
+
     @Autowired
     BatchFeeDetailService batchFeeDetailService;
-    
+
     @Autowired
     ProductService productService;
-    
+
     @Autowired
     CustomerProductService customerProductService;
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     AlphaConfig alphaConfig;
+
+    @Autowired
+    CompanyService companyService;
+
+
+    @Autowired
+    CpExcelService cpExcelService;
 
     //    @GetMapping("/api/customerenterprise/list")
     @GetMapping("/share/customerenterprise/list")
     public Result listCustomerEnterprise() {
         return ResultFactory.buildSuccessResult(customerEnterpriseService.findAllCustomerEnterprise());
     }
-//todo 未完成
+
+    //todo 未完成
     @GetMapping("/share/purchaseservice/list")
     public Result listPurchaseServices() {
         return ResultFactory.buildSuccessResult(customerEnterpriseService.findAllCustomerEnterprise());
     }
+
     //    @PostMapping("/api/admin/content/purchaseorder")
     @PostMapping("/section/purchaseorder")
     @Transactional
@@ -87,12 +83,15 @@ public class PurchaseOrderController {
         customerEnterprise.setOperator(operator);
         customerEnterprise.setCreateTime(new Date());
         if ("1".equals(opt)) {//1 通过
-            customerEnterprise.setCestatus(2);//已核实
+            customerEnterprise.setCestatus(5);//已核实
+            cpExcelService.updateCpExcelDetailStatusById(customerEnterprise.getCpedId(),5);
         } else if ("2".equals(opt)) {//2未通过
-            customerEnterprise.setCestatus(3);//未通过
+            customerEnterprise.setCestatus(-5);//未通过
+            cpExcelService.updateCpExcelDetailStatusById(customerEnterprise.getCpedId(),-5);
         }
         customerEnterprise.setReson(reson);
         customerEnterpriseService.addOrUpdateCustomerEnterprise(customerEnterprise);
+
         return ResultFactory.buildSuccessResult("修改成功");
     }
 
@@ -166,13 +165,14 @@ public class PurchaseOrderController {
 
     /**
      * 上传文件，完成采购付费
+     *
      * @param file
      * @return
      */
     //    @PostMapping("/api/admin/content/purchaseorder/uploadFile")
     @PostMapping("/section/purchaseorder/uploadFile")
     public String payImgUpload(@RequestParam("file") MultipartFile file) {
-        String folder = alphaConfig.getUploadFolder() +"/pay";
+        String folder = alphaConfig.getUploadFolder() + "/pay";
         String fileURL = alphaConfig.getFileUrl();
         String oriFileName = file.getOriginalFilename();
         String suffix = oriFileName.substring(oriFileName.lastIndexOf('.'));
@@ -214,26 +214,85 @@ public class PurchaseOrderController {
         batchFeeMst.setStatus(1);//1已确认
         batchFeeMst.setOperator(operator);
         batchFeeMstService.addOrUpdateBatchFeeMst(batchFeeMst);
-        
+
         List<Product> productList = productService.findByCompanyId(batchFeeMst.getPayId());
-    	List<BatchFeeDetail> batchFeeDetailList = batchFeeDetailService.findBybatchNumber(batchFeeMst.getBatchNumber());
-    	List<CustomerProduct> customerProductList = new ArrayList<CustomerProduct>();
-    	for(BatchFeeDetail batchFeeDetail: batchFeeDetailList) {
-    		CustomerProduct customerProduct = new CustomerProduct();
-    		customerProduct.setCcId(batchFeeDetail.getCeId());
-    		customerProduct.setCompanyId(batchFeeMst.getPayId());
-    		customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
-    		customerProduct.setClosingDate(batchFeeMst.getClosingDate());
-    		customerProduct.setStatus(6);
-    		customerProduct.setOperator(operator);
-    		customerProduct.setCreateTime(new Date());
-    		for(Product product : productList) {
-    			customerProduct.setProductId(product.getId());
-    			customerProductList.add(customerProduct);
-    		}   		
-    	}  	
-    	customerProductService.saveAllCustomerProduct(customerProductList);
+        List<BatchFeeDetail> batchFeeDetailList = batchFeeDetailService.findBybatchNumber(batchFeeMst.getBatchNumber());
+        List<CustomerProduct> customerProductList = new ArrayList<CustomerProduct>();
+        for (BatchFeeDetail batchFeeDetail : batchFeeDetailList) {
+            CustomerProduct customerProduct = new CustomerProduct();
+            customerProduct.setCcId(batchFeeDetail.getCeId());
+            customerProduct.setCompanyId(batchFeeMst.getPayId());
+            customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
+            customerProduct.setClosingDate(batchFeeMst.getClosingDate());
+            customerProduct.setStatus(6);
+            customerProduct.setOperator(operator);
+            customerProduct.setCreateTime(new Date());
+            for (Product product : productList) {
+                customerProduct.setProductId(product.getId());
+                customerProductList.add(customerProduct);
+            }
+        }
+        customerProductService.saveAllCustomerProduct(customerProductList);
 
         return ResultFactory.buildSuccessResult("确认成功");
+    }
+
+    /**
+     * 服务业务-采购单审核
+     * 取客户-企业的eid
+     *
+     * @return
+     */
+
+    //    @GetMapping("/api/customerenterprise/list")
+    @GetMapping("/share/customerenterprise/listTo")
+    public Result listCustomerEnterpriseTo() {
+        String operator = SecurityUtils.getSubject().getPrincipal().toString();
+        //状态,1，新增，2已核实，3未通过，4、延续，
+        List<Integer> statusList = Stream.of(3, 4).collect(Collectors.toList());
+        List<CustomerEnterprise> ceList =
+                customerEnterpriseService.findAllCustomerEnterpriseByToUserAndStatus(operator, statusList);
+        List<CPExcelForm> returnList = new ArrayList<>();
+        for (CustomerEnterprise customerEnterprise : ceList) {
+            returnList.add(new CPExcelForm(0, 0, null, null, null, customerEnterprise.getCname(),
+                    customerEnterprise.getCertificateType(), customerEnterprise.getPhonenum(),
+                    customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
+                    customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",
+                    String.valueOf(customerEnterprise.getCestatus()), customerEnterprise.getCreateTime(),
+                    customerEnterprise.getOperator(), customerEnterprise.getFromType(), customerEnterprise.getFromId(),
+                    companyService.findById(customerEnterprise.getFromId()).getName(), 0, customerEnterprise.getEid(),
+                    companyService.findById(customerEnterprise.getEid()).getName(), ""));
+        }
+        return ResultFactory.buildSuccessResult(returnList);
+        //        return ResultFactory.buildSuccessResult(customerEnterpriseService.findAllCustomerEnterprise());
+    }
+
+    /**
+     * 采购财务-采购单付费
+     * 取客户-企业的fromid
+     *
+     * @return
+     */
+
+    //    @GetMapping("/api/customerenterprise/list")
+    @GetMapping("/share/customerenterprise/listFrom")
+    public Result listCustomerEnterpriseFrom() {
+        String operator = SecurityUtils.getSubject().getPrincipal().toString();
+
+        List<Integer> statusList = Stream.of(5,6,7,8,9,-7).collect(Collectors.toList());
+        List<CustomerEnterprise> ceList =
+                customerEnterpriseService.findAllCustomerEnterpriseByFromUserAndStatus(operator, statusList);
+        List<CPExcelForm> returnList = new ArrayList<>();
+        for (CustomerEnterprise customerEnterprise : ceList) {
+            returnList.add(new CPExcelForm(0, 0, null, null, null, customerEnterprise.getCname(),
+                    customerEnterprise.getCertificateType(), customerEnterprise.getPhonenum(),
+                    customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
+                    customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",
+                    String.valueOf(customerEnterprise.getCestatus()), customerEnterprise.getCreateTime(),
+                    customerEnterprise.getOperator(), customerEnterprise.getFromType(), customerEnterprise.getFromId(),
+                    companyService.findById(customerEnterprise.getFromId()).getName(), 0, customerEnterprise.getEid(),
+                    companyService.findById(customerEnterprise.getEid()).getName(), ""));
+        }
+        return ResultFactory.buildSuccessResult(returnList);
     }
 }

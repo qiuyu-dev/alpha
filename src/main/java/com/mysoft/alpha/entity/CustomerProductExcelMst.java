@@ -49,8 +49,8 @@ public class CustomerProductExcelMst implements Serializable {
     @Column(name = "file_Name")
     private String fileName; 
     
-    @Column(name = "ctype")
-    private int ctype;
+//    @Column(name = "ctype")
+//    private int ctype;
     
     @Column(name = "seq_number")
     private int seqNumber;
@@ -123,13 +123,13 @@ public class CustomerProductExcelMst implements Serializable {
         this.fileName = fileName;
     }
 
-    public int getCtype() {
-        return ctype;
-    }
+//    public int getCtype() {
+//        return ctype;
+//    }
 
-    public void setCtype(int ctype) {
-        this.ctype = ctype;
-    }
+//    public void setCtype(int ctype) {
+//        this.ctype = ctype;
+//    }
 
     public int getSeqNumber() {
         return seqNumber;
@@ -188,7 +188,7 @@ public class CustomerProductExcelMst implements Serializable {
         sb.append(", toType=").append(toType);
         sb.append(", toId=").append(toId);
         sb.append(", fileName='").append(fileName).append('\'');
-        sb.append(", ctype=").append(ctype);
+//        sb.append(", ctype=").append(ctype);
         sb.append(", seqNumber=").append(seqNumber);
         sb.append(", remark='").append(remark).append('\'');
         sb.append(", operator='").append(operator).append('\'');

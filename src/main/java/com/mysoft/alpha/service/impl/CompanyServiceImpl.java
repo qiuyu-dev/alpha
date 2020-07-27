@@ -1,13 +1,12 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.mysoft.alpha.dao.CompanyDAO;
 import com.mysoft.alpha.entity.Company;
 import com.mysoft.alpha.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -29,4 +28,9 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyDAO.getOne(id);
 	}
 
+
+	@Override
+	public List<Company> findAllServiceCompany() {
+		return companyDAO.findByCtypeOrderByIdAsc(2);
+	}
 }

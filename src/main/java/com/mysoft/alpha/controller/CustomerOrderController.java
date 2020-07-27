@@ -1,6 +1,7 @@
 package com.mysoft.alpha.controller;
 
 import com.mysoft.alpha.config.AlphaConfig;
+import com.mysoft.alpha.config.MyWebConfigurer;
 import com.mysoft.alpha.entity.Company;
 import com.mysoft.alpha.entity.CustomerProductExcelDetail;
 import com.mysoft.alpha.entity.CustomerProductExcelMst;
@@ -73,28 +74,40 @@ public class CustomerOrderController {
             List<CustomerProductExcelDetail> cPExcelDetailsList = cPExcelMst.getCpExcelDetails();
             for (CustomerProductExcelDetail cPExcelDetail : cPExcelDetailsList) {
                  String status = cPExcelDetail.getStatus();
-                //状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
                 String statusZh = "";
                 switch (status) {
+                    case "1":
+                        statusZh = MyWebConfigurer.STATUS1;
+                        break;
                     case "2":
-                        statusZh = "等待审核";
+                        statusZh = MyWebConfigurer.STATUS2;
+                        break;
+                    case "3":
+                        statusZh =  MyWebConfigurer.STATUS3;
+                        break;
+                    case "-3":
+                        statusZh =  MyWebConfigurer.STATUS_3;
+                        break;
+                    case "4":
+                        statusZh = MyWebConfigurer.STATUS4;
+                        break;
                     case "5":
-                        statusZh = "审核通过";
+                        statusZh = MyWebConfigurer.STATUS5;
+                        break;
                     case "-5":
-                        statusZh = "审核未通过";
-                    case "-2":
-                        statusZh = "申请失败";
+                        statusZh = MyWebConfigurer.STATUS_5;
+                        break;
                     default:
                         statusZh = "其他";
-
                 }
+
 
                 returnList.add(new CPExcelForm(cPExcelMst.getId(), cPExcelDetail.getId(), cPExcelDetail.getSeqNumber(),
                         cPExcelDetail.getPolicyNumber(), cPExcelDetail.getProduct(), cPExcelDetail.getInsuredName(),
                         cPExcelDetail.getCertificateType(), cPExcelDetail.getPhonenum(), cPExcelDetail.getInsuredId(),
                         cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate(), cPExcelMst.getRemark(),
                         cPExcelDetail.getExplanation(), statusZh, cPExcelMst.getCreateTime(),
-                        cPExcelMst.getOperator(), cPExcelMst.getToType(), cPExcelMst.getToId(),
+                        cPExcelMst.getOperator(), 0,0,null,cPExcelMst.getToType(), cPExcelMst.getToId(),null,
                         cPExcelMst.getFileName()));
             }
         }
@@ -128,6 +141,12 @@ public class CustomerOrderController {
     public Result getAllCompany() {
         return ResultFactory.buildSuccessResult(companyService.findAllCompany());
     }
+
+    @GetMapping("/share/companyService/list")
+    public Result getAllCompanyService() {
+        return ResultFactory.buildSuccessResult(companyService.findAllServiceCompany());
+    }
+
 
     /**
      * 上传excel完成客户单上传
@@ -177,7 +196,7 @@ public class CustomerOrderController {
         cpExcelMst.setFromId(companyId);
         cpExcelMst.setToId(company.getId());
         cpExcelMst.setToType(company.getCtype());
-        cpExcelMst.setCtype(1);
+        cpExcelMst.setStatus("1");//"已触发待申请"
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
         System.out.println("-----cpExcelMst.setFileName(file.getOriginalFilename()):" + cpExcelMst.getFileName());
@@ -206,7 +225,7 @@ public class CustomerOrderController {
         cpExcelDetail.setCpExcelMstId(cpExcelMst.getId());
         cpExcelDetail.setOperator(cpExcelMst.getOperator());
         cpExcelDetail.setCreateTime(new Date());
-        cpExcelDetail.setStatus("1");
+        cpExcelDetail.setStatus("1");//"已触发待申请
         cpExcelDetail.setCompanyId(companyId);
         try {
         	 Row row = sheet.getRow(i);

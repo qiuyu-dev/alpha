@@ -38,8 +38,8 @@ public class CustomerEnterprise  implements Serializable {
     @Column(name = "id")
     private int id;
 	
-	 @Column(name = "cp_excel_detail_id")
-	 private int cpExcelDetailId;
+//	 @Column(name = "cp_excel_detail_id")
+//	 private int cpExcelDetailId;
 	
     @Column(name = "certificate_type")
     private String certificateType;
@@ -252,19 +252,19 @@ public class CustomerEnterprise  implements Serializable {
 		this.reson = reson;
 	}
 	
-	public int getCpExcelDetailId() {
-		return cpExcelDetailId;
-	}
-
-	public void setCpExcelDetailId(int cpExcelDetailId) {
-		this.cpExcelDetailId = cpExcelDetailId;
-	}
+//	public int getCpExcelDetailId() {
+//		return cpExcelDetailId;
+//	}
+//
+//	public void setCpExcelDetailId(int cpExcelDetailId) {
+//		this.cpExcelDetailId = cpExcelDetailId;
+//	}
 
 	@Override
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("CustomerEnterprise{");
 		sb.append("id=").append(id);
-		sb.append(", cpExcelDetailId='").append(cpExcelDetailId).append('\'');
+//		sb.append(", cpExcelDetailId='").append(cpExcelDetailId).append('\'');
 		sb.append(", certificateType='").append(certificateType).append('\'');
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", cname='").append(cname).append('\'');

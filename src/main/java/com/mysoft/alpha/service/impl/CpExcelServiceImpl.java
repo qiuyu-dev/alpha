@@ -64,10 +64,10 @@ public class CpExcelServiceImpl implements CpExcelService {
     }
 
     public void taskCpExcelToCustomerEnterprise() {
-        int mstCtpe = 2;
+        String mstStatus = "3";//"已申请待审核";//客户或采购方-服务方
         //excel主表循环
         List<CustomerProductExcelMst> cPExcelMstsList =
-                customerProductExcelMstDAO.findCustomerProductExcelMstsByCtypeOrderByIdAsc(1);
+                customerProductExcelMstDAO.findCustomerProductExcelMstsByStatusOrderByIdAsc("1 ");
         for (CustomerProductExcelMst cPExcelMst : cPExcelMstsList) {
             //Excel 明细循环
             List<CustomerProductExcelDetail> cPExcelDetailsList =cPExcelMst.getCpExcelDetails();
@@ -90,28 +90,39 @@ public class CpExcelServiceImpl implements CpExcelService {
                     newCustomerEnterprise.setSex(cPExcelDetail.getSex());
                     newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
                     newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
-                    newCustomerEnterprise.setCestatus(1);
+                    newCustomerEnterprise.setCestatus(3);
                     newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
                     newCustomerEnterprise.setFromId(cPExcelMst.getFromId());
                     newCustomerEnterprise.setCpemId(cPExcelMst.getId());
                     newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
                     newCustomerEnterprise
                             .setReson("来源：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName());
-                    newCustomerEnterprise.setOperator("system");
+                    newCustomerEnterprise.setOperator("admin");
+                    newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
+                    newCustomerEnterprise.setCpemId(cPExcelMst.getId());
                     customerEnterpriseDAO.save(newCustomerEnterprise);
+                    cPExcelDetail.setStatus("3");
 
                 }
                 //对应明细确认客户-企业如果有记录，修改Excel明细说明
                 else {
-                    cPExcelDetail.setStatus("-2");
+                    cPExcelDetail.setStatus("-3");
+                    mstStatus = "1";
                     cPExcelDetail.setExplanation(
                             "原因：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName() + "，第" +
                                     cPExcelDetail.getRowNum() + "行");
-                    customerProductExcelDetailDAO.save(cPExcelDetail);
+
                 }
+                customerProductExcelDetailDAO.save(cPExcelDetail);
             }
-            cPExcelMst.setCtype(mstCtpe);
+            cPExcelMst.setStatus(mstStatus);
             customerProductExcelMstDAO.save(cPExcelMst);
         }
+    }
+    @Override
+    public void updateCpExcelDetailStatusById(int cpExcelDetailId, int status) {
+        CustomerProductExcelDetail cpExcelDetail =customerProductExcelDetailDAO.getOne(cpExcelDetailId);
+        cpExcelDetail.setStatus(String.valueOf(status));
+        customerProductExcelDetailDAO.save(cpExcelDetail);
     }
 }

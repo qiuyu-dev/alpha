@@ -70,7 +70,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
             User user = userService.findByUsername(username);
             AdminRole role = adminRoleDAO.findById(adminUserRoleService.listAllByUid(user.getId()).get(0).getRid());
             //            System.out.println("------------------substring" + role.getNameZh().substring(0, 2));
-            roles = adminRoleDAO.findByNameZhLikeOrderByIdDesc(role.getNameZh().substring(0, 1) + "%");
+            roles = adminRoleDAO.findByNameZhLikeOrderByIdAsc(role.getNameZh().substring(0, 1) + "%");
         } else {
             roles = adminRoleDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
         }

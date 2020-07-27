@@ -34,8 +34,10 @@ public class CPExcelForm {
 
 	private int fromType;
 	private int fromId;
+	private String fromName;
 	private int toType;
 	private int toId;
+	private String toName;
 	private String fileName;
 	private int ctype;
 
@@ -44,7 +46,9 @@ public class CPExcelForm {
 
 	public CPExcelForm(int mstId, int detailId, String seqNumber, String policyNumber, String product, String insuredName,
 			String certificateType, String phone, String insuredId, Date effectiveDate, Date closingDate, String remark,
-			String explanation, String status, Date createTime, String operator, int toType, int toId,
+			String explanation, String status, Date createTime, String operator, int fromType, int fromId,
+					   String fromName,int toType,
+					   int toId,String toName,
 			String fileName) {
 		this.mstId = mstId;
 		this.detailId = detailId;
@@ -62,8 +66,12 @@ public class CPExcelForm {
 		this.status = status;
 		this.createTime = createTime;
 		this.operator = operator;
+		this.fromType = fromType;
+		this.fromId = fromId;
+		this.fromName = fromName;
 		this.toType = toType;
 		this.toId = toId;
+		this.toName = toName;
 		this.fileName = fileName;
 	}
 
@@ -275,36 +283,19 @@ public class CPExcelForm {
 		this.ctype = ctype;
 	}
 
-	@Override
-	public String toString() {
-		final StringBuffer sb = new StringBuffer("CPExcelForm{");
-		sb.append("mstId=").append(mstId);
-		sb.append(", detailId=").append(detailId);
-		sb.append(", rowNum=").append(rowNum);
-		sb.append(", seqNumber=").append(seqNumber);
-		sb.append(", policyNumber='").append(policyNumber).append('\'');
-		sb.append(", product='").append(product).append('\'');
-		sb.append(", insuredName='").append(insuredName).append('\'');
-		sb.append(", certificateType='").append(certificateType).append('\'');
-		sb.append(", phone='").append(phone).append('\'');
-		sb.append(", insuredId='").append(insuredId).append('\'');
-		sb.append(", effectiveDate=").append(effectiveDate);
-		sb.append(", closingDate=").append(closingDate);
-		sb.append(", sex='").append(sex).append('\'');
-		sb.append(", age=").append(age);
-		sb.append(", location='").append(location).append('\'');
-		sb.append(", remark='").append(remark).append('\'');
-		sb.append(", explanation='").append(explanation).append('\'');
-		sb.append(", status='").append(status).append('\'');
-		sb.append(", createTime=").append(createTime);
-		sb.append(", operator='").append(operator).append('\'');
-		sb.append(", fromType=").append(fromType);
-		sb.append(", fromId=").append(fromId);
-		sb.append(", toType=").append(toType);
-		sb.append(", toId=").append(toId);
-		sb.append(", fileName='").append(fileName).append('\'');
-		sb.append(", ctype=").append(ctype);
-		sb.append('}');
-		return sb.toString();
+	public String getToName() {
+		return toName;
+	}
+
+	public void setToName(String toName) {
+		this.toName = toName;
+	}
+
+	public String getFromName() {
+		return fromName;
+	}
+
+	public void setFromName(String fromName) {
+		this.fromName = fromName;
 	}
 }

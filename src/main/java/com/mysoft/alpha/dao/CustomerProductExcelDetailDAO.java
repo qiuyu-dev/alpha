@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CustomerProductExcelDetailDAO extends JpaRepository<CustomerProductExcelDetail, Integer> {
+
 	public void deleteAllByIdIn(Integer[] ids);
 
 	public List<CustomerProductExcelDetail> findCustomerProductExcelDetailsByCpExcelMstOrderByIdAsc(CustomerProductExcelMst customerProductExcelMst);
