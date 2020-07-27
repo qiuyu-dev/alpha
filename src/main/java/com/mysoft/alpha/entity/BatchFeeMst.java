@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -86,6 +87,11 @@ public class BatchFeeMst implements Serializable {
 
 	@Column(name = "confirm_remark")
 	private String confirmRemark;// 确认备注
+
+	@OneToMany(cascade = CascadeType.ALL,
+			   mappedBy = "batchFeeMst", orphanRemoval = true)
+	private List<BatchFeeDetail> batchFeeDetail;
+
 
 	public BatchFeeMst() {
 	}
@@ -268,13 +274,31 @@ public class BatchFeeMst implements Serializable {
 
 	@Override
 	public String toString() {
-		return "BatchFee [id=" + id + ", batchNumber=" + batchNumber + ", ftype=" + ftype + ", payType=" + payType
-				+ ", payId=" + payId + ", chargeType=" + chargeType + ", chargeId=" + chargeId + ", effectiveDate="
-				+ effectiveDate + ", closingDate=" + closingDate + ", btype=" + btype + ", effectiveNumber="
-				+ effectiveNumber + ", price=" + price + ", prepayment=" + prepayment + ", receivable=" + receivable
-				+ ", payImg=" + payImg + ", payTime=" + payTime + ", remark=" + remark + ", seqNumber=" + seqNumber
-				+ ", operator=" + operator + ", createTime=" + createTime + ", status=" + status + ", confirmRemark="
-				+ confirmRemark + "]";
+		final StringBuffer sb = new StringBuffer("BatchFeeMst{");
+		sb.append("id=").append(id);
+		sb.append(", batchNumber='").append(batchNumber).append('\'');
+		sb.append(", ftype=").append(ftype);
+		sb.append(", payType=").append(payType);
+		sb.append(", payId=").append(payId);
+		sb.append(", chargeType=").append(chargeType);
+		sb.append(", chargeId=").append(chargeId);
+		sb.append(", effectiveDate=").append(effectiveDate);
+		sb.append(", closingDate=").append(closingDate);
+		sb.append(", btype=").append(btype);
+		sb.append(", effectiveNumber=").append(effectiveNumber);
+		sb.append(", price=").append(price);
+		sb.append(", prepayment=").append(prepayment);
+		sb.append(", receivable=").append(receivable);
+		sb.append(", payImg='").append(payImg).append('\'');
+		sb.append(", payTime=").append(payTime);
+		sb.append(", remark='").append(remark).append('\'');
+		sb.append(", seqNumber=").append(seqNumber);
+		sb.append(", operator='").append(operator).append('\'');
+		sb.append(", createTime=").append(createTime);
+		sb.append(", status=").append(status);
+		sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+		sb.append(", batchFeeDetail=").append(batchFeeDetail);
+		sb.append('}');
+		return sb.toString();
 	}
-
 }

@@ -32,14 +32,14 @@ public class BatchFeeDetail implements Serializable {
     @Column(name = "id")
     private int id;
 	
-	@Column(name = "batch_number")
-	private String batchNumber;//服务批号
+//	@Column(name = "batch_number")
+//	private String batchNumber;//服务批号
 	
 	@Column(name = "ce_id")
 	private int ceId;//客户企业id
 	
-	@Column(name = "cp_id_array")
-	private String cpIdArray;//客户_产品id数组
+	@Column(name = "cp_id")
+	private String cpId;//客户_产品id数组
 	
 	@Column(name = "effective_number")
 	private int effectiveNumber;//有效数
@@ -50,6 +50,9 @@ public class BatchFeeDetail implements Serializable {
 	@Column(name = "create_time")
 	private Date createTime;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "batch_fee_mst_id",insertable = false,updatable = false)
+	private BatchFeeMst batchFeeMst;
 
 	public BatchFeeDetail() {
 	}
@@ -62,13 +65,13 @@ public class BatchFeeDetail implements Serializable {
 		this.id = id;
 	}
 
-	public String getBatchNumber() {
-		return batchNumber;
-	}
-
-	public void setBatchNumber(String batchNumber) {
-		this.batchNumber = batchNumber;
-	}
+//	public String getBatchNumber() {
+//		return batchNumber;
+//	}
+//
+//	public void setBatchNumber(String batchNumber) {
+//		this.batchNumber = batchNumber;
+//	}
 
 	public int getCeId() {
 		return ceId;
@@ -78,13 +81,13 @@ public class BatchFeeDetail implements Serializable {
 		this.ceId = ceId;
 	}
 
-	public String getCpIdArray() {
-		return cpIdArray;
-	}
-
-	public void setCpIdArray(String cpIdArray) {
-		this.cpIdArray = cpIdArray;
-	}
+//	public String getCpIdArray() {
+//		return cpIdArray;
+//	}
+//
+//	public void setCpIdArray(String cpIdArray) {
+//		this.cpIdArray = cpIdArray;
+//	}
 
 	public int getEffectiveNumber() {
 		return effectiveNumber;
@@ -110,16 +113,36 @@ public class BatchFeeDetail implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getCpId() {
+		return cpId;
+	}
+
+	public void setCpId(String cpId) {
+		this.cpId = cpId;
+	}
+
+	public BatchFeeMst getBatchFeeMst() {
+		return batchFeeMst;
+	}
+
+	public void setBatchFeeMst(BatchFeeMst batchFeeMst) {
+		this.batchFeeMst = batchFeeMst;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("BatchFeeDetail{");
 		sb.append("id=").append(id);
-		sb.append(", batchNumber='").append(batchNumber).append('\'');
 		sb.append(", ceId=").append(ceId);
-		sb.append(", cpIdArray='").append(cpIdArray).append('\'');
+		sb.append(", cpId='").append(cpId).append('\'');
 		sb.append(", effectiveNumber=").append(effectiveNumber);
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", createTime=").append(createTime);
+		sb.append(", batchFeeMst=").append(batchFeeMst);
 		sb.append('}');
 		return sb.toString();
 	}

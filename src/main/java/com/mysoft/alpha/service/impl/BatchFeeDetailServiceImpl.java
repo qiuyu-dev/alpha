@@ -1,19 +1,22 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-
+import com.mysoft.alpha.dao.BatchFeeDetailDAO;
+import com.mysoft.alpha.dao.BatchFeeMstDAO;
+import com.mysoft.alpha.entity.BatchFeeDetail;
+import com.mysoft.alpha.service.BatchFeeDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.mysoft.alpha.dao.BatchFeeDetailDAO;
-import com.mysoft.alpha.entity.BatchFeeDetail;
-import com.mysoft.alpha.service.BatchFeeDetailService;
+import java.util.List;
 
 @Service
 public class BatchFeeDetailServiceImpl implements BatchFeeDetailService {
 	@Autowired
 	BatchFeeDetailDAO batchFeeDetailDAO;
+	@Autowired
+	BatchFeeMstDAO batchFeeMstDAO;
+
 	
 	@Override
 	public List<BatchFeeDetail> findAllBatchFeeDetail() {
@@ -37,7 +40,7 @@ public class BatchFeeDetailServiceImpl implements BatchFeeDetailService {
 	
 	@Override
 	public List<BatchFeeDetail> findBybatchNumber(String batchNumber) {
-		return batchFeeDetailDAO.findBybatchNumber(batchNumber);
+		return batchFeeDetailDAO.findByBatchFeeMstOrderByIdAsc(batchFeeMstDAO.findByBatchNumber(batchNumber));
 	}
 
 

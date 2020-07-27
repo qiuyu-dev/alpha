@@ -18,7 +18,7 @@ public class MyWebConfigurer implements WebMvcConfigurer {
     public static final String STATUS3 = "已申请待审核";//客户或采购方-服务方
     public static final String STATUS4 = "重新申请待审核";//客户或采购方-服务方
     public static final String STATUS_5 = "审核未通过";//服务方-客户或采购方
-    public static final String STATUS5 = "审核通过待付费";//服务方-客户或采购方
+    public static final String STATUS5 = "审核通过可付费";//服务方-客户或采购方
     /**
      * 如下在付费开始后，服务开始前
      */

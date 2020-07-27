@@ -140,6 +140,9 @@ public class PurchaseOrderController {
         String remark = map.get("remark");
         String payImg = map.get("payImg");
 
+
+
+
         BatchFeeMst batchFeeMst = new BatchFeeMst();
         batchFeeMst.setBatchNumber(batchNumber);
         batchFeeMst.setBtype(1);//付费类型1，客户-公司，2客户-产品
@@ -254,7 +257,7 @@ public class PurchaseOrderController {
                 customerEnterpriseService.findAllCustomerEnterpriseByToUserAndStatus(operator, statusList);
         List<CPExcelForm> returnList = new ArrayList<>();
         for (CustomerEnterprise customerEnterprise : ceList) {
-            returnList.add(new CPExcelForm(0, 0, null, null, null, customerEnterprise.getCname(),
+            returnList.add(new CPExcelForm(0, customerEnterprise.getId(), null, null, null, customerEnterprise.getCname(),
                     customerEnterprise.getCertificateType(), customerEnterprise.getPhonenum(),
                     customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
                     customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",
@@ -284,7 +287,7 @@ public class PurchaseOrderController {
                 customerEnterpriseService.findAllCustomerEnterpriseByFromUserAndStatus(operator, statusList);
         List<CPExcelForm> returnList = new ArrayList<>();
         for (CustomerEnterprise customerEnterprise : ceList) {
-            returnList.add(new CPExcelForm(0, 0, null, null, null, customerEnterprise.getCname(),
+            returnList.add(new CPExcelForm(0, customerEnterprise.getId(), null, null, null, customerEnterprise.getCname(),
                     customerEnterprise.getCertificateType(), customerEnterprise.getPhonenum(),
                     customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
                     customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",

@@ -27,7 +27,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String[] idArray = ids.split(",");
 		for(String id:idArray) {
 			 BatchFeeDetail batchFeeDetail = new BatchFeeDetail();
-			 batchFeeDetail.setBatchNumber(batchFee.getBatchNumber());
+//			 batchFeeDetail.setBatchNumber(batchFee.getBatchNumber());
 			 batchFeeDetail.setCeId(Integer.parseInt(id));
 			 batchFeeDetail.setEffectiveNumber(1);
 			 batchFeeDetail.setCreateTime(new Date());
