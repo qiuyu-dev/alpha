@@ -11,16 +11,17 @@ import java.util.List;
 
 
 public interface CustomerEnterpriseDAO extends JpaRepository<CustomerEnterprise, Integer> {
+//    public List<CustomerEnterprise> findByEidAndsAndStatusInOrderByIdDesc(int eid,List<String> statusList);
 
-    public List<CustomerEnterprise>  findByEidAndCestatusInOrderByIdDesc(int eid,List<Integer> statusLis);
+    public List<CustomerEnterprise>  findByEidAndStatusInOrderByIdDesc(int eid,List<String> statusList);
 
-    public List<CustomerEnterprise>  findByFromIdAndCestatusInOrderByIdDesc(int fromId,List<Integer> statusLis);
-
-
+    public List<CustomerEnterprise>  findByFromIdAndStatusInOrderByIdDesc(int fromId,List<String> statusLis);
 
 
-//    public List<CustomerEnterprise> findByEidBeforeCestatusInOrderByIdDesc(int eid,List<Integer> statusList);
-//    public List<CustomerEnterprise> findByFromIdBeforeCestatusInOrderByIdDesc(int eid,List<Integer> statusList);
+
+
+//    public List<CustomerEnterprise> findByEidBeforeStatusInOrderByIdDesc(int eid,List<Integer> statusList);
+//    public List<CustomerEnterprise> findByFromIdBeforeStatusInOrderByIdDesc(int eid,List<Integer> statusList);
 
     public List<CustomerEnterprise> findByEidOrderByIdDesc(int eid);
 
@@ -28,7 +29,7 @@ public interface CustomerEnterpriseDAO extends JpaRepository<CustomerEnterprise,
 
 
     @Query(nativeQuery = true, value = "SELECT     `id`,    `cp_excel_mst_id`,    `row_num`,    `certificate_type`,\n" +
-            "    `insured_id`,    `insured_name`,    `phonenum`,    `location`,\n" +
+            "    `insured_id`,    `insured_name`,    `phone`,    `location`,\n" +
             "    `age`,    `sex`,    `company_id`,    `customer_id`,\n" +
             "    `product_id`,    `product`,    `policy_number`,    `effective_date`,\n" +
             "    `closing_date`,    `status`,    `seq_number`,    `remark`,\n" +

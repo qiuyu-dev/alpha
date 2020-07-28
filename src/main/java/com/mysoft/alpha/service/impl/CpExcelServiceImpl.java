@@ -83,14 +83,14 @@ public class CpExcelServiceImpl implements CpExcelService {
                     newCustomerEnterprise.setCertificateType(cPExcelDetail.getCertificateType());
                     newCustomerEnterprise.setInsuredId(cPExcelDetail.getInsuredId());
                     newCustomerEnterprise.setCname(cPExcelDetail.getInsuredName());
-                    newCustomerEnterprise.setPhonenum(cPExcelDetail.getPhonenum());
+                    newCustomerEnterprise.setPhone(cPExcelDetail.getPhone());
                     newCustomerEnterprise.setEid(Integer.valueOf(cPExcelMst.getToId()));
                     newCustomerEnterprise.setLocation(cPExcelDetail.getLocation());
                     newCustomerEnterprise.setAge(cPExcelDetail.getAge());
                     newCustomerEnterprise.setSex(cPExcelDetail.getSex());
                     newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
                     newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
-                    newCustomerEnterprise.setCestatus(3);
+                    newCustomerEnterprise.setStatus("3");
                     newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
                     newCustomerEnterprise.setFromId(cPExcelMst.getFromId());
                     newCustomerEnterprise.setCpemId(cPExcelMst.getId());

@@ -1,14 +1,13 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-
+import com.mysoft.alpha.dao.ProductDAO;
+import com.mysoft.alpha.entity.Product;
+import com.mysoft.alpha.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.mysoft.alpha.dao.ProductDAO;
-import com.mysoft.alpha.entity.Product;
-import com.mysoft.alpha.service.ProductService;
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -31,4 +30,8 @@ public class ProductServiceImpl implements ProductService {
 		return productDAO.findByCompanyId(id);
 	}
 
+	@Override
+	public void save(Product product) {
+		productDAO.save(product);
+	}
 }

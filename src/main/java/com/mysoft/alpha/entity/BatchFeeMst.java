@@ -83,15 +83,14 @@ public class BatchFeeMst implements Serializable {
 	private Date createTime;
 
 	@Column(name = "status")
-	private int status;// 状态
+	private String status;// 状态6 = "付费完成待收款";//客户或采购方-服务方
 
 	@Column(name = "confirm_remark")
 	private String confirmRemark;// 确认备注
 
-	@OneToMany(cascade = CascadeType.ALL,
-			   mappedBy = "batchFeeMst", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,
+			   mappedBy = "batchFeeMst" , orphanRemoval = true)
 	private List<BatchFeeDetail> batchFeeDetail;
-
 
 	public BatchFeeMst() {
 	}
@@ -256,11 +255,11 @@ public class BatchFeeMst implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -270,6 +269,14 @@ public class BatchFeeMst implements Serializable {
 
 	public void setConfirmRemark(String confirmRemark) {
 		this.confirmRemark = confirmRemark;
+	}
+
+	public List<BatchFeeDetail> getBatchFeeDetail() {
+		return batchFeeDetail;
+	}
+
+	public void setBatchFeeDetail(List<BatchFeeDetail> batchFeeDetail) {
+		this.batchFeeDetail = batchFeeDetail;
 	}
 
 	@Override
@@ -295,7 +302,7 @@ public class BatchFeeMst implements Serializable {
 		sb.append(", seqNumber=").append(seqNumber);
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", createTime=").append(createTime);
-		sb.append(", status=").append(status);
+		sb.append(", status='").append(status).append('\'');
 		sb.append(", confirmRemark='").append(confirmRemark).append('\'');
 		sb.append(", batchFeeDetail=").append(batchFeeDetail);
 		sb.append('}');

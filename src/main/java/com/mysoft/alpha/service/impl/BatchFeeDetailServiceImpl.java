@@ -14,9 +14,9 @@ import java.util.List;
 public class BatchFeeDetailServiceImpl implements BatchFeeDetailService {
 	@Autowired
 	BatchFeeDetailDAO batchFeeDetailDAO;
+	
 	@Autowired
 	BatchFeeMstDAO batchFeeMstDAO;
-
 	
 	@Override
 	public List<BatchFeeDetail> findAllBatchFeeDetail() {
@@ -40,7 +40,7 @@ public class BatchFeeDetailServiceImpl implements BatchFeeDetailService {
 	
 	@Override
 	public List<BatchFeeDetail> findBybatchNumber(String batchNumber) {
-		return batchFeeDetailDAO.findByBatchFeeMstOrderByIdAsc(batchFeeMstDAO.findByBatchNumber(batchNumber));
+		return  batchFeeMstDAO.findByBatchNumber(batchNumber).getBatchFeeDetail();
 	}
 
 

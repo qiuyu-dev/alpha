@@ -1,5 +1,6 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -43,16 +44,32 @@ public class BatchFeeDetail implements Serializable {
 	
 	@Column(name = "effective_number")
 	private int effectiveNumber;//有效数
-	
+
+	@Column(name="batch_fee_mst_id")
+	private int batchFeeMstId;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "batch_fee_mst_id",insertable = false,updatable = false)
+	@JsonIgnore
+	@JsonIgnoreProperties
+   private BatchFeeMst batchFeeMst;
+
+//	//多对一
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "batch_fee_mst_id")
+//	@JsonIgnore
+//	@JsonIgnoreProperties
+//	private BatchFeeMst batchFeeMst;
+
+
+	@Column(name = "status")
+	private String status;
+
 	@Column(name = "operator")
 	private String operator;
 	
 	@Column(name = "create_time")
 	private Date createTime;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "batch_fee_mst_id",insertable = false,updatable = false)
-	private BatchFeeMst batchFeeMst;
 
 	public BatchFeeDetail() {
 	}
@@ -65,14 +82,6 @@ public class BatchFeeDetail implements Serializable {
 		this.id = id;
 	}
 
-//	public String getBatchNumber() {
-//		return batchNumber;
-//	}
-//
-//	public void setBatchNumber(String batchNumber) {
-//		this.batchNumber = batchNumber;
-//	}
-
 	public int getCeId() {
 		return ceId;
 	}
@@ -81,13 +90,13 @@ public class BatchFeeDetail implements Serializable {
 		this.ceId = ceId;
 	}
 
-//	public String getCpIdArray() {
-//		return cpIdArray;
-//	}
-//
-//	public void setCpIdArray(String cpIdArray) {
-//		this.cpIdArray = cpIdArray;
-//	}
+	public String getCpId() {
+		return cpId;
+	}
+
+	public void setCpId(String cpId) {
+		this.cpId = cpId;
+	}
 
 	public int getEffectiveNumber() {
 		return effectiveNumber;
@@ -95,6 +104,22 @@ public class BatchFeeDetail implements Serializable {
 
 	public void setEffectiveNumber(int effectiveNumber) {
 		this.effectiveNumber = effectiveNumber;
+	}
+
+	public BatchFeeMst getBatchFeeMst() {
+		return batchFeeMst;
+	}
+
+	public void setBatchFeeMst(BatchFeeMst batchFeeMst) {
+		this.batchFeeMst = batchFeeMst;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getOperator() {
@@ -113,24 +138,12 @@ public class BatchFeeDetail implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
+	public int getBatchFeeMstId() {
+		return batchFeeMstId;
 	}
 
-	public String getCpId() {
-		return cpId;
-	}
-
-	public void setCpId(String cpId) {
-		this.cpId = cpId;
-	}
-
-	public BatchFeeMst getBatchFeeMst() {
-		return batchFeeMst;
-	}
-
-	public void setBatchFeeMst(BatchFeeMst batchFeeMst) {
-		this.batchFeeMst = batchFeeMst;
+	public void setBatchFeeMstId(int batchFeeMstId) {
+		this.batchFeeMstId = batchFeeMstId;
 	}
 
 	@Override
@@ -140,9 +153,11 @@ public class BatchFeeDetail implements Serializable {
 		sb.append(", ceId=").append(ceId);
 		sb.append(", cpId='").append(cpId).append('\'');
 		sb.append(", effectiveNumber=").append(effectiveNumber);
+		sb.append(", batchFeeMstId=").append(batchFeeMstId);
+		sb.append(", batchFeeMst=").append(batchFeeMst);
+		sb.append(", status='").append(status).append('\'');
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", createTime=").append(createTime);
-		sb.append(", batchFeeMst=").append(batchFeeMst);
 		sb.append('}');
 		return sb.toString();
 	}

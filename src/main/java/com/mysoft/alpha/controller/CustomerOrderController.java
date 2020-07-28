@@ -100,7 +100,7 @@ public class CustomerOrderController {
 
 				returnList.add(new CPExcelForm(cPExcelMst.getId(), cPExcelDetail.getId(), cPExcelDetail.getSeqNumber(),
 						cPExcelDetail.getPolicyNumber(), cPExcelDetail.getProduct(), cPExcelDetail.getInsuredName(),
-						cPExcelDetail.getCertificateType(), cPExcelDetail.getPhonenum(), cPExcelDetail.getInsuredId(),
+						cPExcelDetail.getCertificateType(), cPExcelDetail.getPhone(), cPExcelDetail.getInsuredId(),
 						cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate(), cPExcelMst.getRemark(),
 						cPExcelDetail.getExplanation(), statusZh, cPExcelMst.getCreateTime(), cPExcelMst.getOperator(),
 						0, 0, null, cPExcelMst.getToType(), cPExcelMst.getToId(),
@@ -245,7 +245,7 @@ public class CustomerOrderController {
 			Cell c5 = row.getCell(5);
 			cpExcelDetail.setInsuredId(c5.getStringCellValue());
 			Cell c6 = row.getCell(6);
-			cpExcelDetail.setPhonenum(c6.getStringCellValue());
+			cpExcelDetail.setPhone(c6.getStringCellValue());
 			Cell c7 = row.getCell(7);
 			String effectiveDate = c7.getStringCellValue();
 			cpExcelDetail.setEffectiveDate(DateUtil.convertToDate(effectiveDate));

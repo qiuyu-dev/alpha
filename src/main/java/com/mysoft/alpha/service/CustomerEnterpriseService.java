@@ -6,9 +6,10 @@ import java.util.List;
 
 public interface CustomerEnterpriseService {
 
-	public List<CustomerEnterprise> findAllCustomerEnterpriseByToUserAndStatus(String username,List<Integer> statusList) ;
+	public List<CustomerEnterprise> findAllCustomerEnterpriseByToUserAndStatus(String username,
+																			   List<String> statusList) ;
 	public List<CustomerEnterprise> findAllCustomerEnterpriseByFromUserAndStatus(String username,
-																			  List<Integer> statusList) ;
+																			  List<String> statusList) ;
 
 
 	public List<CustomerEnterprise> findAllCustomerEnterprise();

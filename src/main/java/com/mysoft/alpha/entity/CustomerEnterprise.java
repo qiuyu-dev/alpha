@@ -50,8 +50,8 @@ public class CustomerEnterprise  implements Serializable {
     @Column(name = "cname")
     private String cname;
     
-    @Column(name = "phonenum")
-    private String phonenum;
+    @Column(name = "phone")
+    private String phone;
     
     @Column(name = "eid")
     private int eid;
@@ -71,8 +71,8 @@ public class CustomerEnterprise  implements Serializable {
     @Column(name = "closing_date")
     private Date closingDate;
     
-    @Column(name = "cestatus")
-    private int cestatus;//状态,1，新增，2已核实，3未通过，4、延续，
+    @Column(name = "status")
+    private String status;
     
     @Column(name = "from_type")
     private int fromType;
@@ -132,12 +132,12 @@ public class CustomerEnterprise  implements Serializable {
 		this.cname = cname;
 	}
 
-	public String getPhonenum() {
-		return phonenum;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setPhonenum(String phonenum) {
-		this.phonenum = phonenum;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public int getEid() {
@@ -188,12 +188,12 @@ public class CustomerEnterprise  implements Serializable {
 		this.closingDate = closingDate;
 	}
 
-	public int getCestatus() {
-		return cestatus;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setCestatus(int cestatus) {
-		this.cestatus = cestatus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public int getFromType() {
@@ -268,14 +268,14 @@ public class CustomerEnterprise  implements Serializable {
 		sb.append(", certificateType='").append(certificateType).append('\'');
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", cname='").append(cname).append('\'');
-		sb.append(", phonenum='").append(phonenum).append('\'');
+		sb.append(", phone='").append(phone).append('\'');
 		sb.append(", eid=").append(eid);
 		sb.append(", location='").append(location).append('\'');
 		sb.append(", age=").append(age);
 		sb.append(", sex='").append(sex).append('\'');
 		sb.append(", effectiveDate=").append(effectiveDate);
 		sb.append(", closingDate=").append(closingDate);
-		sb.append(", cestatus=").append(cestatus);
+		sb.append(", status=").append(status).append('\'');
 		sb.append(", fromType=").append(fromType);
 		sb.append(", fromId=").append(fromId);
 		sb.append(", cpemId=").append(cpemId);

@@ -29,14 +29,14 @@ public class CustomerEnterpriseServiceImpl implements CustomerEnterpriseService 
 
 	@Override
 	public List<CustomerEnterprise> findAllCustomerEnterpriseByFromUserAndStatus(String username,
-																				 List<Integer> statusList) {
+																				 List<String> statusList) {
 		List<CustomerEnterprise>  retrunList = new ArrayList<>();
 		if (username.equals("admin")) {
 			retrunList = customerEnterpriseDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
 		} else {
 			User user = userDAO.findByUsername(username);
-			retrunList = customerEnterpriseDAO.findByFromIdAndCestatusInOrderByIdDesc(user.getCompany().getId(),
+			retrunList = customerEnterpriseDAO.findByFromIdAndStatusInOrderByIdDesc(user.getCompany().getId(),
 					statusList);
 
 		}
@@ -45,7 +45,7 @@ public class CustomerEnterpriseServiceImpl implements CustomerEnterpriseService 
 
 	@Override
 	public List<CustomerEnterprise> findAllCustomerEnterpriseByToUserAndStatus(String username,
-																			  List<Integer> statusList) {
+																			  List<String> statusList) {
 		List<CustomerEnterprise>  retrunList = new ArrayList<>();
 		if (username.equals("admin")) {
 			retrunList = customerEnterpriseDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -56,7 +56,7 @@ public class CustomerEnterpriseServiceImpl implements CustomerEnterpriseService 
 //
 //			AdminRole role = adminRoleDAO.findById(roleId);
 //			if (role.getNameZh().contains("管理")) {
-				retrunList = customerEnterpriseDAO.findByEidAndCestatusInOrderByIdDesc(user.getCompany().getId(),
+				retrunList = customerEnterpriseDAO .findByEidAndStatusInOrderByIdDesc(user.getCompany().getId(),
 						statusList);
 //			} else {
 //				retrunList = customerEnterpriseDAO.findByOperatorOrderByIdDesc(user.getUsername());

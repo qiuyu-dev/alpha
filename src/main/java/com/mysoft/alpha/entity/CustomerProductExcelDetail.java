@@ -52,8 +52,8 @@ public class CustomerProductExcelDetail implements Serializable {
     @Column(name="certificate_type")
     private String certificateType;//证件类型 1  身份证 2 护照
     
-    @Column(name="phonenum ")
-    private String phonenum ;//电话号码
+    @Column(name="phone")
+    private String phone ;//电话号码
     
     @Column(name="insured_id")
     private String insuredId;//被保险人证件号
@@ -163,12 +163,12 @@ public class CustomerProductExcelDetail implements Serializable {
 		this.certificateType = certificateType;
 	}
 
-	public String getPhonenum() {
-		return phonenum;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setPhonenum(String phonenum) {
-		this.phonenum = phonenum;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getInsuredId() {
@@ -309,7 +309,7 @@ public class CustomerProductExcelDetail implements Serializable {
 		sb.append(", product='").append(product).append('\'');
 		sb.append(", insuredName='").append(insuredName).append('\'');
 		sb.append(", certificateType='").append(certificateType).append('\'');
-		sb.append(", phonenum='").append(phonenum).append('\'');
+		sb.append(", phone='").append(phone).append('\'');
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", effectiveDate=").append(effectiveDate);
 		sb.append(", closingDate=").append(closingDate);

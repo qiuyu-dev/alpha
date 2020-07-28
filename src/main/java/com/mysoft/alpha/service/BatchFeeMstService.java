@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface BatchFeeMstService {
 	public List<BatchFeeMst> findAllBatchFeeMst();
+
+	public List<BatchFeeMst> findAllBatchFeeMstByUser(String username);
 	
 	public BatchFeeMst addOrUpdateBatchFeeMst(BatchFeeMst batchFeeMst);
 	
