@@ -37,7 +37,7 @@ public class LoginController {
         	System.out.println("subject.isRemembered()="+subject.isRemembered());
         	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
         	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
-            if (user.getEnabled().equals("0")) {
+            if (user.getEnabled().toString().equals("0")) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }
             return ResultFactory.buildSuccessResult(username);

@@ -1,14 +1,13 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-
+import com.mysoft.alpha.dao.ComplaintDAO;
+import com.mysoft.alpha.entity.Complaint;
+import com.mysoft.alpha.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.mysoft.alpha.dao.ComplaintDAO;
-import com.mysoft.alpha.entity.Complaint;
-import com.mysoft.alpha.service.ComplaintService;
+import java.util.List;
 
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
@@ -25,4 +24,9 @@ public class ComplaintServiceImpl implements ComplaintService {
 		return complaintDAO.getOne(id);
 	}
 
+	@Override
+	public void save(Complaint complaint) {
+		complaintDAO.save(complaint);
+
+	}
 }

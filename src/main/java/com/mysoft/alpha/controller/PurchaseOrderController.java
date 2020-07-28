@@ -228,7 +228,7 @@ public class PurchaseOrderController {
             for (Product product : productList) {
                 CustomerProduct customerProduct = new CustomerProduct();
                 customerProduct.setFromId(batchFeeDetail.getCeId());
-                customerProduct.setCompanyId(batchFeeMst.getPayId());
+                customerProduct.setCompanyId(batchFeeMst.getChargeId());
                 customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
                 customerProduct.setClosingDate(batchFeeMst.getClosingDate());
                 customerProduct.setStatus("7");
