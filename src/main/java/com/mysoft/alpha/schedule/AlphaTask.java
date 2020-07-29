@@ -14,15 +14,12 @@ public class AlphaTask {
 @Autowired
     private CpExcelService cpExcelService;
     /**
-     * @Scheduled 定时任务，20分钟，每天1，8，12，22点执行
+     * @Scheduled 定时任务，4小时执行一次
      *
      */
-    @Scheduled(cron ="0 0/20 * * * ? ")
+    @Scheduled(cron ="0 0 0/6 * * ? ")
     public void cpExcelToCustomerEnterprise(){
         cpExcelService.taskCpExcelToCustomerEnterprise();
-
-
-
     }
 
 }

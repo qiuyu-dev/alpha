@@ -37,10 +37,7 @@ public class CustomerEnterprise  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-	
-//	 @Column(name = "cp_excel_detail_id")
-//	 private int cpExcelDetailId;
-	
+
     @Column(name = "certificate_type")
     private String certificateType;
     
@@ -55,16 +52,7 @@ public class CustomerEnterprise  implements Serializable {
     
     @Column(name = "eid")
     private int eid;
-    
-    @Column(name = "location")
-    private String location;
-    
-    @Column(name = "age")
-    private Integer age;
-    
-    @Column(name = "sex")
-    private String sex;
-    
+
     @Column(name = "effective_date")
     private Date effectiveDate;
     
@@ -85,19 +73,28 @@ public class CustomerEnterprise  implements Serializable {
     
     @Column(name="cped_id")
     private int cpedId;
+
+
+
+	@Column(name = "remark")
+	private String remark;
+
+	@Column(name = "confirm_remark")
+	private String confirmRemark;
     
     @Column(name = "operator")
     private String operator;
-    
+
 
 	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
 	@Column(name = "create_time",insertable = false)
     private Date createTime;
-    
-    @Column(name = "reson")
-    private String reson;
 
 	public CustomerEnterprise() {
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
 	}
 
 	public int getId() {
@@ -146,30 +143,6 @@ public class CustomerEnterprise  implements Serializable {
 
 	public void setEid(int eid) {
 		this.eid = eid;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
 	}
 
 	public Date getEffectiveDate() {
@@ -228,6 +201,23 @@ public class CustomerEnterprise  implements Serializable {
 		this.cpedId = cpedId;
 	}
 
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getConfirmRemark() {
+		return confirmRemark;
+	}
+
+	public void setConfirmRemark(String confirmRemark) {
+		this.confirmRemark = confirmRemark;
+	}
+
 	public String getOperator() {
 		return operator;
 	}
@@ -244,45 +234,26 @@ public class CustomerEnterprise  implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getReson() {
-		return reson;
-	}
-
-	public void setReson(String reson) {
-		this.reson = reson;
-	}
-	
-//	public int getCpExcelDetailId() {
-//		return cpExcelDetailId;
-//	}
-//
-//	public void setCpExcelDetailId(int cpExcelDetailId) {
-//		this.cpExcelDetailId = cpExcelDetailId;
-//	}
-
 	@Override
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("CustomerEnterprise{");
 		sb.append("id=").append(id);
-//		sb.append(", cpExcelDetailId='").append(cpExcelDetailId).append('\'');
 		sb.append(", certificateType='").append(certificateType).append('\'');
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", cname='").append(cname).append('\'');
 		sb.append(", phone='").append(phone).append('\'');
 		sb.append(", eid=").append(eid);
-		sb.append(", location='").append(location).append('\'');
-		sb.append(", age=").append(age);
-		sb.append(", sex='").append(sex).append('\'');
 		sb.append(", effectiveDate=").append(effectiveDate);
 		sb.append(", closingDate=").append(closingDate);
-		sb.append(", status=").append(status).append('\'');
+		sb.append(", status='").append(status).append('\'');
 		sb.append(", fromType=").append(fromType);
 		sb.append(", fromId=").append(fromId);
 		sb.append(", cpemId=").append(cpemId);
 		sb.append(", cpedId=").append(cpedId);
+		sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+		sb.append(", remark='").append(remark).append('\'');
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", createTime=").append(createTime);
-		sb.append(", reson='").append(reson).append('\'');
 		sb.append('}');
 		return sb.toString();
 	}

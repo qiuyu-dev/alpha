@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,7 +105,7 @@ public class UserServiceImpl implements UserService {
         email = HtmlUtils.htmlEscape(email);
         user.setEmail(email);
         user.setEnabled(1);
-        user.setCreateTime(new Date());
+//        user.setCreateTime(new Date());
         if (username.equals("") || password.equals("")) {
             return 0;
         }
@@ -200,7 +199,7 @@ public class UserServiceImpl implements UserService {
         email = HtmlUtils.htmlEscape(email);
         user.setEmail(email);
         user.setEnabled(1);
-        user.setCreateTime(new Date());
+//        user.setCreateTime(new Date());
         user.setOperator(username);
 
         //保存公司信息
@@ -211,7 +210,7 @@ public class UserServiceImpl implements UserService {
             company.setPhone(phone);
             company.setCtype(ctype);
             company.setEnabled(1);
-            company.setCreateTime(new Date());
+//            company.setCreateTime(new Date());
             company.setOperator(username);
             Company companyR = companyDAO.save(company);
               user.setCompany(companyR);//存入关联id

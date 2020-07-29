@@ -102,7 +102,7 @@ public class CustomerOrderController {
 						cPExcelDetail.getPolicyNumber(), cPExcelDetail.getProduct(), cPExcelDetail.getInsuredName(),
 						cPExcelDetail.getCertificateType(), cPExcelDetail.getPhone(), cPExcelDetail.getInsuredId(),
 						cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate(), cPExcelMst.getRemark(),
-						cPExcelDetail.getExplanation(), statusZh, cPExcelMst.getCreateTime(), cPExcelMst.getOperator(),
+						cPExcelDetail.getConfirmRemark(), statusZh, cPExcelMst.getCreateTime(), cPExcelMst.getOperator(),
 						0, 0, null, cPExcelMst.getToType(), cPExcelMst.getToId(),
 						companyService.findById(cPExcelMst.getToId()).getName(), cPExcelMst.getFileName()));
 			}

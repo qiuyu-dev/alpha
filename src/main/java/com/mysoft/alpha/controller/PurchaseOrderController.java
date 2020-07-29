@@ -83,7 +83,7 @@ public class PurchaseOrderController {
             customerEnterprise.setStatus("-5");// 未通过
             cpExcelService.updateCpExcelDetailStatusById(customerEnterprise.getCpedId(), -5);
         }
-        customerEnterprise.setReson(reson);
+        customerEnterprise.setConfirmRemark(reson);
         customerEnterpriseService.addOrUpdateCustomerEnterprise(customerEnterprise);
 
         return ResultFactory.buildSuccessResult("修改成功");
@@ -139,8 +139,10 @@ public class PurchaseOrderController {
         batchFeeMst.setBatchNumber(batchNumber);
         batchFeeMst.setBtype(1);// 付费类型1，客户-公司，2客户-产品
         batchFeeMst.setFtype(1);// 1付费，-1扣费
-        batchFeeMst.setPayType(2);// 2企业
-        batchFeeMst.setPayId(Integer.parseInt(cid));// 付费来源id
+        batchFeeMst.setFtype(2);// 2企业
+        batchFeeMst.setFromId(Integer.valueOf(cid));// 付费来源id
+//        batchFeeMst.setPayType(2);// 2企业
+//        batchFeeMst.setPayId(Integer.parseInt(cid));// 付费来源id
         batchFeeMst.setEffectiveDate(DateUtil.convertToDate(effectiveDate));
         batchFeeMst.setClosingDate(DateUtil.convertToDate(closingDate));
         batchFeeMst.setEffectiveNumber(Integer.parseInt(effectiveNumber));// 有效数
@@ -151,7 +153,9 @@ public class PurchaseOrderController {
         batchFeeMst.setPayTime(DateUtil.convertToDate(payTime));
         batchFeeMst.setOperator(operator);
         batchFeeMst.setCreateTime(new Date());
-        batchFeeMst.setChargeId(Integer.valueOf(toId));
+        batchFeeMst.setToType(2);// 2企业
+        batchFeeMst.setToId(Integer.valueOf(toId));//收款企业
+//        batchFeeMst.setChargeId(Integer.valueOf(toId));
         batchFeeMst.setStatus("6");// "付费完成待收款";//客户或采购方-服务方
 
         purchaseOrderService.batchFeeMstFormProcess(batchFeeMst, ids);
@@ -218,7 +222,8 @@ public class PurchaseOrderController {
         batchFeeMst.setOperator(operator);
         BatchFeeMst batchFeeMstNew = batchFeeMstService.addOrUpdateBatchFeeMst(batchFeeMst);
 
-        List<Product> productList = productService.findByCompanyId(batchFeeMstNew.getChargeId());
+//        List<Product> productList = productService.findByCompanyId(batchFeeMstNew.getChargeId());
+        List<Product> productList = productService.findByCompanyId(batchFeeMstNew.getToId());
 
         List<BatchFeeDetail> batchFeeDetailList = batchFeeMstNew.getBatchFeeDetail();
         //				batchFeeDetailService.findBybatchNumber(batchFeeMst.getBatchNumber());
@@ -228,7 +233,8 @@ public class PurchaseOrderController {
             for (Product product : productList) {
                 CustomerProduct customerProduct = new CustomerProduct();
                 customerProduct.setFromId(batchFeeDetail.getCeId());
-                customerProduct.setCompanyId(batchFeeMst.getChargeId());
+//                customerProduct.setCompanyId(batchFeeMst.getChargeId());
+                customerProduct.setCompanyId(batchFeeMst.getToId());
                 customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
                 customerProduct.setClosingDate(batchFeeMst.getClosingDate());
                 customerProduct.setStatus("7");
@@ -267,7 +273,7 @@ public class PurchaseOrderController {
                     .add(new CPExcelForm(0, customerEnterprise.getId(), null, null, null, customerEnterprise.getCname(),
                             customerEnterprise.getCertificateType(), customerEnterprise.getPhone(),
                             customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
-                            customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",
+                            customerEnterprise.getClosingDate(), customerEnterprise.getConfirmRemark(), "",
                             String.valueOf(customerEnterprise.getStatus()), customerEnterprise.getCreateTime(),
                             customerEnterprise.getOperator(), customerEnterprise.getFromType(),
                             customerEnterprise.getFromId(),
@@ -299,7 +305,7 @@ public class PurchaseOrderController {
                     .add(new CPExcelForm(0, customerEnterprise.getId(), null, null, null, customerEnterprise.getCname(),
                             customerEnterprise.getCertificateType(), customerEnterprise.getPhone(),
                             customerEnterprise.getInsuredId(), customerEnterprise.getEffectiveDate(),
-                            customerEnterprise.getClosingDate(), customerEnterprise.getReson(), "",
+                            customerEnterprise.getClosingDate(), customerEnterprise.getConfirmRemark(), "",
                             String.valueOf(customerEnterprise.getStatus()), customerEnterprise.getCreateTime(),
                             customerEnterprise.getOperator(), customerEnterprise.getFromType(),
                             customerEnterprise.getFromId(),

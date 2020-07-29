@@ -63,7 +63,7 @@ public class CustomerProductExcelMst implements Serializable {
     
     @Column(name = "operator")
     private String operator;
-    
+
     @Column(name = "create_time")
     private Date createTime;
 
@@ -188,8 +188,8 @@ public class CustomerProductExcelMst implements Serializable {
         sb.append(", toType=").append(toType);
         sb.append(", toId=").append(toId);
         sb.append(", fileName='").append(fileName).append('\'');
-//        sb.append(", ctype=").append(ctype);
         sb.append(", seqNumber=").append(seqNumber);
+        sb.append(", status='").append(status).append('\'');
         sb.append(", remark='").append(remark).append('\'');
         sb.append(", operator='").append(operator).append('\'');
         sb.append(", createTime=").append(createTime);

@@ -76,12 +76,12 @@ public class CustomerProductExcelDetail implements Serializable {
     @Column(name="remark")
     private String remark;//备注
     
-    @Column(name="explanation")
-    private String explanation;//系统说明
+    @Column(name="confirm_remark")
+    private String confirmRemark;//申请备注
     
     @Column(name="status")
     private String status;//状态1、触发，2、已申请，3、重新触发，4、重新申请 、5、审核通过，6、确认，7、提供中，8、完成，9、评价，-1、失败，-5审核未通过（目前没有1，6，7）
-    
+
     @Column(name="create_time")
     private Date createTime;//创建时间
     
@@ -227,12 +227,12 @@ public class CustomerProductExcelDetail implements Serializable {
 		this.remark = remark;
 	}
 
-	public String getExplanation() {
-		return explanation;
+	public String getConfirmRemark() {
+		return confirmRemark;
 	}
 
-	public void setExplanation(String explanation) {
-		this.explanation = explanation;
+	public void setConfirmRemark(String confirmRemark) {
+		this.confirmRemark = confirmRemark;
 	}
 
 	public String getStatus() {
@@ -304,7 +304,7 @@ public class CustomerProductExcelDetail implements Serializable {
 		final StringBuffer sb = new StringBuffer("CustomerProductExcelDetail{");
 		sb.append("id=").append(id);
 		sb.append(", rowNum=").append(rowNum);
-		sb.append(", seqNumber=").append(seqNumber);
+		sb.append(", seqNumber='").append(seqNumber).append('\'');
 		sb.append(", policyNumber='").append(policyNumber).append('\'');
 		sb.append(", product='").append(product).append('\'');
 		sb.append(", insuredName='").append(insuredName).append('\'');
@@ -317,8 +317,8 @@ public class CustomerProductExcelDetail implements Serializable {
 		sb.append(", age=").append(age);
 		sb.append(", location='").append(location).append('\'');
 		sb.append(", remark='").append(remark).append('\'');
-		sb.append(", explanation='").append(explanation).append('\'');
-		sb.append(", status=").append(status);
+		sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+		sb.append(", status='").append(status).append('\'');
 		sb.append(", createTime=").append(createTime);
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", cpExcelMstId=").append(cpExcelMstId);

@@ -85,9 +85,9 @@ public class CpExcelServiceImpl implements CpExcelService {
                     newCustomerEnterprise.setCname(cPExcelDetail.getInsuredName());
                     newCustomerEnterprise.setPhone(cPExcelDetail.getPhone());
                     newCustomerEnterprise.setEid(Integer.valueOf(cPExcelMst.getToId()));
-                    newCustomerEnterprise.setLocation(cPExcelDetail.getLocation());
-                    newCustomerEnterprise.setAge(cPExcelDetail.getAge());
-                    newCustomerEnterprise.setSex(cPExcelDetail.getSex());
+//                    newCustomerEnterprise.setLocation(cPExcelDetail.getLocation());
+//                    newCustomerEnterprise.setAge(cPExcelDetail.getAge());
+//                    newCustomerEnterprise.setSex(cPExcelDetail.getSex());
                     newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
                     newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
                     newCustomerEnterprise.setStatus("3");
@@ -96,7 +96,7 @@ public class CpExcelServiceImpl implements CpExcelService {
                     newCustomerEnterprise.setCpemId(cPExcelMst.getId());
                     newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
                     newCustomerEnterprise
-                            .setReson("来源：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName());
+                            .setConfirmRemark("来源：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName());
                     newCustomerEnterprise.setOperator("admin");
                     newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
                     newCustomerEnterprise.setCpemId(cPExcelMst.getId());
@@ -108,7 +108,7 @@ public class CpExcelServiceImpl implements CpExcelService {
                 else {
                     cPExcelDetail.setStatus("-3");
                     mstStatus = "1";
-                    cPExcelDetail.setExplanation(
+                    cPExcelDetail.setConfirmRemark(
                             "原因：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName() + "，第" +
                                     cPExcelDetail.getRowNum() + "行");
 

@@ -33,7 +33,7 @@ public interface CustomerEnterpriseDAO extends JpaRepository<CustomerEnterprise,
             "    `age`,    `sex`,    `company_id`,    `customer_id`,\n" +
             "    `product_id`,    `product`,    `policy_number`,    `effective_date`,\n" +
             "    `closing_date`,    `status`,    `seq_number`,    `remark`,\n" +
-            "    `explanation`,    `operator`,    `create_time` \n" +
+            "    `confirm_remark`,    `operator` \n" +
             "FROM\n" +
             "    cp_excel_detail\n" +
             "WHERE\n" +

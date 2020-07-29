@@ -47,7 +47,7 @@ public class BatchFeeMstServiceImpl implements BatchFeeMstService {
 			retrunList = batchFeeMstDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		} else {
 			User user = userDAO.findByUsername(username);
-			retrunList = batchFeeMstDAO.findByChargeIdOrderByIdAsc(user.getCompany().getId());
+			retrunList = batchFeeMstDAO.findByToIdOrderByIdAsc(user.getCompany().getId());
 		}
 		return retrunList;
 	}

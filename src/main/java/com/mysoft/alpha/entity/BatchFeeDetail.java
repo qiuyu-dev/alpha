@@ -33,9 +33,7 @@ public class BatchFeeDetail implements Serializable {
     @Column(name = "id")
     private int id;
 	
-//	@Column(name = "batch_number")
-//	private String batchNumber;//服务批号
-	
+
 	@Column(name = "ce_id")
 	private int ceId;//客户企业id
 	
@@ -54,24 +52,17 @@ public class BatchFeeDetail implements Serializable {
 	@JsonIgnoreProperties
    private BatchFeeMst batchFeeMst;
 
-//	//多对一
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "batch_fee_mst_id")
-//	@JsonIgnore
-//	@JsonIgnoreProperties
-//	private BatchFeeMst batchFeeMst;
-
-
-	@Column(name = "status")
-	private String status;
-
 	@Column(name = "operator")
 	private String operator;
-	
+
 	@Column(name = "create_time")
 	private Date createTime;
 
 	public BatchFeeDetail() {
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
 	}
 
 	public int getId() {
@@ -106,6 +97,14 @@ public class BatchFeeDetail implements Serializable {
 		this.effectiveNumber = effectiveNumber;
 	}
 
+	public int getBatchFeeMstId() {
+		return batchFeeMstId;
+	}
+
+	public void setBatchFeeMstId(int batchFeeMstId) {
+		this.batchFeeMstId = batchFeeMstId;
+	}
+
 	public BatchFeeMst getBatchFeeMst() {
 		return batchFeeMst;
 	}
@@ -114,13 +113,6 @@ public class BatchFeeDetail implements Serializable {
 		this.batchFeeMst = batchFeeMst;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	public String getOperator() {
 		return operator;
@@ -138,14 +130,6 @@ public class BatchFeeDetail implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public int getBatchFeeMstId() {
-		return batchFeeMstId;
-	}
-
-	public void setBatchFeeMstId(int batchFeeMstId) {
-		this.batchFeeMstId = batchFeeMstId;
-	}
-
 	@Override
 	public String toString() {
 		final StringBuffer sb = new StringBuffer("BatchFeeDetail{");
@@ -155,7 +139,6 @@ public class BatchFeeDetail implements Serializable {
 		sb.append(", effectiveNumber=").append(effectiveNumber);
 		sb.append(", batchFeeMstId=").append(batchFeeMstId);
 		sb.append(", batchFeeMst=").append(batchFeeMst);
-		sb.append(", status='").append(status).append('\'');
 		sb.append(", operator='").append(operator).append('\'');
 		sb.append(", createTime=").append(createTime);
 		sb.append('}');

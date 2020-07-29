@@ -39,7 +39,7 @@ public class RoleController {
      */
     @GetMapping("/listbycurruser")
     public Result listRolesByCurrUser() {
-        System.out.println("------------------substring" + SecurityUtils.getSubject().getPrincipal().toString().substring(0,2));
+//        System.out.println("------------------substring" + SecurityUtils.getSubject().getPrincipal().toString().substring(0,2));
 
         return ResultFactory.buildSuccessResult(
                 adminRoleService.listSubRolesByUser(SecurityUtils.getSubject().getPrincipal().toString()));

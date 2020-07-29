@@ -76,6 +76,7 @@ public class ServiceController {
         User currUser = userService.findByUsername(operator);
         product.setOperator(operator);
         product.setCompany(currUser.getCompany());
+        product.setCreateTime(new Date());
         productService.save(product);
         return ResultFactory.buildSuccessResult("保存成功");
     }

@@ -9,6 +9,6 @@ public interface BatchFeeMstDAO extends JpaRepository<BatchFeeMst, Integer> {
 	
 	public BatchFeeMst findByBatchNumber(String batchNumber);
 
-	public List<BatchFeeMst> findByChargeIdOrderByIdAsc(int chargeId);
+	public List<BatchFeeMst> findByToIdOrderByIdAsc(int chargeId);
 
 }
