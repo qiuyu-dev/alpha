@@ -56,6 +56,7 @@ public class ServiceController {
             complaint.setCtype(1);//不减扣费用
             complaint.setRemark(opt_zh+"："+remark);
             complaint.setOperator(operator);
+            complaint.setCreateTime(new Date());
             complaintService.save(complaint);
         }else{
             //            评价

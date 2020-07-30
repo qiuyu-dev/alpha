@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Service 业务层
@@ -62,58 +64,55 @@ public class CpExcelServiceImpl implements CpExcelService {
         }
         return retrunList;
     }
-
+    //不用事务，直接提交
     public void taskCpExcelToCustomerEnterprise() {
         String mstStatus = "3";//"已申请待审核";//客户或采购方-服务方
+        //1 = 已触发待申请;导入cp_excel2 = 重新触发待申请;未通过后修改
+        List<String> statusList = Stream.of("1", "2").collect(Collectors.toList());
         //excel主表循环
         List<CustomerProductExcelMst> cPExcelMstsList =
-                customerProductExcelMstDAO.findCustomerProductExcelMstsByStatusOrderByIdAsc("1 ");
+                customerProductExcelMstDAO.findCustomerProductExcelMstsByStatusInOrderByIdAsc(statusList);
         for (CustomerProductExcelMst cPExcelMst : cPExcelMstsList) {
             //Excel 明细循环
             List<CustomerProductExcelDetail> cPExcelDetailsList =cPExcelMst.getCpExcelDetails();
-                   // customerProductExcelDetailDAO.findCustomerProductExcelDetailsByCpExcelMstOrderByIdAsc(cPExcelMst);
             for (CustomerProductExcelDetail cPExcelDetail : cPExcelDetailsList) {
-                //对应明细确认客户-企业是否有记录
-                CustomerEnterprise customerEnterprise = customerEnterpriseDAO
-                        .findFirstByInsuredIdAndEidAndBeginTimeAndEndTimeOrderByIdIdDesc(cPExcelDetail.getInsuredId(),
-                                cPExcelMst.getToId(), cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate());
-                //对应明细确认客户-企业如果没有记录，增加记录
-                if (customerEnterprise == null) {
-                    CustomerEnterprise newCustomerEnterprise = new CustomerEnterprise();
-                    newCustomerEnterprise.setCertificateType(cPExcelDetail.getCertificateType());
-                    newCustomerEnterprise.setInsuredId(cPExcelDetail.getInsuredId());
-                    newCustomerEnterprise.setCname(cPExcelDetail.getInsuredName());
-                    newCustomerEnterprise.setPhone(cPExcelDetail.getPhone());
-                    newCustomerEnterprise.setEid(Integer.valueOf(cPExcelMst.getToId()));
-//                    newCustomerEnterprise.setLocation(cPExcelDetail.getLocation());
-//                    newCustomerEnterprise.setAge(cPExcelDetail.getAge());
-//                    newCustomerEnterprise.setSex(cPExcelDetail.getSex());
-                    newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
-                    newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
-                    newCustomerEnterprise.setStatus("3");
-                    newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
-                    newCustomerEnterprise.setFromId(cPExcelMst.getFromId());
-                    newCustomerEnterprise.setCpemId(cPExcelMst.getId());
-                    newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
-                    newCustomerEnterprise
-                            .setConfirmRemark("来源：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName());
-                    newCustomerEnterprise.setOperator("admin");
-                    newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
-                    newCustomerEnterprise.setCpemId(cPExcelMst.getId());
-                    customerEnterpriseDAO.save(newCustomerEnterprise);
-                    cPExcelDetail.setStatus("3");
+                if(cPExcelDetail.getStatus().equals("1")||cPExcelDetail.getStatus().equals("2")) {
+                    //对应明细确认客户-企业是否有记录
+                    CustomerEnterprise customerEnterprise = customerEnterpriseDAO
+                            .findFirstByInsuredIdAndCompanyIdAndBeginTimeAndEndTimeOrderByIdIdDesc(cPExcelDetail.getInsuredId(),
+                                    cPExcelMst.getToId(), cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate());
+                    //对应明细确认客户-企业如果没有记录，增加记录
+                    if (customerEnterprise == null) {
+                        CustomerEnterprise newCustomerEnterprise = new CustomerEnterprise();
+                        newCustomerEnterprise.setCertificateType(cPExcelDetail.getCertificateType());
+                        newCustomerEnterprise.setInsuredId(cPExcelDetail.getInsuredId());
+                        newCustomerEnterprise.setCname(cPExcelDetail.getInsuredName());
+                        newCustomerEnterprise.setPhone(cPExcelDetail.getPhone());
+                        newCustomerEnterprise.setCompanyId(Integer.valueOf(cPExcelMst.getToId()));
+                        newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
+                        newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
+                        newCustomerEnterprise.setStatus("3");
+                        newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
+                        newCustomerEnterprise.setFromId(cPExcelMst.getFromId());
+                        newCustomerEnterprise.setCpemId(cPExcelMst.getId());
+                        newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
+                        newCustomerEnterprise.setRemark("来源："+ cPExcelMst.getFileName()+",行号："+cPExcelDetail.getRowNum()+",日期：" + cPExcelMst.getCreateTime()  );
+                        newCustomerEnterprise.setOperator("admin");
+                        newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
+                        newCustomerEnterprise.setCpemId(cPExcelMst.getId());
+                        customerEnterpriseDAO.save(newCustomerEnterprise);
+                        cPExcelDetail.setStatus("3");
 
+                    }
+                    //对应明细确认客户-企业如果有记录，修改Excel明细说明
+                    else {
+                        cPExcelDetail.setStatus("-3");
+                        mstStatus = "1";
+                        cPExcelDetail.setConfirmRemark(
+                                "原因：客户已经申请服务"  + "，" +customerEnterprise.getRemark());
+                    }
+                    customerProductExcelDetailDAO.save(cPExcelDetail);
                 }
-                //对应明细确认客户-企业如果有记录，修改Excel明细说明
-                else {
-                    cPExcelDetail.setStatus("-3");
-                    mstStatus = "1";
-                    cPExcelDetail.setConfirmRemark(
-                            "原因：" + cPExcelMst.getCreateTime() + "，文件：" + cPExcelMst.getFileName() + "，第" +
-                                    cPExcelDetail.getRowNum() + "行");
-
-                }
-                customerProductExcelDetailDAO.save(cPExcelDetail);
             }
             cPExcelMst.setStatus(mstStatus);
             customerProductExcelMstDAO.save(cPExcelMst);

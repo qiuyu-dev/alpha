@@ -10,10 +10,10 @@ public interface CustomerProductExcelMstDAO extends JpaRepository<CustomerProduc
 
     /**
      * find  如果为查询到返回空，get报错
-     * @param status
+     * @param statusList
      * @return
      */
-    List<CustomerProductExcelMst> findCustomerProductExcelMstsByStatusOrderByIdAsc(String status);
+    List<CustomerProductExcelMst> findCustomerProductExcelMstsByStatusInOrderByIdAsc(List<String> statusList);
 
 
     /**

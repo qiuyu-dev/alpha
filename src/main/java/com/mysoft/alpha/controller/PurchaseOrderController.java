@@ -232,7 +232,11 @@ public class PurchaseOrderController {
         for (BatchFeeDetail batchFeeDetail : batchFeeDetailList) {
             for (Product product : productList) {
                 CustomerProduct customerProduct = new CustomerProduct();
-                customerProduct.setFromId(batchFeeDetail.getCeId());
+                customerProduct.setFromType(2);
+                customerProduct.setFromId(batchFeeMstNew.getFromId());
+                customerProduct.setToType(2);
+                customerProduct.setToId(batchFeeMstNew.getToId());
+
 //                customerProduct.setCompanyId(batchFeeMst.getChargeId());
                 customerProduct.setCompanyId(batchFeeMst.getToId());
                 customerProduct.setEffectiveDate(batchFeeMst.getEffectiveDate());
@@ -278,7 +282,8 @@ public class PurchaseOrderController {
                             customerEnterprise.getOperator(), customerEnterprise.getFromType(),
                             customerEnterprise.getFromId(),
                             companyService.findById(customerEnterprise.getFromId()).getName(), 0,
-                            customerEnterprise.getEid(), companyService.findById(customerEnterprise.getEid()).getName(),
+                            customerEnterprise.getCompanyId(),
+                            companyService.findById(customerEnterprise.getCompanyId()).getName(),
                             ""));
         }
         return ResultFactory.buildSuccessResult(returnList);
@@ -310,7 +315,8 @@ public class PurchaseOrderController {
                             customerEnterprise.getOperator(), customerEnterprise.getFromType(),
                             customerEnterprise.getFromId(),
                             companyService.findById(customerEnterprise.getFromId()).getName(), 0,
-                            customerEnterprise.getEid(), companyService.findById(customerEnterprise.getEid()).getName(),
+                            customerEnterprise.getCompanyId(),
+                            companyService.findById(customerEnterprise.getCompanyId()).getName(),
                             ""));
         }
         return ResultFactory.buildSuccessResult(returnList);

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Date;
 
 
 
@@ -57,9 +56,9 @@ public class Company implements Serializable {
 	@Column(name ="operator",columnDefinition = " VARCHAR(255) NULL  COMMENT '操作员'")
 	private String operator;
 
-	@Column(name ="create_time" ,columnDefinition = " datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Date createTime;
+//	@Column(name ="create_time" ,columnDefinition = " datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	private Date createTime;
 
 
 	public Company() {
@@ -121,13 +120,13 @@ public class Company implements Serializable {
 		this.operator = operator;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+//	public Date getCreateTime() {
+//		return createTime;
+//	}
+//
+//	public void setCreateTime(Date createTime) {
+//		this.createTime = createTime;
+//	}
 
 	@Override
 	public String toString() {
@@ -139,7 +138,7 @@ public class Company implements Serializable {
 		sb.append(", phone='").append(phone).append('\'');
 		sb.append(", enabled=").append(enabled);
 		sb.append(", operator='").append(operator).append('\'');
-		sb.append(", createTime=").append(createTime);
+//		sb.append(", createTime=").append(createTime);
 		sb.append('}');
 		return sb.toString();
 	}

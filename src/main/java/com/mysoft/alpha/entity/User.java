@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 
@@ -97,9 +96,9 @@ public class User implements Serializable {
     @Column(name = "operator", columnDefinition = " VARCHAR(255) NULL  COMMENT '操作员'")
     private String operator;
 
-    @Column(name = "create_time", columnDefinition = " datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Date createTime;
+//    @Column(name = "create_time", columnDefinition = " datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'")
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private Date createTime;
 
 
     /**
@@ -206,13 +205,13 @@ public class User implements Serializable {
         this.operator = operator;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+//    public Date getCreateTime() {
+//        return createTime;
+//    }
+//
+//    public void setCreateTime(Date createTime) {
+//        this.createTime = createTime;
+//    }
 
     public List<AdminRole> getRoles() {
         return roles;
@@ -235,7 +234,7 @@ public class User implements Serializable {
         sb.append(", enabled=").append(enabled);
         sb.append(", company=").append(company);
         sb.append(", operator='").append(operator).append('\'');
-        sb.append(", createTime=").append(createTime);
+//        sb.append(", createTime=").append(createTime);
         sb.append(", roles=").append(roles);
         sb.append('}');
         return sb.toString();

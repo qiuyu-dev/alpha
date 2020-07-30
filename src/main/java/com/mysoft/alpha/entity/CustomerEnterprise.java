@@ -50,8 +50,8 @@ public class CustomerEnterprise  implements Serializable {
     @Column(name = "phone")
     private String phone;
     
-    @Column(name = "eid")
-    private int eid;
+    @Column(name = "company_id")
+    private int companyId;
 
     @Column(name = "effective_date")
     private Date effectiveDate;
@@ -137,12 +137,12 @@ public class CustomerEnterprise  implements Serializable {
 		this.phone = phone;
 	}
 
-	public int getEid() {
-		return eid;
+	public int getCompanyId() {
+		return companyId;
 	}
 
-	public void setEid(int eid) {
-		this.eid = eid;
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
 	}
 
 	public Date getEffectiveDate() {
@@ -242,7 +242,7 @@ public class CustomerEnterprise  implements Serializable {
 		sb.append(", insuredId='").append(insuredId).append('\'');
 		sb.append(", cname='").append(cname).append('\'');
 		sb.append(", phone='").append(phone).append('\'');
-		sb.append(", eid=").append(eid);
+		sb.append(", companyId=").append(companyId);
 		sb.append(", effectiveDate=").append(effectiveDate);
 		sb.append(", closingDate=").append(closingDate);
 		sb.append(", status='").append(status).append('\'');

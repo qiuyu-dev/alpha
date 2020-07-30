@@ -56,7 +56,7 @@ public class CustomerEnterpriseServiceImpl implements CustomerEnterpriseService 
 //
 //			AdminRole role = adminRoleDAO.findById(roleId);
 //			if (role.getNameZh().contains("管理")) {
-				retrunList = customerEnterpriseDAO .findByEidAndStatusInOrderByIdDesc(user.getCompany().getId(),
+				retrunList = customerEnterpriseDAO .findByCompanyIdAndStatusInOrderByIdDesc(user.getCompany().getId(),
 						statusList);
 //			} else {
 //				retrunList = customerEnterpriseDAO.findByOperatorOrderByIdDesc(user.getUsername());

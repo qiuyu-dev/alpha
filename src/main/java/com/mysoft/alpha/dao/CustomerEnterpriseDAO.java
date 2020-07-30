@@ -11,40 +11,28 @@ import java.util.List;
 
 
 public interface CustomerEnterpriseDAO extends JpaRepository<CustomerEnterprise, Integer> {
-//    public List<CustomerEnterprise> findByEidAndsAndStatusInOrderByIdDesc(int eid,List<String> statusList);
 
-    public List<CustomerEnterprise>  findByEidAndStatusInOrderByIdDesc(int eid,List<String> statusList);
+    public List<CustomerEnterprise>  findByCompanyIdAndStatusInOrderByIdDesc(int eid,List<String> statusList);
 
     public List<CustomerEnterprise>  findByFromIdAndStatusInOrderByIdDesc(int fromId,List<String> statusLis);
 
-
-
-
-//    public List<CustomerEnterprise> findByEidBeforeStatusInOrderByIdDesc(int eid,List<Integer> statusList);
-//    public List<CustomerEnterprise> findByFromIdBeforeStatusInOrderByIdDesc(int eid,List<Integer> statusList);
-
-    public List<CustomerEnterprise> findByEidOrderByIdDesc(int eid);
+    public List<CustomerEnterprise> findByCompanyIdOrderByIdDesc(int eid);
 
     public List<CustomerEnterprise> findByOperatorOrderByIdDesc(String operator);
 
 
-    @Query(nativeQuery = true, value = "SELECT     `id`,    `cp_excel_mst_id`,    `row_num`,    `certificate_type`,\n" +
-            "    `insured_id`,    `insured_name`,    `phone`,    `location`,\n" +
-            "    `age`,    `sex`,    `company_id`,    `customer_id`,\n" +
-            "    `product_id`,    `product`,    `policy_number`,    `effective_date`,\n" +
-            "    `closing_date`,    `status`,    `seq_number`,    `remark`,\n" +
-            "    `confirm_remark`,    `operator` \n" +
-            "FROM\n" +
-            "    cp_excel_detail\n" +
-            "WHERE\n" +
-            "    insured_id = :insured_id AND company_id = :company_id  \n" +
-            "        AND ((effective_date >= :begin_time \n" +
-            "        AND effective_date <= :end_time ) \n" +
-            "        OR (closing_date >= :begin_time \n" +
-            "        AND closing_date <= :end_time )) \n" +
+    @Query(nativeQuery = true, value = "SELECT     `id`,    `certificate_type`,    `insured_id`,    `cname`,    `phone`,    `company_id`,\n" +
+            "    `effective_date`,    `closing_date`,    `status`,    `from_type`,    `from_id`,    `cpem_id`,    `cped_id`,\n" +
+            "    `remark`,    `confirm_remark`,    `operator`,    `create_time` \n" +
+            "FROM  customer_enterprise\n" +
+            "WHERE   insured_id = :insured_id AND company_id = :company_id  \n" +
+            "        AND ((effective_date <= :begin_time \n" +
+            "        AND closing_date >= :begin_time ) \n" +
+            "        OR (effective_date >= :begin_time \n" +
+            "        AND effective_date < :end_time )) \n" +
             "ORDER BY id DESC\n" +
             "LIMIT 1\n")
-    public CustomerEnterprise findFirstByInsuredIdAndEidAndBeginTimeAndEndTimeOrderByIdIdDesc(
+    public CustomerEnterprise findFirstByInsuredIdAndCompanyIdAndBeginTimeAndEndTimeOrderByIdIdDesc(
             @Param("insured_id") String insuredId
             , @Param("company_id") Integer companyId
             ,@Param("begin_time") Date beginTime
