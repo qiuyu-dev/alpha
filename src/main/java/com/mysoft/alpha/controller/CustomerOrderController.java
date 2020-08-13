@@ -153,6 +153,7 @@ public class CustomerOrderController {
 	@PostMapping("/share/uploadFile")
 	@Transactional
 	public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file) {
+		Result result = null;
 		String cid = map.get("cid");
 		String folder = alphaConfig.getUploadFolder();
 		String fileURL = alphaConfig.getFileUrl();
@@ -163,21 +164,26 @@ public class CustomerOrderController {
 		File localFile = new File(uploadFileFolder, prefix + System.currentTimeMillis() + suffix);
 		if (!localFile.getParentFile().exists())
 			localFile.getParentFile().mkdirs();
-		try {
-			Result result = parseUploadFile(cid, file);
+		try {			
+			parseUploadFile(cid, file);
 			file.transferTo(localFile);
 			fileURL += localFile.getName();
-			ResultFactory.buildResult(ResultCode.SUCCESS, "上传成功", fileURL);
+			result = ResultFactory.buildResult(ResultCode.SUCCESS, "上传成功", fileURL);
 			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
+			result = ResultFactory.buildResult(ResultCode.FAIL,e.getMessage(),null);
+		} catch (CustomException e) {
+			e.printStackTrace();
+			result = ResultFactory.buildResult(ResultCode.FAIL,e.getMsg(),null);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result = ResultFactory.buildFailResult(e.getMessage());
 		}
-		return null;
+		return result;
 	}
 
-	private Result parseUploadFile(String cid, MultipartFile file) throws IOException {
+	private void parseUploadFile(String cid, MultipartFile file) throws IOException, CustomException {
 		Company company = companyService.findById(Integer.parseInt(cid));
 		String operator = SecurityUtils.getSubject().getPrincipal().toString();
 		User user = userService.findByUsername(operator);
@@ -208,8 +214,6 @@ public class CustomerOrderController {
 		}
 		customerOrderService.saveAllCustomerProductExcelDetail(customerProductExcelDetailList);
 		workbook.close();
-
-		return null;
 	}
 
 	private CustomerProductExcelDetail parseOneRow(CustomerProductExcelMst cpExcelMst, int companyId, Sheet sheet,
