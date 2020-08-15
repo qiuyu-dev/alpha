@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Component
 public class AlphaConfig {
-	@Value("${alpha.upload.folder:D:/upload/file}")
+	@Value("${alpha.upload.file.folder:D:/upload/file}")
 	private String uploadFolder;
 	@Value("${alpha.upload.file.url:http://localhost:8443/api/file/}")
 	private String fileUrl;
