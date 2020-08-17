@@ -371,7 +371,7 @@ public class CpExcelController {
                         str = cell.getStringCellValue();
                         break;
                     case NUMERIC:
-                        str = cell.getNumericCellValue() + "";
+                    	str = Double.valueOf(cell.getNumericCellValue()).intValue() + "";
                         break;
                     default:
                         break;
