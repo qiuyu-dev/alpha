@@ -6,51 +6,44 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-
-
 /**
+ * 角色(AdminRole)实体类
  *
- *  entity
- *  class 数据对象类
- *  Serializable 序列化用于网络传输
- *  创建空构造函数
- *  get，set
- *  tostring
+ * @author makejava
+ * @since 2020-08-02 16:13:20
  */
-
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
 @Entity
 @Table(name = "admin_role")
-//@ToString
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class AdminRole   implements Serializable {
+public class AdminRole implements Serializable {
+    private static final long serialVersionUID = -79543607633194140L;
+    /**
+     * 角色主键
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
+    private Integer id;
     /**
-     * Role name.
+     * 角色名称
      */
     @Column(name = "name")
     private String name;
-
     /**
-     * Role name in Chinese.
+     * 角色名称-中文，不可修改
      */
     @Column(name = "name_zh")
     private String nameZh;
-
     /**
-     * Role status.
+     * 是否可用，0不可用，1可用
      */
     @Column(name = "enabled")
-    private int enabled;
-
-
+    private Integer enabled;
+    /**
+     * 操作员
+     */
+    @Column(name = "operator")
+    private String operator;
     /**
      * Transient property for storing permissions owned by current role.
      */
@@ -63,60 +56,64 @@ public class AdminRole   implements Serializable {
     @Transient
     private List<AdminMenu> menus;
 
-	public AdminRole() {
-	}
+    public AdminRole() {
+    }
 
-	public AdminRole(String name) {
-		this.name = name;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getNameZh() {
+        return nameZh;
+    }
 
-	public String getNameZh() {
-		return nameZh;
-	}
+    public void setNameZh(String nameZh) {
+        this.nameZh = nameZh;
+    }
 
-	public void setNameZh(String nameZh) {
-		this.nameZh = nameZh;
-	}
-
-    public int getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(int enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
     public List<AdminPermission> getPerms() {
-		return perms;
-	}
+        return perms;
+    }
 
-	public void setPerms(List<AdminPermission> perms) {
-		this.perms = perms;
-	}
+    public void setPerms(List<AdminPermission> perms) {
+        this.perms = perms;
+    }
 
-	public List<AdminMenu> getMenus() {
-		return menus;
-	}
+    public List<AdminMenu> getMenus() {
+        return menus;
+    }
 
-	public void setMenus(List<AdminMenu> menus) {
-		this.menus = menus;
-	}
+    public void setMenus(List<AdminMenu> menus) {
+        this.menus = menus;
+    }
 
     @Override
     public String toString() {
@@ -125,6 +122,7 @@ public class AdminRole   implements Serializable {
         sb.append(", name='").append(name).append('\'');
         sb.append(", nameZh='").append(nameZh).append('\'');
         sb.append(", enabled=").append(enabled);
+        sb.append(", operator='").append(operator).append('\'');
         sb.append(", perms=").append(perms);
         sb.append(", menus=").append(menus);
         sb.append('}');

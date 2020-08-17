@@ -4,12 +4,14 @@ import com.mysoft.alpha.entity.Complaint;
 
 import java.util.List;
 
+/**
+ * 投诉(Complaint)表服务接口
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:58
+ */
 public interface ComplaintService {
-	
-	public List<Complaint> findAllComplaint();
-	
-	public Complaint findById(Integer id);
-
-	public void save(Complaint complaint);
+    Complaint save(Complaint complaint);
+    List<Complaint> findByCustomerProductId(Integer customerProductId);
 
 }

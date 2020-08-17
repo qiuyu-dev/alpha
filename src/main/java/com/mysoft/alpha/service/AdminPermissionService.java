@@ -1,23 +1,23 @@
 package com.mysoft.alpha.service;
 
+import com.mysoft.alpha.entity.AdminPermission;
+
 import java.util.List;
 import java.util.Set;
 
-import com.mysoft.alpha.entity.AdminPermission;
-
+/**
+ * 许可(AdminPermission)表服务接口
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:17
+ */
 public interface AdminPermissionService {
 
-	public List<AdminPermission> list();
+    Set<String> listPermissionURLsByUser(String username);
 
-	/**
-	 * Determine whether client requires permission when requests a certain API.
-	 * 
-	 * @param requestAPI API requested by client
-	 * @return true when requestAPI is found in the DB
-	 */
-	public boolean needFilter(String requestAPI);
+    boolean needFilter(String requestAPI);
 
-	public List<AdminPermission> listPermsByRoleId(int rid);
+    List<AdminPermission> listPermsByRoleId(Integer rid);
 
-	public Set<String> listPermissionURLsByUser(String username);
+    List<AdminPermission>  list();
 }

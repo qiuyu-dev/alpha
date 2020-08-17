@@ -1,5 +1,6 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -8,100 +9,149 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * entity class 数据对象类 Serializable 序列化用于网络传输 创建空构造函数 get，set tostring
+ * 批次付费主表(BatchFeeMst)实体类
+ *
+ * @author makejava
+ * @since 2020-08-09 15:38:44
  */
 @Entity
 @Table(name = "batch_fee_mst")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class BatchFeeMst implements Serializable {
+    private static final long serialVersionUID = 417076524580282839L;
     /**
-     *
+     * 主键
      */
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
+    private Integer id;
+    /**
+     * 服务批号，P_组织机构代码_YYYYMMDD_序号2位
+     */
     @Column(name = "batch_number")
-    private String batchNumber;// 批号 P
-
-    @Column(name = "ftype")
-    private int ftype;// 类型 1付费 -1 扣费
-
-    @Column(name = "from_type")
-    private int fromType;// 付费来源类型
-
-    @Column(name = "from_id")
-    private int fromId;// 付费来源
-
-    @Column(name = "to_type")
-    private int toType;// 收费来源类型
-
-    @Column(name = "to_id")
-    private int toId;// 收费来源id
-
+    private String batchNumber;
+    /**
+     * 付费主体ID，Excel上传企业，这里是保险企业
+     */
+    @Column(name = "pay_subject_id")
+    private Integer paySubjectId;
+    /**
+     * 提供主体ID，选择的企业，这里是服务企业，冗余
+     */
+    @Column(name = "charge_subject_id")
+    private Integer chargeSubjectId;
+    /**
+     * 开始时间
+     */
     @Column(name = "effective_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date effectiveDate;
-
+    /**
+     * 结束时间，默认为开始时间后一月
+     */
     @Column(name = "closing_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date closingDate;
-
-    @Column(name = "btype")
-    private int btype;// 付费类型 1客户-公司 2 客户-产品
-
+    /**
+     * 1、按客户付费、2按客户产品
+     */
+    @Column(name = "pay_type")
+    private Integer payType;
+    /**
+     * 1收款，-1退款
+     */
+    @Column(name = "charge_type")
+    private Integer chargeType;
+    /**
+     * 有效数
+     */
     @Column(name = "effective_number")
-    private int effectiveNumber;// 有效数
-
+    private Integer effectiveNumber;
+    /**
+     * 单价
+     */
     @Column(name = "price")
-    private int price;// 单价
-
+    private Integer price;
+    /**
+     * 预付款
+     */
     @Column(name = "prepayment")
-    private int prepayment;// 应付款
-
+    private Integer prepayment;
+    /**
+     * 应收款
+     */
     @Column(name = "receivable")
-    private int receivable;// 应收款
-
-    @Column(name = "pay_img")
-    private String payImg;// 付费凭证图片
-
+    private Integer receivable;
+    /**
+     * 付费凭证图片
+     */
+    @Column(name = "img")
+    private String img;
+    /**
+     * 图片存储url
+     */
+    @Column(name = "url")
+    private String url;
+    /**
+     * 付费时间
+     */
     @Column(name = "pay_time")
-    private Date payTime;// 付费时间
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date payTime;
+    /**
+     * 收款时间
+     */
+    @Column(name = "charge_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date chargeTime;
+    /**
+     * 备注
+     */
     @Column(name = "remark")
-    private String remark;// 备注
-
-    @Column(name = "seq_number")
-    private int seqNumber;// 顺序号
-
+    private String remark;
+    /**
+     * 确认备注
+     */
+    @Column(name = "confirm_remark")
+    private String confirmRemark;
+    /**
+     * 状态
+     */
+    @Column(name = "state")
+    private Integer state;
+    /**
+     * 操作员
+     */
     @Column(name = "operator")
     private String operator;
-
+    /**
+     * 收款员
+     */
+    @Column(name = "cashier")
+    private String cashier;
+    /**
+     * 创建时间
+     */
     @Column(name = "create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    @Column(name = "status")
-    private String status;// 状态6 = "付费完成待收款";//客户或采购方-服务方
 
-    @Column(name = "confirm_remark")
-    private String confirmRemark;// 确认备注
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "batchFeeMst", orphanRemoval = true)
-    private List<BatchFeeDetail> batchFeeDetail;
+    /**
+     * 明细
+     */
+    @Transient
+    private List<BatchFeeDetail> batchFeeDetails;
 
     public BatchFeeMst() {
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -113,44 +163,20 @@ public class BatchFeeMst implements Serializable {
         this.batchNumber = batchNumber;
     }
 
-    public int getFtype() {
-        return ftype;
+    public Integer getPaySubjectId() {
+        return paySubjectId;
     }
 
-    public void setFtype(int ftype) {
-        this.ftype = ftype;
+    public void setPaySubjectId(Integer paySubjectId) {
+        this.paySubjectId = paySubjectId;
     }
 
-    public int getFromType() {
-        return fromType;
+    public Integer getChargeSubjectId() {
+        return chargeSubjectId;
     }
 
-    public void setFromType(int fromType) {
-        this.fromType = fromType;
-    }
-
-    public int getFromId() {
-        return fromId;
-    }
-
-    public void setFromId(int fromId) {
-        this.fromId = fromId;
-    }
-
-    public int getToType() {
-        return toType;
-    }
-
-    public void setToType(int toType) {
-        this.toType = toType;
-    }
-
-    public int getToId() {
-        return toId;
-    }
-
-    public void setToId(int toId) {
-        this.toId = toId;
+    public void setChargeSubjectId(Integer chargeSubjectId) {
+        this.chargeSubjectId = chargeSubjectId;
     }
 
     public Date getEffectiveDate() {
@@ -169,52 +195,68 @@ public class BatchFeeMst implements Serializable {
         this.closingDate = closingDate;
     }
 
-    public int getBtype() {
-        return btype;
+    public Integer getPayType() {
+        return payType;
     }
 
-    public void setBtype(int btype) {
-        this.btype = btype;
+    public void setPayType(Integer payType) {
+        this.payType = payType;
     }
 
-    public int getEffectiveNumber() {
+    public Integer getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(Integer chargeType) {
+        this.chargeType = chargeType;
+    }
+
+    public Integer getEffectiveNumber() {
         return effectiveNumber;
     }
 
-    public void setEffectiveNumber(int effectiveNumber) {
+    public void setEffectiveNumber(Integer effectiveNumber) {
         this.effectiveNumber = effectiveNumber;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public int getPrepayment() {
+    public Integer getPrepayment() {
         return prepayment;
     }
 
-    public void setPrepayment(int prepayment) {
+    public void setPrepayment(Integer prepayment) {
         this.prepayment = prepayment;
     }
 
-    public int getReceivable() {
+    public Integer getReceivable() {
         return receivable;
     }
 
-    public void setReceivable(int receivable) {
+    public void setReceivable(Integer receivable) {
         this.receivable = receivable;
     }
 
-    public String getPayImg() {
-        return payImg;
+    public String getImg() {
+        return img;
     }
 
-    public void setPayImg(String payImg) {
-        this.payImg = payImg;
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Date getPayTime() {
@@ -225,44 +267,20 @@ public class BatchFeeMst implements Serializable {
         this.payTime = payTime;
     }
 
+    public Date getChargeTime() {
+        return chargeTime;
+    }
+
+    public void setChargeTime(Date chargeTime) {
+        this.chargeTime = chargeTime;
+    }
+
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public int getSeqNumber() {
-        return seqNumber;
-    }
-
-    public void setSeqNumber(int seqNumber) {
-        this.seqNumber = seqNumber;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getConfirmRemark() {
@@ -273,41 +291,43 @@ public class BatchFeeMst implements Serializable {
         this.confirmRemark = confirmRemark;
     }
 
-    public List<BatchFeeDetail> getBatchFeeDetail() {
-        return batchFeeDetail;
+    public Integer getState() {
+        return state;
     }
 
-    public void setBatchFeeDetail(List<BatchFeeDetail> batchFeeDetail) {
-        this.batchFeeDetail = batchFeeDetail;
+    public void setState(Integer state) {
+        this.state = state;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("BatchFeeMst{");
-        sb.append("id=").append(id);
-        sb.append(", batchNumber='").append(batchNumber).append('\'');
-        sb.append(", ftype=").append(ftype);
-        sb.append(", fromType=").append(fromType);
-        sb.append(", fromId=").append(fromId);
-        sb.append(", toType=").append(toType);
-        sb.append(", toId=").append(toId);
-        sb.append(", effectiveDate=").append(effectiveDate);
-        sb.append(", closingDate=").append(closingDate);
-        sb.append(", btype=").append(btype);
-        sb.append(", effectiveNumber=").append(effectiveNumber);
-        sb.append(", price=").append(price);
-        sb.append(", prepayment=").append(prepayment);
-        sb.append(", receivable=").append(receivable);
-        sb.append(", payImg='").append(payImg).append('\'');
-        sb.append(", payTime=").append(payTime);
-        sb.append(", remark='").append(remark).append('\'');
-        sb.append(", seqNumber=").append(seqNumber);
-        sb.append(", operator='").append(operator).append('\'');
-        sb.append(", createTime=").append(createTime);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", confirmRemark='").append(confirmRemark).append('\'');
-        sb.append(", batchFeeDetail=").append(batchFeeDetail);
-        sb.append('}');
-        return sb.toString();
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getCashier() {
+        return cashier;
+    }
+
+    public void setCashier(String cashier) {
+        this.cashier = cashier;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public List<BatchFeeDetail> getBatchFeeDetails() {
+        return batchFeeDetails;
+    }
+
+    public void setBatchFeeDetails(List<BatchFeeDetail> batchFeeDetails) {
+        this.batchFeeDetails = batchFeeDetails;
     }
 }

@@ -1,61 +1,129 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 产品(Product)实体类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:14:08
+ */
 @Entity
 @Table(name = "product")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class Product implements Serializable {
+    private static final long serialVersionUID = -49157486065965398L;
     /**
-     *
+     * 产品主键
      */
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
+    private Integer id;
+    /**
+     * 产品全称
+     */
+    @Column(name = "name")
+    private String name;
+    /**
+     * 企业主体id
+     */
+    @Column(name = "alpha_subject_id")
+    private Integer alphaSubjectId;
+    /**
+     * 1、普通，2、保险，3、保险配套服务
+     */
+    @Column(name = "product_type")
+    private Integer productType;
+    /**
+     * 备案编号，唯一
+     */
     @Column(name = "record_number")
     private String recordNumber;
-
-    @Column(name = "product")
-    private String product;
-
-    @Column(name = "ptype")
-    private int ptype;
-
-    @Column(name = "seq_number")
-    private String seqNumber;
-
+    /**
+     * 顺序号，排序用
+     */
+    @Column(name = "ordered")
+    private Integer ordered;
+    /**
+     * 触发类型，1付费企业excel，2，系统维护
+     */
+    @Column(name = "source_type")
+    private Integer sourceType;
+    /**
+     * 触发id，1、cp_excel_mst_id，2null
+     */
+    @Column(name = "source_id")
+    private Integer sourceId;
+    /**
+     * 触发id，1、cp_excel_detail_id，2null
+     */
+    @Column(name = "source_detail_id")
+    private Integer sourceDetailId;
+    /**
+     * 是否可用，0不可用，1可用
+     */
+    @Column(name = "enabled")
+    private Integer enabled;
+    /**
+     * 操作员
+     */
     @Column(name = "operator")
     private String operator;
-
-    @Column(name = "create_time")
+    /**
+     * 创建时间
+     */
+    @Transient
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    public int getId() {
+    /**
+     * 所属企业
+     */
+
+    @Transient
+    private AlphaSubject alphaSubject;
+
+
+
+    public Product() {
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Company getCompany() {
-        return company;
+    public String getName() {
+        return name;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAlphaSubjectId() {
+        return alphaSubjectId;
+    }
+
+    public void setAlphaSubjectId(Integer alphaSubjectId) {
+        this.alphaSubjectId = alphaSubjectId;
+    }
+
+    public Integer getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Integer productType) {
+        this.productType = productType;
     }
 
     public String getRecordNumber() {
@@ -66,28 +134,44 @@ public class Product implements Serializable {
         this.recordNumber = recordNumber;
     }
 
-    public String getProduct() {
-        return product;
+    public Integer getOrdered() {
+        return ordered;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setOrdered(Integer ordered) {
+        this.ordered = ordered;
     }
 
-    public int getPtype() {
-        return ptype;
+    public Integer getSourceType() {
+        return sourceType;
     }
 
-    public void setPtype(int ptype) {
-        this.ptype = ptype;
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
-    public String getSeqNumber() {
-        return seqNumber;
+    public Integer getSourceId() {
+        return sourceId;
     }
 
-    public void setSeqNumber(String seqNumber) {
-        this.seqNumber = seqNumber;
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public Integer getSourceDetailId() {
+        return sourceDetailId;
+    }
+
+    public void setSourceDetailId(Integer sourceDetailId) {
+        this.sourceDetailId = sourceDetailId;
+    }
+
+    public Integer getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
     }
 
     public String getOperator() {
@@ -106,18 +190,13 @@ public class Product implements Serializable {
         this.createTime = createTime;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("Product{");
-        sb.append("id=").append(id);
-        sb.append(", company=").append(company);
-        sb.append(", recordNumber='").append(recordNumber).append('\'');
-        sb.append(", product='").append(product).append('\'');
-        sb.append(", ptype=").append(ptype);
-        sb.append(", seqNumber='").append(seqNumber).append('\'');
-        sb.append(", operator='").append(operator).append('\'');
-        sb.append(", createTime=").append(createTime);
-        sb.append('}');
-        return sb.toString();
+    public AlphaSubject getAlphaSubject() {
+        return alphaSubject;
     }
+
+    public void setAlphaSubject(AlphaSubject alphaSubject) {
+        this.alphaSubject = alphaSubject;
+    }
+
+
 }

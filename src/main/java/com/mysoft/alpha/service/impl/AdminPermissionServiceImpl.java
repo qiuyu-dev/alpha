@@ -1,81 +1,84 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.mysoft.alpha.dao.AdminPermissionDAO;
-import com.mysoft.alpha.dao.AdminRolePermissionDAO;
+import com.mysoft.alpha.dao.AdminPermissionDao;
+import com.mysoft.alpha.dao.AdminRolePermissionDao;
 import com.mysoft.alpha.entity.AdminPermission;
 import com.mysoft.alpha.entity.AdminRole;
 import com.mysoft.alpha.entity.AdminRolePermission;
 import com.mysoft.alpha.service.AdminPermissionService;
 import com.mysoft.alpha.service.AdminRolePermissionService;
 import com.mysoft.alpha.service.AdminRoleService;
-import com.mysoft.alpha.service.AdminUserRoleService;
-import com.mysoft.alpha.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * 许可(AdminPermission)表服务实现类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:18
+ */
 @Service
 public class AdminPermissionServiceImpl implements AdminPermissionService {
-	@Autowired
-	AdminPermissionDAO adminPermissionDAO;
-	
-	@Autowired
-	AdminUserRoleService adminUserRoleService;
-	
-	@Autowired
-	AdminRoleService adminRoleService;
-	
-	@Autowired
-	AdminRolePermissionService adminRolePermissionService;
-	
-	@Autowired
-	AdminRolePermissionDAO adminRolePermissionDAO;
-	
-	@Autowired
-	UserService userService;
+    /**
+     * 服务对象
+     */
+    @Autowired
+    private AdminPermissionDao adminPermissionDao;
 
-	public List<AdminPermission> list() {
-		return adminPermissionDAO.findAll();
-	}
+    @Autowired
+    private AdminRoleService adminRoleService;
 
-	/**
-	 * Determine whether client requires permission when requests a certain API.
-	 * 
-	 * @param requestAPI API requested by client
-	 * @return true when requestAPI is found in the DB
-	 */
-	public boolean needFilter(String requestAPI) {
-		List<AdminPermission> ps = adminPermissionDAO.findAll();
-		for (AdminPermission p : ps) {
-			// match prefix
-			if (requestAPI.startsWith(p.getUrl())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Autowired
+    private AdminRolePermissionDao adminRolePermissionDao;
 
-	public List<AdminPermission> listPermsByRoleId(int rid) {
-		List<Integer> pids = adminRolePermissionService.findAllByRid(rid).stream().map(AdminRolePermission::getPid)
-				.collect(Collectors.toList());
-		return adminPermissionDAO.findAllById(pids);
-	}
+    @Autowired
+    private AdminRolePermissionService adminRolePermissionService;
 
-	public Set<String> listPermissionURLsByUser(String username) {
-		List<Integer> rids = adminRoleService.listRolesByUser(username).stream().map(AdminRole::getId)
-				.collect(Collectors.toList());
 
-		List<Integer> pids = adminRolePermissionDAO.findAllByRidIn(rids).stream().map(AdminRolePermission::getPid)
-				.collect(Collectors.toList());
+    public Set<String> listPermissionURLsByUser(String username) {
+        List<Integer> rids = adminRoleService.listRolesByUser(username).stream().map(AdminRole::getId)
+                                             .collect(Collectors.toList());
 
-		List<AdminPermission> perms = adminPermissionDAO.findAllById(pids);
+        List<Integer> pids = adminRolePermissionDao.findAllByRidIn(rids).stream().map(AdminRolePermission::getPid)
+                                                   .collect(Collectors.toList());
 
-		Set<String> URLs = perms.stream().map(AdminPermission::getUrl).collect(Collectors.toSet());
+        List<AdminPermission> perms = adminPermissionDao.findAllById(pids);
 
-		return URLs;
-	}
+        Set<String> URLs = perms.stream().map(AdminPermission::getUrl).collect(Collectors.toSet());
+
+        return URLs;
+    }
+
+    /**
+     * Determine whether client requires permission when requests a certain API.
+     *
+     * @param requestAPI API requested by client
+     * @return true when requestAPI is found in the DB
+     */
+    public boolean needFilter(String requestAPI) {
+        List<AdminPermission> ps = adminPermissionDao.findAll();
+        for (AdminPermission p : ps) {
+            // match prefix
+            if (requestAPI.startsWith(p.getUrl())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<AdminPermission> listPermsByRoleId(Integer rid) {
+        List<Integer> pids = adminRolePermissionDao.findAllByRid(rid).stream().map(AdminRolePermission::getPid)
+                                                       .collect(Collectors.toList());
+        return adminPermissionDao.findAllById(pids);
+    }
+
+    @Override
+    public List<AdminPermission>  list() {
+        return adminPermissionDao.findAll();
+    }
 }

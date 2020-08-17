@@ -3,6 +3,7 @@ package com.mysoft.alpha.result;
 public class ResultFactory {
 
     public static Result buildSuccessResult(Object data) {
+        System.out.println("buildSuccessResult,buildResult="+data.toString());
         return buildResult(ResultCode.SUCCESS, "成功", data);
     }
 

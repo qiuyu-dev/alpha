@@ -1,32 +1,33 @@
 package com.mysoft.alpha.service.impl;
 
-import com.mysoft.alpha.dao.ComplaintDAO;
+import com.mysoft.alpha.dao.ComplaintDao;
 import com.mysoft.alpha.entity.Complaint;
 import com.mysoft.alpha.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 投诉(Complaint)表服务实现类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:59
+ */
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
-	@Autowired
-	ComplaintDAO complaintDAO;
+    /**
+     * 服务对象
+     */
+    @Autowired
+    private ComplaintDao complaintDao;
 
-	@Override
-	public List<Complaint> findAllComplaint() {
-		return complaintDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
-	}
+    public Complaint save(Complaint complaint){
+        return complaintDao.save(complaint);
+    }
 
-	@Override
-	public Complaint findById(Integer id) {
-		return complaintDAO.getOne(id);
-	}
 
-	@Override
-	public void save(Complaint complaint) {
-		complaintDAO.save(complaint);
-
-	}
+    public List<Complaint> findByCustomerProductId(Integer customerProductId){
+        return complaintDao.findByCustomerProductIdOrderByIdDesc(customerProductId);
+    }
 }

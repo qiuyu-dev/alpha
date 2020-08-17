@@ -1,9 +1,9 @@
 package com.mysoft.alpha.dto.base;
 
 
-import static com.mysoft.alpha.util.BeanUtils.updateProperties;
-
 import org.springframework.lang.NonNull;
+
+import static com.mysoft.alpha.util.BeanUtils.updateProperties;
 
 
 /**
@@ -25,7 +25,7 @@ public interface OutputConverter<DTO extends OutputConverter<DTO, DOMAIN>, DOMAI
      */
     @SuppressWarnings("unchecked")
     @NonNull
-    default <T extends DTO> T convertFrom(@NonNull DOMAIN domain) {
+    default <T extends DTO> T   convertFrom(@NonNull DOMAIN domain) {
 
         updateProperties(domain, this);
 

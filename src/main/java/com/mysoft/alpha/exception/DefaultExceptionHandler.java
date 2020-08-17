@@ -1,14 +1,12 @@
 package com.mysoft.alpha.exception;
 
+import com.mysoft.alpha.result.Result;
+import com.mysoft.alpha.result.ResultFactory;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.mysoft.alpha.exception.CustomException;
-import com.mysoft.alpha.result.Result;
-import com.mysoft.alpha.result.ResultFactory;
 
 /**
  * Global exception handler.

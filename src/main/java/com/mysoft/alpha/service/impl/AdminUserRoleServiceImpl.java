@@ -1,30 +1,34 @@
 package com.mysoft.alpha.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mysoft.alpha.dao.AdminUserRoleDao;
+import com.mysoft.alpha.entity.AdminRole;
+import com.mysoft.alpha.entity.AdminUserRole;
+import com.mysoft.alpha.service.AdminUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysoft.alpha.dao.AdminUserRoleDAO;
-import com.mysoft.alpha.entity.AdminRole;
-import com.mysoft.alpha.entity.AdminUserRole;
-import com.mysoft.alpha.service.AdminUserRoleService;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * 用户-角色(AdminUserRole)表服务实现类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:33
+ */
 @Service
 public class AdminUserRoleServiceImpl implements AdminUserRoleService {
+    /**
+     * 服务对象
+     */
     @Autowired
-    AdminUserRoleDAO adminUserRoleDAO;
+    private AdminUserRoleDao adminUserRoleDao;
 
-    public List<AdminUserRole> listAllByUid(int uid) {
-        return adminUserRoleDAO.findAllByUid(uid);
-    }
-
-//    @Modifying
+    @Override
     @Transactional
-    public void saveRoleChanges(int uid, List<AdminRole> roles) {
-        adminUserRoleDAO.deleteAllByUid(uid);
+    public void saveRoleChanges(Integer uid, List<AdminRole> roles) {
+        adminUserRoleDao.deleteAllByUid(uid);
         List<AdminUserRole> urs = new ArrayList<>();
         roles.forEach(r -> {
             AdminUserRole ur = new AdminUserRole();
@@ -32,6 +36,7 @@ public class AdminUserRoleServiceImpl implements AdminUserRoleService {
             ur.setRid(r.getId());
             urs.add(ur);
         });
-        adminUserRoleDAO.saveAll(urs);
+        adminUserRoleDao.saveAll(urs);
+
     }
 }

@@ -1,42 +1,56 @@
 package com.mysoft.alpha.service.impl;
 
-import com.mysoft.alpha.dao.AdminRoleDAO;
+import com.mysoft.alpha.dao.AdminRoleDao;
+import com.mysoft.alpha.dao.AdminUserRoleDao;
 import com.mysoft.alpha.entity.*;
 import com.mysoft.alpha.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 角色(AdminRole)表服务实现类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:23
+ */
 @Service
 public class AdminRoleServiceImpl implements AdminRoleService {
+    /**
+     * 服务对象
+     */
     @Autowired
-    AdminRoleDAO adminRoleDAO;
+    private AdminRoleDao adminRoleDao;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    AdminUserRoleService adminUserRoleService;
+    private AdminUserRoleDao adminUserRoleDao;
 
     @Autowired
-    AdminPermissionService adminPermissionService;
+    private AdminPermissionService adminPermissionService;
 
     @Autowired
-    AdminRolePermissionService adminRolePermissionService;
+    private AdminMenuService adminMenuService;
 
     @Autowired
-    AdminMenuService adminMenuService;
+    private AdminRolePermissionService adminRolePermissionService;
 
+    public List<AdminRole> listRolesByUser(String username) {
+        int uid = userService.findByUsername(username).getId();
+        List<Integer> rids =
+                adminUserRoleDao.findAllByUid(uid).stream().map(AdminUserRole::getRid).collect(Collectors.toList());
+        return adminRoleDao.findAllById(rids);
+    }
+
+    @Override
     public List<AdminRole> listWithPermsAndMenus() {
-        List<AdminRole> roles = adminRoleDAO.findAll();
-        //		List<AdminPermission> perms;
-        //		List<AdminMenu> menus; gll 20200724
+        List<AdminRole> roles = adminRoleDao.findAll();
         for (AdminRole role : roles) {
             List<AdminPermission> perms;
             List<AdminMenu> menus;
@@ -48,44 +62,37 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         return roles;
     }
 
-    public List<AdminRole> findAll() {
-        return adminRoleDAO.findAll();
-    }
-
-    public void addOrUpdate(AdminRole adminRole) {
-        adminRoleDAO.save(adminRole);
-    }
-
-    public List<AdminRole> listRolesByUser(String username) {
-        int uid = userService.findByUsername(username).getId();
-        List<Integer> rids =
-                adminUserRoleService.listAllByUid(uid).stream().map(AdminUserRole::getRid).collect(Collectors.toList());
-        return adminRoleDAO.findAllById(rids);
-    }
-
     @Override
     public List<AdminRole> listSubRolesByUser(String username) {
         List<AdminRole> roles = new ArrayList<>();
         if (!username.equals("admin")) {
             User user = userService.findByUsername(username);
-            AdminRole role = adminRoleDAO.findById(adminUserRoleService.listAllByUid(user.getId()).get(0).getRid());
-            //            System.out.println("------------------substring" + role.getNameZh().substring(0, 2));
-            roles = adminRoleDAO.findByNameZhLikeOrderByIdAsc(role.getNameZh().substring(0, 1) + "%");
+            AdminRole role = adminRoleDao.getOne(adminUserRoleDao.findAllByUid(user.getId()).get(0).getRid());
+            roles = adminRoleDao.findByNameZhLikeOrderByIdAsc(role.getNameZh().substring(0, 1) + "%");
         } else {
-            roles = adminRoleDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
+            roles = adminRoleDao.findAll(Sort.by(Sort.Direction.ASC, "id"));
         }
         return roles;
     }
 
+    @Override
     public AdminRole updateRoleStatus(AdminRole role) {
-        AdminRole roleInDB = adminRoleDAO.findById(role.getId());
+        AdminRole roleInDB = adminRoleDao.getOne(role.getId());
         roleInDB.setEnabled(role.getEnabled());
-        return adminRoleDAO.save(roleInDB);
+        return adminRoleDao.save(roleInDB);
     }
 
-    @Transactional
-    public void editRole(@RequestBody AdminRole role) {
-        adminRoleDAO.save(role);
-        adminRolePermissionService.savePermChanges(role.getId(), role.getPerms());
+    @Override
+    public void addOrUpdate(AdminRole role) {
+        adminRoleDao.save(role);
+
     }
+
+    @Override
+    public void editRole(AdminRole role) {
+        adminRoleDao.save(role);
+        adminRolePermissionService.savePermChanges(role.getId(), role.getPerms());
+
+    }
+
 }

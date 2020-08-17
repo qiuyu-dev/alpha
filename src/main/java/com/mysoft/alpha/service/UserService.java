@@ -6,26 +6,24 @@ import com.mysoft.alpha.model.RegisterForm;
 
 import java.util.List;
 
-
+/**
+ * 用户(User)表服务接口
+ *
+ * @author makejava
+ * @since 2020-08-02 16:14:13
+ */
 public interface UserService {
 
-	public List<UserDTO> list(String username);
+    User findByUsername(String userName);
 
-    public boolean isExistUsername(String username);
-    
-    public User findByUsername(String username);
+    int register(RegisterForm registerForm);
 
-    public User get(String username, String password);
+    List<UserDTO> list(String toString);
 
-    public int register(User user);
-    
-    public int register(RegisterForm registerForm);
+    void updateUserStatus(User requestUser);
 
-    public void updateUserStatus(User user);
+    User resetPassword(User requestUser);
 
-    public User resetPassword(User user);
-
-    public void editUser(User user);
-
-    public void deleteById(int id);
+    void editUser(User requestUser);
+    User getUserById(Integer id);
 }

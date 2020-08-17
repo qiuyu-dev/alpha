@@ -1,127 +1,151 @@
 package com.mysoft.alpha.service.impl;
 
 import com.mysoft.alpha.dao.*;
-import com.mysoft.alpha.entity.*;
+import com.mysoft.alpha.entity.CpExcelDetail;
+import com.mysoft.alpha.entity.CpExcelMst;
 import com.mysoft.alpha.service.CpExcelService;
+import com.mysoft.alpha.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * @Service 业务层
- * @Transactional 事务管理
+ * 客户-产品Excel主表(CpExcelMst)表服务实现类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:14:06
  */
-
 @Service
-@Transactional
 public class CpExcelServiceImpl implements CpExcelService {
+    /**
+     * excel主表服务对象
+     */
+    @Autowired
+    private CpExcelMstDao cpExcelMstDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private AdminUserRoleDao adminUserRoleDao;
+    @Autowired
+    private AdminRoleDao adminRoleDao;
+    @Autowired
+    private AlphaSubjectDao alphaSubjectDao;
 
     /**
-     * excel主表
+     * excel明细服务对象
      */
     @Autowired
-    private CustomerProductExcelMstDAO customerProductExcelMstDAO;
+    private CpExcelDetailDao cpExcelDetailDao;
 
-    /**
-     * Excel明细
-     */
-    @Autowired
-    private CustomerProductExcelDetailDAO customerProductExcelDetailDAO;
-    /**
-     * 客户-企业
-     */
-    @Autowired
-    private CustomerEnterpriseDAO customerEnterpriseDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private AdminUserRoleDAO adminUserRoleDAO;
-    @Autowired
-    private AdminRoleDAO adminRoleDAO;
+    public CpExcelMst saveMst(CpExcelMst cpExcelMst) {
+        return cpExcelMstDao.save(cpExcelMst);
+    }
+
+    public CpExcelDetail saveDetail(CpExcelDetail cpExceldetail) {
+        return cpExcelDetailDao.save(cpExceldetail);
+    }
+
+    public void saveAllDetails(List<CpExcelDetail> cpExcelDetails) {
+        cpExcelDetailDao.saveAll(cpExcelDetails);
+    }
+
+    @Override
+    public boolean isExistOutTradeNoe(String outTradeNo) {
+        CpExcelDetail cpExcelDetail = cpExcelDetailDao.findByOutTradeNo(outTradeNo);
+        return null != cpExcelDetail;
+    }
+
+    @Override
+    public boolean isExistOutTradeNoe(Integer customerId, Integer productId, Date effectiveDate, Date closingDate) {
+        List<CpExcelDetail> cpExcelDetails =
+                cpExcelDetailDao.findByCustomerSubjectIdAndProductId(customerId,  productId);
+        for (CpExcelDetail cpExcelDetail : cpExcelDetails) {
+            String effective = DateUtil.getDateByFormat(effectiveDate.toString(), "yyyy-MM-dd");
+            String closing = DateUtil.getDateByFormat(closingDate.toString(), "yyyy-MM-dd");
+            String begin = DateUtil.getDateByFormat(cpExcelDetail.getEffectiveDate().toString(), "yyyy-MM-dd");
+            String end = DateUtil.getDateByFormat(cpExcelDetail.getClosingDate().toString(), "yyyy-MM-dd");
+
+            if (!((effective.compareTo(begin) < 0 && closing.compareTo(begin) < 0) ||
+                    (effective.compareTo(end) > 0 && closing.compareTo(end) > 0))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public CpExcelMst findMstByFileName(String fileName) {
+        return cpExcelMstDao.findByFileName(fileName);
+    }
+
+    @Override
+    public List<CpExcelMst> findMstByPaySubjectIdOrderById(Integer paySubjectId) {
+        return cpExcelMstDao.findByPaySubjectIdOrderByIdDesc(paySubjectId);
+    }
+    @Override
+    public List<CpExcelMst> findMstByChargeSubjectIdOrderById(Integer chargeSubjectId){
+        return cpExcelMstDao.findByChargeSubjectIdOrderByIdDesc(chargeSubjectId);
+    }
+
+    @Override
+    public void deleteDetailByCpExcelMstId(Integer cpExcelMstId) {
+        cpExcelDetailDao.deleteByCpExcelMstId(cpExcelMstId);
+
+    }
+
+    @Override
+    public void deleteMstById(Integer cpExcelMstId) {
+        cpExcelMstDao.deleteById(cpExcelMstId);
+
+    }
+
+    @Override
+    public void deleteDetailById(Integer cpExcelDetailId) {
+        cpExcelDetailDao.deleteById(cpExcelDetailId);
+
+    }
+
+    @Override
+    public List<CpExcelDetail> findDetailByCpExcelMstId(Integer cpExcelMstId) {
+
+        return cpExcelDetailDao.findByCpExcelMstId(cpExcelMstId);
+    }
+
+    @Override
+    public List<CpExcelDetail> findDetailByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId,
+                                                                              List<Integer> status) {
+        return cpExcelDetailDao.findByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMstId,status);
+    }
+    @Override
+    public List<CpExcelMst> findMstAll() {
+        return cpExcelMstDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
 
 
     @Override
-    public List<CustomerProductExcelMst> findCpExcelByUser(String username) {
-        List<CustomerProductExcelMst> retrunList = new ArrayList<>();
-        if (username.equals("admin")) {
-            retrunList = customerProductExcelMstDAO.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        } else {
-            User user = userDAO.findByUsername(username);
-            int roleId = adminUserRoleDAO.findAllByUid(user.getId()).get(0).getRid();
+    public boolean isExistFileName(String fileName, String chargeId) {
+        CpExcelMst cpExcelMst1 = new CpExcelMst();
+        cpExcelMst1.setFileName(fileName);
+        cpExcelMst1.setChargeSubjectId(Integer.valueOf(chargeId));
+        Example<CpExcelMst> example = Example.of(cpExcelMst1);
+        System.out.println("cpExcelMstDao.exists(example):"+cpExcelMstDao.exists(example));
+        return cpExcelMstDao.exists(example);
+//        CpExcelMst cpExcelMst = cpExcelMstDao.findByFileName(fileName);
+//        return null != cpExcelMst;
+    }
 
-            AdminRole role = adminRoleDAO.findById(roleId);
-            if (role.getNameZh().contains("管理")) {
-                retrunList = customerProductExcelMstDAO.findByFromIdOrderByIdDesc(user.getCompany().getId());
-            } else {
-                retrunList = customerProductExcelMstDAO.findByOperatorOrderByIdDesc(user.getUsername());
-            }
-        }
-        return retrunList;
+    public CpExcelDetail getDetailById(Integer detailId){
+        return cpExcelDetailDao.getOne(detailId);
     }
-    //不用事务，直接提交
-    public void taskCpExcelToCustomerEnterprise() {
-        String mstStatus = "3";//"已申请待审核";//客户或采购方-服务方
-        //1 = 已触发待申请;导入cp_excel2 = 重新触发待申请;未通过后修改
-        List<String> statusList = Stream.of("1", "2").collect(Collectors.toList());
-        //excel主表循环
-        List<CustomerProductExcelMst> cPExcelMstsList =
-                customerProductExcelMstDAO.findCustomerProductExcelMstsByStatusInOrderByIdAsc(statusList);
-        for (CustomerProductExcelMst cPExcelMst : cPExcelMstsList) {
-            //Excel 明细循环
-            List<CustomerProductExcelDetail> cPExcelDetailsList =cPExcelMst.getCpExcelDetails();
-            for (CustomerProductExcelDetail cPExcelDetail : cPExcelDetailsList) {
-                if(cPExcelDetail.getStatus().equals("1")||cPExcelDetail.getStatus().equals("2")) {
-                    //对应明细确认客户-企业是否有记录
-                    CustomerEnterprise customerEnterprise = customerEnterpriseDAO
-                            .findFirstByInsuredIdAndCompanyIdAndBeginTimeAndEndTimeOrderByIdIdDesc(cPExcelDetail.getInsuredId(),
-                                    cPExcelMst.getToId(), cPExcelDetail.getEffectiveDate(), cPExcelDetail.getClosingDate());
-                    //对应明细确认客户-企业如果没有记录，增加记录
-                    if (customerEnterprise == null) {
-                        CustomerEnterprise newCustomerEnterprise = new CustomerEnterprise();
-                        newCustomerEnterprise.setCertificateType(cPExcelDetail.getCertificateType());
-                        newCustomerEnterprise.setInsuredId(cPExcelDetail.getInsuredId());
-                        newCustomerEnterprise.setCname(cPExcelDetail.getInsuredName());
-                        newCustomerEnterprise.setPhone(cPExcelDetail.getPhone());
-                        newCustomerEnterprise.setCompanyId(Integer.valueOf(cPExcelMst.getToId()));
-                        newCustomerEnterprise.setEffectiveDate(cPExcelDetail.getEffectiveDate());
-                        newCustomerEnterprise.setClosingDate(cPExcelDetail.getClosingDate());
-                        newCustomerEnterprise.setStatus("3");
-                        newCustomerEnterprise.setFromType(cPExcelMst.getFromType());
-                        newCustomerEnterprise.setFromId(cPExcelMst.getFromId());
-                        newCustomerEnterprise.setCpemId(cPExcelMst.getId());
-                        newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
-                        newCustomerEnterprise.setRemark("来源："+ cPExcelMst.getFileName()+",行号："+cPExcelDetail.getRowNum()+",日期：" + cPExcelMst.getCreateTime()  );
-                        newCustomerEnterprise.setOperator("admin");
-                        newCustomerEnterprise.setCpedId(cPExcelDetail.getId());
-                        newCustomerEnterprise.setCpemId(cPExcelMst.getId());
-                        customerEnterpriseDAO.save(newCustomerEnterprise);
-                        cPExcelDetail.setStatus("3");
 
-                    }
-                    //对应明细确认客户-企业如果有记录，修改Excel明细说明
-                    else {
-                        cPExcelDetail.setStatus("-3");
-                        mstStatus = "1";
-                        cPExcelDetail.setConfirmRemark(
-                                "原因：客户已经申请服务"  + "，" +customerEnterprise.getRemark());
-                    }
-                    customerProductExcelDetailDAO.save(cPExcelDetail);
-                }
-            }
-            cPExcelMst.setStatus(mstStatus);
-            customerProductExcelMstDAO.save(cPExcelMst);
-        }
+    public CpExcelMst getMstById(Integer mstId){
+        return cpExcelMstDao.getOne(mstId);
     }
-    @Override
-    public void updateCpExcelDetailStatusById(int cpExcelDetailId, int status) {
-        CustomerProductExcelDetail cpExcelDetail =customerProductExcelDetailDAO.getOne(cpExcelDetailId);
-        cpExcelDetail.setStatus(String.valueOf(status));
-        customerProductExcelDetailDAO.save(cpExcelDetail);
-    }
+
+
 }

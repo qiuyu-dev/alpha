@@ -1,141 +1,166 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+/**
+ * 客户-企业-产品订单(CustomerProduct)实体类
+ *
+ * @author makejava
+ * @since 2020-08-02 16:13:52
+ */
 @Entity
 @Table(name = "customer_product")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class CustomerProduct {
+public class CustomerProduct implements Serializable {
+    private static final long serialVersionUID = 366306108075287561L;
+    /**
+     * 客户-企业-产品订单主键
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
-
-    @Column(name = "company_id")
-    private int companyId;
-
+    private Integer id;
+    /**
+     * 客户主体ID，这里是客户id
+     */
+    @Column(name = "customer_subject_id")
+    private Integer customerSubjectId;
+    /**
+     * 提供产品ID，保险产品
+     */
     @Column(name = "product_id")
-    private int productId;
-
-    @Column(name = "policy_number")
-    private String policyNumber;//订单号
-
-
-    @Column(name = "name")
-    private String name;//姓名
-
-    @Column(name = "certificate_type")
-    private String certificateType;//证件类型 1  身份证 2 护照
-
-    @Column(name = "insured_id")
-    private String insuredId;//证件号
-
-    @Column(name = "phone ")
-    private String phone;//电话号码
-
-
+    private Integer productId;
+    /**
+     * 开始时间
+     */
     @Column(name = "effective_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date effectiveDate;
-
+    /**
+     * 结束时间
+     */
     @Column(name = "closing_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date closingDate;
-
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "seq_number")
-    private int seqNumber;
-
-    @Column(name = "from_type")
-    private int fromType;
-
-    @Column(name = "from_id")
-    private int fromId;
-
-    @Column(name = "to_type")
-    private int toType;
-
-    @Column(name = "to_id")
-    private int toId;
-
+    /**
+     * 订单标识,唯一，可能是保单号，服务单据号等，对应客户+产品
+     */
+    @Column(name = "out_trade_no")
+    private String outTradeNo;
+    /**
+     * 备注
+     */
     @Column(name = "remark")
     private String remark;
-
+    /**
+     * 申请备注
+     */
+    @Column(name = "confirm_remark")
+    private String confirmRemark;
+    /**
+     * 申请类型，1、申请（付费）企业excel，2，系统维护
+     */
+    @Column(name = "source_type")
+    private Integer sourceType;
+    /**
+     * 触发ID，客户-产品excle主表ID，冗余
+     */
+    @Column(name = "source_id")
+    private Integer sourceId;
+    /**
+     * 触发id，客户-产品excle明细ID, 之一
+     */
+    @Column(name = "source_detail_id")
+    private Integer sourceDetailId;
+    /**
+     * 状态：1、已触发待申请，2 = 重新触发待申请，3 = 审核通过待付费，4=重新申请待审核，5 = 审核通过可付费，6 = 付费完成待收款，7 = 确认收款服务中，8 = 服务完成，9 = 服务完成且评价，-3=审核不通过，-5=未付费，-7=未收款
+     */
+    @Column(name = "state")
+    private Integer state;
+    /**
+     * 付费次数
+     */
+    @Column(name = "pay_times")
+    private Integer payTimes;
+    /**
+     * 操作员
+     */
     @Column(name = "operator")
     private String operator;
-
+    /**
+     * 创建时间
+     */
     @Column(name = "create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
+
+    /**
+     * 客户主体ID
+     */
+    @Transient
+    private AlphaSubject customerSubject;
+    /**
+     * 产品ID
+     */
+    @Transient
+    private Product product;
+
+    /**
+     * 触发ID，客户-产品excle主表ID，冗余
+     */
+    @Transient
+    private CpExcelMst sourceMst;
+    /**
+     * 触发id，客户-产品excle明细ID, 之一
+     */
+    @Transient
+    private CpExcelDetail sourceDetail;
+
+    /**
+     * 投诉
+     */
+    @Transient
+    private List<Complaint> complaints;
 
     public CustomerProduct() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCompanyId() {
-        return companyId;
+    public Integer getCustomerSubjectId() {
+        return customerSubjectId;
     }
 
-    public void setCompanyId(int companyId) {
-        this.companyId = companyId;
+    public void setCustomerSubjectId(Integer customerSubjectId) {
+        this.customerSubjectId = customerSubjectId;
     }
 
-    public int getProductId() {
+    public AlphaSubject getCustomerSubject() {
+        return customerSubject;
+    }
+
+    public void setCustomerSubject(AlphaSubject customerSubject) {
+        this.customerSubject = customerSubject;
+    }
+
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
-    }
-
-    public String getPolicyNumber() {
-        return policyNumber;
-    }
-
-    public void setPolicyNumber(String policyNumber) {
-        this.policyNumber = policyNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCertificateType() {
-        return certificateType;
-    }
-
-    public void setCertificateType(String certificateType) {
-        this.certificateType = certificateType;
-    }
-
-    public String getInsuredId() {
-        return insuredId;
-    }
-
-    public void setInsuredId(String insuredId) {
-        this.insuredId = insuredId;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public Date getEffectiveDate() {
@@ -154,52 +179,12 @@ public class CustomerProduct {
         this.closingDate = closingDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getOutTradeNo() {
+        return outTradeNo;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getSeqNumber() {
-        return seqNumber;
-    }
-
-    public void setSeqNumber(int seqNumber) {
-        this.seqNumber = seqNumber;
-    }
-
-    public int getFromType() {
-        return fromType;
-    }
-
-    public void setFromType(int fromType) {
-        this.fromType = fromType;
-    }
-
-    public int getFromId() {
-        return fromId;
-    }
-
-    public void setFromId(int fromId) {
-        this.fromId = fromId;
-    }
-
-    public int getToType() {
-        return toType;
-    }
-
-    public void setToType(int toType) {
-        this.toType = toType;
-    }
-
-    public int getToId() {
-        return toId;
-    }
-
-    public void setToId(int toId) {
-        this.toId = toId;
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
     }
 
     public String getRemark() {
@@ -208,6 +193,54 @@ public class CustomerProduct {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getConfirmRemark() {
+        return confirmRemark;
+    }
+
+    public void setConfirmRemark(String confirmRemark) {
+        this.confirmRemark = confirmRemark;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public Integer getSourceDetailId() {
+        return sourceDetailId;
+    }
+
+    public void setSourceDetailId(Integer sourceDetailId) {
+        this.sourceDetailId = sourceDetailId;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getPayTimes() {
+        return payTimes;
+    }
+
+    public void setPayTimes(Integer payTimes) {
+        this.payTimes = payTimes;
     }
 
     public String getOperator() {
@@ -226,28 +259,66 @@ public class CustomerProduct {
         this.createTime = createTime;
     }
 
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public CpExcelMst getSourceMst() {
+        return sourceMst;
+    }
+
+    public void setSourceMst(CpExcelMst sourceMst) {
+        this.sourceMst = sourceMst;
+    }
+
+    public CpExcelDetail getSourceDetail() {
+        return sourceDetail;
+    }
+
+    public void setSourceDetail(CpExcelDetail sourceDetail) {
+        this.sourceDetail = sourceDetail;
+    }
+
+    public List<Complaint> getComplaints() {
+        return complaints;
+    }
+
+    public void setComplaints(List<Complaint> complaints) {
+        this.complaints = complaints;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("CustomerProduct{");
         sb.append("id=").append(id);
-        sb.append(", companyId=").append(companyId);
+        sb.append(", customerSubjectId=").append(customerSubjectId);
         sb.append(", productId=").append(productId);
-        sb.append(", policyNumber='").append(policyNumber).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", certificateType='").append(certificateType).append('\'');
-        sb.append(", insuredId='").append(insuredId).append('\'');
-        sb.append(", phone='").append(phone).append('\'');
         sb.append(", effectiveDate=").append(effectiveDate);
         sb.append(", closingDate=").append(closingDate);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", seqNumber=").append(seqNumber);
-        sb.append(", fromType=").append(fromType);
-        sb.append(", fromId=").append(fromId);
-        sb.append(", toType=").append(toType);
-        sb.append(", toId=").append(toId);
+        sb.append(", outTradeNo='").append(outTradeNo).append('\'');
         sb.append(", remark='").append(remark).append('\'');
+        sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", sourceId=").append(sourceId);
+        sb.append(", sourceDetailId=").append(sourceDetailId);
+        sb.append(", state=").append(state);
+        sb.append(", payTimes=").append(payTimes);
         sb.append(", operator='").append(operator).append('\'');
         sb.append(", createTime=").append(createTime);
+        sb.append(", customerSubject=").append(customerSubject);
+        sb.append(", product=").append(product);
+        sb.append(", sourceMst=").append(sourceMst);
+        sb.append(", sourceDetail=").append(sourceDetail);
+        sb.append(", complaints=").append(complaints);
         sb.append('}');
         return sb.toString();
     }

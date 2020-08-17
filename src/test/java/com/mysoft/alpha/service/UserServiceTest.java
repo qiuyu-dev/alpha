@@ -14,11 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.mysoft.alpha.dao.CompanyDAO;
-import com.mysoft.alpha.dao.UserDAO;
+import com.mysoft.alpha.dao.UserDao;
 import com.mysoft.alpha.dto.UserDTO;
 import com.mysoft.alpha.entity.AdminRole;
-import com.mysoft.alpha.entity.Company;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.model.RegisterForm;
 import com.mysoft.alpha.service.AdminRoleService;
@@ -36,9 +34,7 @@ import static org.hamcrest.CoreMatchers.is;
 @SpringBootTest
 public class UserServiceTest {
     @Mock
-    private UserDAO userDAO;
-    @Mock
-    private CompanyDAO companyDAO;
+    private UserDao userDAO;
     @Mock
     private AdminRoleService adminRoleService;
     @InjectMocks

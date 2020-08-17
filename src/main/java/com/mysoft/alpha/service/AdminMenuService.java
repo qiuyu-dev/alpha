@@ -4,21 +4,19 @@ import com.mysoft.alpha.entity.AdminMenu;
 
 import java.util.List;
 
-
+/**
+ * 菜单(AdminMenu)表服务接口
+ *
+ * @author makejava
+ * @since 2020-08-02 16:12:34
+ */
 public interface AdminMenuService {
 
-    public List<AdminMenu> findAll();
+    List<AdminMenu> getMenusByCurrentUser();
 
-    public List<AdminMenu> getAllByParentId(int parentId);
+    List<AdminMenu> getMenusByRoleId(int rid);
 
-    public List<AdminMenu> getMenusByCurrentUser();
+    List<AdminMenu> findAll();
 
-    public List<AdminMenu> getMenusByRoleId(int rid);
 
-    /**
-     * Adjust the Structure of the menu.
-     *
-     * @param menus Menu items list without structure
-     */
-    public void handleMenus(List<AdminMenu> menus);
 }
