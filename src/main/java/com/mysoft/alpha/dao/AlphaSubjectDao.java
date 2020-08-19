@@ -16,7 +16,8 @@ public interface AlphaSubjectDao extends JpaRepository<AlphaSubject, Integer> {
 
     AlphaSubject findByRecordNumber(String orgcode);
 
-    AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(Integer subjectType, Integer recordType, String recordNumber);
+    AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(Integer subjectType, String recordType,
+                                                               String recordNumber);
 
     void deleteBySourceTypeAndSourceDetailIdIn(Integer sourceType,List<Integer> sourceDetailId);
 

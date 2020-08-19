@@ -14,9 +14,10 @@ public interface AlphaSubjectService {
 
     AlphaSubject getAlphaSubjectById(int id);
 
-    boolean isExistAlphaSubject( Integer subjectType,Integer recordType,String recordNumber);
+    boolean isExistAlphaSubject( Integer subjectType,String recordType,String recordNumber);
 
-    AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber( Integer subjectType,Integer recordType,String recordNumber);
+    AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber( Integer subjectType,String recordType,
+                                                                String recordNumber);
 
     AlphaSubject save(AlphaSubject alphaSubject);
 

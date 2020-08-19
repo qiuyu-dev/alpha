@@ -235,9 +235,8 @@ public class CpExcelController {
      */
     @PostMapping("/excelUpload")
     @Transactional //测试使用事务可以吗？
-    public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file) throws
-    Exception
-    {
+    public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file)
+            throws Exception {
         //操作员
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
@@ -268,32 +267,32 @@ public class CpExcelController {
         cpExcelMst.setCreateTime(new Date());
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
         System.out.println("----------------------saveCpExcelMst");
-//        try {
-            //存储文件明细
-            saveCpExcelDetail(file, cpExcelMst);
-            System.out.println("----------------------saveCpExcelDetail");
-            //触发申请服务产品
-            saveCustomerProduct(cpExcelMst);
-            System.out.println("----------------------saveCustomerProduct");
-            file.transferTo(localFile);
-            fileURL += localFile.getName();
-            return ResultFactory.buildResult(ResultCode.SUCCESS, "上传成功", fileURL);
-//        } catch (Exception e) {
-//            int mstId = cpExcelMst.getId();
-//            System.out.println("----------------------Exception，mstId" + mstId);
-//            alphaSubjectService.deleteBySourceTypeAndSourceId(1, mstId);
-//            productService.deleteBySourceTypeAndSourceId(1, mstId);
-//            cpExcelService.deleteDetailByCpExcelMstId(mstId);
-//            cpExcelService.deleteMstById(mstId);
-//            if (e instanceof CustomException) {
-//                CustomException customException = (CustomException) e;
-//                System.out.println("----------------------Exception:" + customException.getMsg());
-//                return ResultFactory.buildFailResult(customException.getMsg());
-//            } else {
-//                return ResultFactory.buildFailResult(e.));
-//            }
-//
-//        }
+        //        try {
+        //存储文件明细
+        saveCpExcelDetail(file, cpExcelMst);
+        System.out.println("----------------------saveCpExcelDetail");
+        //触发申请服务产品
+        saveCustomerProduct(cpExcelMst);
+        System.out.println("----------------------saveCustomerProduct");
+        file.transferTo(localFile);
+        fileURL += localFile.getName();
+        return ResultFactory.buildResult(ResultCode.SUCCESS, "上传成功", fileURL);
+        //        } catch (Exception e) {
+        //            int mstId = cpExcelMst.getId();
+        //            System.out.println("----------------------Exception，mstId" + mstId);
+        //            alphaSubjectService.deleteBySourceTypeAndSourceId(1, mstId);
+        //            productService.deleteBySourceTypeAndSourceId(1, mstId);
+        //            cpExcelService.deleteDetailByCpExcelMstId(mstId);
+        //            cpExcelService.deleteMstById(mstId);
+        //            if (e instanceof CustomException) {
+        //                CustomException customException = (CustomException) e;
+        //                System.out.println("----------------------Exception:" + customException.getMsg());
+        //                return ResultFactory.buildFailResult(customException.getMsg());
+        //            } else {
+        //                return ResultFactory.buildFailResult(e.));
+        //            }
+        //
+        //        }
     }
 
     /**
@@ -339,14 +338,14 @@ public class CpExcelController {
         String outTradeNo;//保单号
         String productName = null;//保险产品名称
         String customerName = null;//客户姓名
-        String customerTypeName;//证件类型名称
-        Integer recordType = 1;//证件类型，默认身份证
+        String customerTypeName = null;//证件类型名称
+        //        Integer recordType = 1;//证件类型，默认身份证
         String recordNumber = null;//证件号
         Date effectiveDate = null;//生效日
         Date closingDate = null;//截止日
-        String sex;//性别
-        String age;//年龄
-        String location;//所在地
+        String sex = null;//性别
+        Integer age = null;//年龄
+        String location = null;//所在地
         AlphaSubject customer = null;
         Product product = new Product();
         System.out.println("for");// 行数包括标题行
@@ -365,8 +364,8 @@ public class CpExcelController {
                 default:
                     break;
             }
-            System.out.println("icell:" + icell + ",type:" +cell.getCellType()+",DataFormat:"+ cell.getCellStyle().getDataFormatString()+",data:"+str
-            );
+            System.out.println("icell:" + icell + ",type:" + cell.getCellType() + ",DataFormat:" +
+                    cell.getCellStyle().getDataFormatString() + ",data:" + str);
             switch (icell) {
                 case 0://序号
                     if (str != null) {
@@ -405,19 +404,26 @@ public class CpExcelController {
                 case 4://证件类型
                     if (str != null) {
                         customerTypeName = str;
-                        cpExcelDetail.setCustomerType(customerTypeName);
-                        if (customerTypeName != null && customerTypeName.equals("身份证")) {
-                            recordType = 1;
-                        } else if (customerTypeName != null && customerTypeName.equals("护照")) {
-                            recordType = 2;
+
+                        if (customerTypeName == null || customerTypeName.equals("")) {
+                            customerTypeName = "其他";
                         }
+                        if (customerTypeName.contains("身份证")) {
+                            customerTypeName = "身份证";
+                        }
+                        cpExcelDetail.setCustomerType(customerTypeName);
+                        //                        if (customerTypeName != null && customerTypeName.equals("身份证")) {
+                        //                            recordType = 1;
+                        //                        } else if (customerTypeName != null && customerTypeName.equals("护照")) {
+                        //                            recordType = 2;
+                        //                        }
                     }
                     break;
                 case 5://证件号
                     if (str != null) {
                         recordNumber = str;
-                    } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，证件号不能为空");
+                        //                    } else {
+                        //                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，证件号不能为空");
                     }
                     break;
                 case 6://联系电话
@@ -452,19 +458,46 @@ public class CpExcelController {
                     }
                     break;
                 case 9://性别
-                    if (str != null) {
+                    if (str == null || str.equals("")) {
+                        if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
+                            throw new CustomException(0, "第" + irows + "行，无法获取性别信息");
+                        } else {
+                            if (Integer.valueOf(customer.getRecordNumber().substring(16, 17)) % 2 == 0) {
+                                sex = "女";
+                            } else {
+                                sex = "男";
+                            }
+
+                        }
+
+                    } else {
                         sex = str;
                         cpExcelDetail.setSex(sex);
                     }
                     break;
                 case 10://年龄
-                    if (str != null) {
-                        age = str;
-                        cpExcelDetail.setAge(age);
+                    if (str == null || str.equals("")) {
+                        if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
+                            throw new CustomException(0, "第" + irows + "行，无法获取年龄信息");
+                        } else {
+                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+                            Date dt = null;
+                            dt = df.parse(customer.getRecordNumber().substring(6, 14));
+                            age = getAge(dt);
+                        }
+                    } else {
+                        age = Integer.valueOf(str);
+                        cpExcelDetail.setAge(str);
                     }
                     break;
                 case 11://所在地
-                    if (str != null) {
+                    if (str == null || str.equals("")) {
+                        if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
+                            throw new CustomException(0, "第" + irows + "行，无法获取所在地信息");
+                        } else {
+                            location = getProvince(customer.getRecordNumber());
+                        }
+                    } else {
                         location = str;
                         cpExcelDetail.setLocation(location);
                     }
@@ -479,7 +512,14 @@ public class CpExcelController {
             }
         }
 
-         //先存一次产生detailid
+//        if (location == null || location.equals("") || sex == null || sex.equals("") || age == null ||
+//                age.intValue() < 0) {
+//            if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
+//                throw new CustomException(0, "第" + irows + "行，无法获取性别、年龄、所在地信息");
+//            }
+//        }
+
+        //先存一次产生detailid
         cpExcelDetail = cpExcelService.saveDetail(cpExcelDetail);
         if (productService.isExistProduct(productName)) {
             product = productService.findByName(productName);
@@ -497,13 +537,14 @@ public class CpExcelController {
             product = productService.save(pnew);
         }
 
-//        System.out.println("alphaSubjectService:");// 行数包括标题行
-        if (alphaSubjectService.isExistAlphaSubject(1, recordType, recordNumber)) {
-            customer = alphaSubjectService.findBySubjectTypeAndRecordTypeAndRecordNumber(1, recordType, recordNumber);
+        //        System.out.println("alphaSubjectService:");// 行数包括标题行
+        if (alphaSubjectService.isExistAlphaSubject(1, customerTypeName, recordNumber)) {
+            customer = alphaSubjectService
+                    .findBySubjectTypeAndRecordTypeAndRecordNumber(1, customerTypeName, recordNumber);
         } else {
             AlphaSubject cnew = new AlphaSubject();
             cnew.setSubjectType(1);
-            cnew.setRecordType(recordType);
+            cnew.setRecordType(customerTypeName);
             cnew.setRecordNumber(recordNumber);
             cnew.setName(customerName);
             cnew.setPhone(cpExcelDetail.getCustomerPhone());
@@ -513,33 +554,36 @@ public class CpExcelController {
             cnew.setEnabled(1);
             cnew.setOperator(cpExcelMst.getOperator());
             cnew.setCreateTime(new Date());
+            cnew.setAge(age);
+            cnew.setSex(sex);
+            cnew.setLocation(location);
             customer = alphaSubjectService.save(cnew);
         }
-       if (cpExcelService.isExistOutTradeNoe(customer.getId(), product.getId(), effectiveDate, closingDate)) {
+        if (cpExcelService.isExistOutTradeNoe(customer.getId(), product.getId(), effectiveDate, closingDate)) {
             throw new CustomException(0, "第" + irows + "行，保单已经存在");
         }
         cpExcelDetail.setProductId(product.getId());
         cpExcelDetail.setCustomerSubjectId(customer.getId());
-        if (cpExcelDetail.getSex() == null && customer.getRecordType() == 1) {
-            if (Integer.valueOf(customer.getRecordNumber().substring(16, 17)) % 2 == 0) {
-                cpExcelDetail.setSex("女");
-            } else {
-                cpExcelDetail.setSex("男");
-            }
-        }
-        if (cpExcelDetail.getAge() == null && customer.getRecordType() == 1) {
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-            Date dt = null;
-            try {
-                dt = df.parse(customer.getRecordNumber().substring(6, 14));
-                cpExcelDetail.setAge(getAge(dt) + "");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (cpExcelDetail.getLocation() == null && customer.getRecordType() == 1) {
-            cpExcelDetail.setLocation(getProvince(customer.getRecordNumber()));
-        }
+        //        if (cpExcelDetail.getSex() == null && customer.getRecordType().equals("身份证")) {
+        //            if (Integer.valueOf(customer.getRecordNumber().substring(16, 17)) % 2 == 0) {
+        //                cpExcelDetail.setSex("女");
+        //            } else {
+        //                cpExcelDetail.setSex("男");
+        //            }
+        //        }
+        //        if (cpExcelDetail.getAge() == null && customer.getRecordType() == 1) {
+        //            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        //            Date dt = null;
+        //            try {
+        //                dt = df.parse(customer.getRecordNumber().substring(6, 14));
+        //                cpExcelDetail.setAge(getAge(dt) + "");
+        //            } catch (Exception e) {
+        //                e.printStackTrace();
+        //            }
+        //        }
+        //        if (cpExcelDetail.getLocation() == null && customer.getRecordType() == 1) {
+        //            cpExcelDetail.setLocation(getProvince(customer.getRecordNumber()));
+        //        }
 
         if (cpExcelDetail.getClosingDate().before(cpExcelDetail.getEffectiveDate())) {
             throw new CustomException(0, "结束日期早于开始日期");

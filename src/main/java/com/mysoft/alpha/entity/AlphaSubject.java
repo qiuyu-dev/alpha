@@ -34,7 +34,7 @@ public class AlphaSubject implements Serializable {
      * 证件类型,1、身份证，2、军官证,驾驶证，3、新生儿出生证明，4、社会保险卡号，,10企业机构代码，
      */
     @Column(name = "record_type")
-    private Integer recordType;
+    private String recordType;
     /**
      * 组织机构代码，验证，唯一，或者身份证或其他证件好
      */
@@ -45,6 +45,22 @@ public class AlphaSubject implements Serializable {
      */
     @Column(name = "name")
     private String name;
+
+    /**
+     * 所在地,可以录入或来源于身份证号
+     */
+    @Column(name = "location")
+    private String location;
+    /**
+     * 年龄,可以录入或来源于身份证号
+     */
+    @Column(name = "age")
+    private Integer age;
+    /**
+     * 性别,1男，2女，可以录入或来源于身份证号
+     */
+    @Column(name = "sex")
+    private String sex;
     /**
      * 联系电话
      */
@@ -101,11 +117,11 @@ public class AlphaSubject implements Serializable {
         this.subjectType = subjectType;
     }
 
-    public Integer getRecordType() {
+    public String getRecordType() {
         return recordType;
     }
 
-    public void setRecordType(Integer recordType) {
+    public void setRecordType(String recordType) {
         this.recordType = recordType;
     }
 
@@ -181,5 +197,31 @@ public class AlphaSubject implements Serializable {
         this.createTime = createTime;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 }

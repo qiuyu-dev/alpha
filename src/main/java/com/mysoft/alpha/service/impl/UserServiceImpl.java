@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         AlphaSubject alphaSubject = new AlphaSubject();
         if (registerForm.getItype() == 1) {//注册企业和企业管理用户
             alphaSubject.setSubjectType(registerForm.getCtype());//1、客户，2、保险企业，3、服务企业
-            alphaSubject.setRecordType(10);
+            alphaSubject.setRecordType("组织机构代码");
             alphaSubject.setRecordNumber(registerForm.getOrgcode());
             alphaSubject.setName(crop);
             alphaSubject.setPhone(phone);

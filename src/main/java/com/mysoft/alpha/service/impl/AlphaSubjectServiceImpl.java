@@ -36,13 +36,18 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
     }
 
     @Override
-    public boolean isExistAlphaSubject(Integer subjectType, Integer recordType, String recordNumber) {
-        AlphaSubject alphaSubject = alphaSubjectDao.findBySubjectTypeAndRecordTypeAndRecordNumber(subjectType, recordType, recordNumber);
-        return null != alphaSubject;
+    public boolean isExistAlphaSubject(Integer subjectType, String recordType, String recordNumber) {
+        if (recordType != null && recordType.equals("身份证")) {
+            AlphaSubject alphaSubject = alphaSubjectDao
+                    .findBySubjectTypeAndRecordTypeAndRecordNumber(subjectType, recordType, recordNumber);
+            return null != alphaSubject;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(Integer subjectType, Integer recordType,
+    public AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(Integer subjectType, String recordType,
                                                                       String recordNumber) {
         return alphaSubjectDao.findBySubjectTypeAndRecordTypeAndRecordNumber(subjectType, recordType, recordNumber);
     }
@@ -53,12 +58,13 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
     }
 
     @Override
-    public void deleteBySourceTypeAndSourceId(Integer sourceType,  Integer sourceId) {
-        alphaSubjectDao.deleteBySourceTypeAndSourceId(sourceType,  sourceId);
+
+    public void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId) {
+        alphaSubjectDao.deleteBySourceTypeAndSourceId(sourceType, sourceId);
     }
 
     @Override
-    public void deleteBySourceTypeAndSourceDetailId(Integer sourceType,  Integer sourceDetailId) {
+    public void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId) {
 
         AlphaSubject alphaSubject = alphaSubjectDao.findBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
         CpExcelDetail cpExcelDetail = new CpExcelDetail();
@@ -71,7 +77,7 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
 
     @Override
     public List<AlphaSubject> findAllBySubjectType(Integer subjectType) {
-       return alphaSubjectDao.findAllBySubjectType(subjectType);
+        return alphaSubjectDao.findAllBySubjectType(subjectType);
 
     }
 }

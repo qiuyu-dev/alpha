@@ -28,6 +28,10 @@ public class AlphaSubjectController {
     @GetMapping("/getNameById")
     public Result getAlphaSubject(Integer id)  throws CustomException {
         AlphaSubject alphaSubject = alphaSubjectService.getAlphaSubjectById(id);
+        if(!alphaSubject.getRecordType().equals("组织机构代码")){
+            alphaSubject.setName(alphaSubject.getName()+"（性别："+alphaSubject.getSex()+"，年龄："+alphaSubject.getAge()+
+                    "，所在地："+alphaSubject.getLocation()+"）");
+        }
         return ResultFactory.buildSuccessResult(alphaSubject);
     }
 

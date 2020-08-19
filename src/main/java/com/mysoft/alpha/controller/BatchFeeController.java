@@ -56,8 +56,7 @@ public class BatchFeeController {
         batchFeeMst.setConfirmRemark(confirmRemark);
         batchFeeMst.setCreateTime(new Date());
         batchFeeMst.setState(7);// 7 = "确认收款服务中";//服务方-客户或采购方
-        batchFeeMst.setOperator(operator);
-
+        batchFeeMst.setCashier(operator);
 
         List<BatchFeeDetail> batchFeeDetailList = batchFeeService.findDetailsByBatchFeeMstId(batchFeeMst.getId());
         for (BatchFeeDetail batchFeeDetail : batchFeeDetailList) {
