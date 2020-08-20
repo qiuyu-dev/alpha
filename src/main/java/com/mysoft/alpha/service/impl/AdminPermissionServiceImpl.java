@@ -35,10 +35,6 @@ public class AdminPermissionServiceImpl implements AdminPermissionService {
     @Autowired
     private AdminRolePermissionDao adminRolePermissionDao;
 
-    @Autowired
-    private AdminRolePermissionService adminRolePermissionService;
-
-
     public Set<String> listPermissionURLsByUser(String username) {
         List<Integer> rids = adminRoleService.listRolesByUser(username).stream().map(AdminRole::getId)
                                              .collect(Collectors.toList());
