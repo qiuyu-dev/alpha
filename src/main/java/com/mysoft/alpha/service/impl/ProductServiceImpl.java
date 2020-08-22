@@ -70,13 +70,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId) {
-
         Product product = productDao.findBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
-        CpExcelDetail cpExcelDetail = new CpExcelDetail();
-        cpExcelDetail.setProductId(product.getId());
-        Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-        if (!cpExcelDetailDao.exists(example)) {
-            productDao.deleteById(product.getId());
+        if (product != null) {
+            CpExcelDetail cpExcelDetail = new CpExcelDetail();
+            cpExcelDetail.setProductId(product.getId());
+            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+            if (!cpExcelDetailDao.exists(example)) {
+                productDao.deleteById(product.getId());
+            }
         }
     }
 

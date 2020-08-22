@@ -53,9 +53,19 @@ public class CpExcelServiceImpl implements CpExcelService {
     }
 
     @Override
-    public boolean isExistOutTradeNoe(String outTradeNo) {
-        CpExcelDetail cpExcelDetail = cpExcelDetailDao.findByOutTradeNo(outTradeNo);
-        return null != cpExcelDetail;
+    public boolean isExistOutTradeNoe(String outTradeNo, Integer chargeId) {
+        CpExcelDetail cpExcelDetail = new CpExcelDetail();
+        cpExcelDetail.setOutTradeNo(outTradeNo);
+        Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+        List<CpExcelDetail> cpExcelDetailList = cpExcelDetailDao.findAll(example);
+        for(CpExcelDetail cpExcelDetail1:cpExcelDetailList){
+            CpExcelMst cpExcelMst = cpExcelMstDao.getOne(cpExcelDetail1.getCpExcelMstId());
+            if(cpExcelMst.getChargeSubjectId()!=null && cpExcelMst.getChargeSubjectId().compareTo(
+                    chargeId) ==0){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -135,9 +145,9 @@ public class CpExcelServiceImpl implements CpExcelService {
     public boolean isExistFileName(String fileName, String chargeId) {
         CpExcelMst cpExcelMst1 = new CpExcelMst();
         cpExcelMst1.setFileName(fileName);
-        cpExcelMst1.setChargeSubjectId(Integer.valueOf(chargeId));
+//        cpExcelMst1.setChargeSubjectId(Integer.valueOf(chargeId));
         Example<CpExcelMst> example = Example.of(cpExcelMst1);
-        System.out.println("cpExcelMstDao.exists(example):" + cpExcelMstDao.exists(example));
+//        System.out.println("cpExcelMstDao.exists(example):" + cpExcelMstDao.exists(example));
         return cpExcelMstDao.exists(example);
         //        CpExcelMst cpExcelMst = cpExcelMstDao.findByFileName(fileName);
         //        return null != cpExcelMst;

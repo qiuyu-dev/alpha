@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer id) {
         return userDao.getOne(id);
     }
+    
     @Transactional
     public int register(RegisterForm registerForm) {
         int ret = validateForm(registerForm);
@@ -83,7 +84,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setEnabled(1);
 
-
         //保存公司信息
         AlphaSubject alphaSubject = new AlphaSubject();
         if (registerForm.getItype() == 1) {//注册企业和企业管理用户
@@ -104,7 +104,6 @@ public class UserServiceImpl implements UserService {
             user.setOperator(SecurityUtils.getSubject().getPrincipal().toString());
         }
 
-
         // 默认生成 16 位盐
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         user.setSalt(salt);
@@ -115,7 +114,6 @@ public class UserServiceImpl implements UserService {
         User userNew = userDao.save(user);
 
         if (registerForm.getItype() == 1) {
-
             //添加对应角色
             AdminUserRole adminUserRole = new AdminUserRole();
             adminUserRole.setUid(userNew.getId());
@@ -132,7 +130,6 @@ public class UserServiceImpl implements UserService {
                     break;
                 default:
                     adminUserRole.setRid(0);
-
             }
             adminUserRoleDao.save(adminUserRole);
         }
@@ -143,26 +140,25 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> list(String username) {
         //根据登录用户，查询用户信息
         List<User> users = new ArrayList<>();
-
         if (username.equals("admin")) {
             users = userDao.findAll();
         } else {
-            User loginuser = userDao.findByUsername(username);
-            users = userDao.findByAlphaSubjectIdOrderByIdDesc(loginuser.getAlphaSubjectId());
+            User loginUser = userDao.findByUsername(username);
+            users = userDao.findByAlphaSubjectIdOrderByIdDesc(loginUser.getAlphaSubjectId());
         }
 
         // Find all roles in DB to enable JPA persistence context.
         //        List<AdminRole> allRoles = adminRoleService.findAll();
 
-        List<UserDTO> userDTOS =
+        List<UserDTO> userDTOs =
                 users.stream().map(user -> (UserDTO) new UserDTO().convertFrom(user)).collect(Collectors.toList());
 
-        userDTOS.forEach(u -> {
+        userDTOs.forEach(u -> {
             List<AdminRole> roles = adminRoleService.listRolesByUser(u.getUsername());
             u.setRoles(roles);
         });
 
-        return userDTOS;
+        return userDTOs;
     }
 
 

@@ -85,14 +85,12 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     @Override
     public void addOrUpdate(AdminRole role) {
         adminRoleDao.save(role);
-
     }
 
     @Override
     public void editRole(AdminRole role) {
         adminRoleDao.save(role);
         adminRolePermissionService.savePermChanges(role.getId(), role.getPerms());
-
     }
 
 }

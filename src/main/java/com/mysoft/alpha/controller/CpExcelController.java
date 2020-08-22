@@ -97,45 +97,30 @@ public class CpExcelController {
      */
     @GetMapping("/detailList")
     public Result detailList(@RequestParam() Integer step) throws CustomException {
-        //        System.out.println("----------------------CpExcelController:detailList,step:");
-        //        Integer step = map.get("step");
-        System.out.println("----------------------CpExcelController:detailList,step:" + step);
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
-        //        List<Integer> statusList = Stream.of(3, 4).collect(Collectors.toList());
         //根据付费方或收款方查询Excel主表
         List<CpExcelMst> cpExcelMstList = new ArrayList<>();
         if (operator.equals("admin")) {
             cpExcelMstList = cpExcelService.findMstAll();
         } else {
             switch (step) {
-                case 1:
+                case 1://客户单维护
                     cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
                     break;
-                case 2:
+                case 2://采购单维护-审核
                     cpExcelMstList = cpExcelService.findMstByChargeSubjectIdOrderById(user.getAlphaSubjectId());
                     break;
-                default:
+                default://采购单维护-付费
                     cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
                     break;
             }
         }
-        //        System.out
-        //                .println("----------------------CpExcelController:detailList,cpExcelMstList:" + cpExcelMstList.size());
         //根据Excel主表状态查询Excel明细
         List<CpExcelDetail> returnList = new ArrayList<>();
-
         for (CpExcelMst cpExcelMst : cpExcelMstList) {
             List<CpExcelDetail> cpExcelDetailList = new ArrayList<>();
             switch (step) {
-                //                case 1:
-                //                    cpExcelDetailList = cpExcelService.findDetailByCpExcelMstId(cpExcelMst.getId());
-                //                    break;
-                //
-                //                case 2:
-                //                    cpExcelDetailList = cpExcelService
-                //                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(3, 4));
-                //                    break;
                 case 3:
                     cpExcelDetailList = cpExcelService
                             .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(5));
@@ -145,8 +130,8 @@ public class CpExcelController {
                             .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(3, 4));
                     break;
             }
-            System.out.println(
-                    "----------------------CpExcelController:detailList,cpExcelDetailList:" + cpExcelDetailList.size());
+//            System.out.println(
+//                    "----------------------CpExcelController:detailList,cpExcelDetailList:" + cpExcelDetailList.size());
 
             //1，2根据Excel 明细查询CustomerProduct
             //3根据Excel明细查询付费主表
@@ -188,13 +173,9 @@ public class CpExcelController {
         if (cpExcelDetail.getState() > 4) {
             throw new CustomException(0, "已审核通过，不可删除");
         } else {
-            System.out.println("deleteBySourceTypeAndSourceDetailId");
             productService.deleteBySourceTypeAndSourceDetailId(1, detailId);
-            System.out.println("deleteBySourceTypeAndSourceDetailId");
             alphaSubjectService.deleteBySourceTypeAndSourceDetailId(1, detailId);
-            System.out.println("deleteBySourceTypeAndSourceDetailId");
             customerProductService.deleteBySourceTypeAndSourceDetailId(1, detailId);
-            System.out.println();
             cpExcelService.deleteDetailById(detailId);
             return ResultFactory.buildSuccessResult("删除成功");
         }
@@ -233,10 +214,14 @@ public class CpExcelController {
         if (!localFile.getParentFile().exists())
             localFile.getParentFile().mkdirs();
 
+
+        fileURL += localFile.getName();
+
         CpExcelMst cpExcelMst = cpExcelService.saveMst(new CpExcelMst());
         cpExcelMst.setPaySubjectId(payAS.getId());
         cpExcelMst.setChargeSubjectId(chargeAS.getId());
         cpExcelMst.setFileName(file.getOriginalFilename());
+        cpExcelMst.setUrl(fileURL);
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
@@ -248,25 +233,11 @@ public class CpExcelController {
         //触发申请服务产品
         saveCustomerProduct(cpExcelMst);
         System.out.println("----------------------saveCustomerProduct");
+
         file.transferTo(localFile);
-        fileURL += localFile.getName();
+
         return ResultFactory.buildResult(ResultCode.SUCCESS, "上传成功", fileURL);
-        //        } catch (Exception e) {
-        //            int mstId = cpExcelMst.getId();
-        //            System.out.println("----------------------Exception，mstId" + mstId);
-        //            alphaSubjectService.deleteBySourceTypeAndSourceId(1, mstId);
-        //            productService.deleteBySourceTypeAndSourceId(1, mstId);
-        //            cpExcelService.deleteDetailByCpExcelMstId(mstId);
-        //            cpExcelService.deleteMstById(mstId);
-        //            if (e instanceof CustomException) {
-        //                CustomException customException = (CustomException) e;
-        //                System.out.println("----------------------Exception:" + customException.getMsg());
-        //                return ResultFactory.buildFailResult(customException.getMsg());
-        //            } else {
-        //                return ResultFactory.buildFailResult(e.));
-        //            }
-        //
-        //        }
+
     }
 
     /**
@@ -321,7 +292,6 @@ public class CpExcelController {
         String location = null;//所在地
         AlphaSubject customer = null;
         Product product = new Product();
-        System.out.println("for");// 行数包括标题行
 
         for (int icell = 0; icell <= 12; icell++) {
             Cell cell = row.getCell(icell);
@@ -349,13 +319,13 @@ public class CpExcelController {
                     break;
                 case 1://保单号
                     if (str != null) {
-                        if (cpExcelService.isExistOutTradeNoe(str)) {
-                            throw new CustomException(0, "第" + irows + "行，第" + icell + "列，保单号已经存在");
+                        if (cpExcelService.isExistOutTradeNoe(str,cpExcelMst.getChargeSubjectId())) {
+                            throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1)+ "列，保单号已经存在");
                         }
                         outTradeNo = str;
                         cpExcelDetail.setOutTradeNo(outTradeNo);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，保单号不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，保单号不能为空");
                     }
                     break;
                 case 2://产品名称
@@ -363,7 +333,7 @@ public class CpExcelController {
                         productName = str;
                         cpExcelDetail.setProductName(productName);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，产品名称不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，产品名称不能为空");
                     }
                     break;
                 case 3://客户姓名
@@ -371,7 +341,7 @@ public class CpExcelController {
                         customerName = str;
                         cpExcelDetail.setCustomerName(customerName);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，客户姓名不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，客户姓名不能为空");
                     }
                     break;
                 case 4://证件类型
@@ -402,7 +372,7 @@ public class CpExcelController {
                     if (str != null) {
                         cpExcelDetail.setCustomerPhone(str);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，联系电话不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，联系电话不能为空");
                     }
                     break;
                 case 7://生效日
@@ -410,11 +380,11 @@ public class CpExcelController {
                         try {
                             effectiveDate = DateUtil.convertExcelToDate(str, cell.getCellStyle().getDataFormatString());
                         } catch (Exception e) {
-                            throw new CustomException(0, "第" + irows + "行，第" + icell + "列，生效日不符合格式要求");
+                            throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，生效日不符合格式要求");
                         }
                         cpExcelDetail.setEffectiveDate(effectiveDate);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，生效日不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，生效日不能为空");
                     }
                     break;
                 case 8://截止日
@@ -422,11 +392,11 @@ public class CpExcelController {
                         try {
                             closingDate = DateUtil.convertExcelToDate(str, cell.getCellStyle().getDataFormatString());
                         } catch (Exception e) {
-                            throw new CustomException(0, "第" + irows + "行，第" + icell + "列，截止日不符合格式要求");
+                            throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，截止日不符合格式要求");
                         }
                         cpExcelDetail.setClosingDate(closingDate);
                     } else {
-                        throw new CustomException(0, "第" + irows + "行，第" + icell + "列，截止日不能为空");
+                        throw new CustomException(0, "第" + (irows+1) + "行，第" + (icell+1) + "列，截止日不能为空");
                     }
                     break;
                 case 9://性别
@@ -448,7 +418,7 @@ public class CpExcelController {
                 case 10://年龄
                     if (str == null || str.equals("")) {
                         if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
-                            throw new CustomException(0, "第" + irows + "行，无法获取年龄信息");
+                            throw new CustomException(0, "第" + (irows+1) + "行，无法获取年龄信息");
                         } else {
                             SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
                             Date dt = null;
@@ -463,7 +433,7 @@ public class CpExcelController {
                 case 11://所在地
                     if (str == null || str.equals("")) {
                         if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
-                            throw new CustomException(0, "第" + irows + "行，无法获取所在地信息");
+                            throw new CustomException(0, "第" + irows +1+ "行，无法获取所在地信息");
                         } else {
                             location = IdNumUtils.getProvince(recordNumber);
                         }
@@ -481,14 +451,6 @@ public class CpExcelController {
                     break;
             }
         }
-
-//        if (location == null || location.equals("") || sex == null || sex.equals("") || age == null ||
-//                age.intValue() < 0) {
-//            if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
-//                throw new CustomException(0, "第" + irows + "行，无法获取性别、年龄、所在地信息");
-//            }
-//        }
-
         //先存一次产生detailid
         cpExcelDetail = cpExcelService.saveDetail(cpExcelDetail);
         if (productService.isExistProduct(productName)) {
@@ -507,10 +469,9 @@ public class CpExcelController {
             product = productService.save(pnew);
         }
 
-        //        System.out.println("alphaSubjectService:");// 行数包括标题行
-        if (alphaSubjectService.isExistAlphaSubject(1, customerTypeName, recordNumber)) {
+        if (alphaSubjectService.isExistAlphaSubject(customerTypeName, recordNumber)) {
             customer = alphaSubjectService
-                    .findBySubjectTypeAndRecordTypeAndRecordNumber(1, customerTypeName, recordNumber);
+                    .findBySubjectTypeAndRecordTypeAndRecordNumber( customerTypeName, recordNumber);
         } else {
             AlphaSubject cnew = new AlphaSubject();
             cnew.setSubjectType(1);
@@ -534,27 +495,6 @@ public class CpExcelController {
         }
         cpExcelDetail.setProductId(product.getId());
         cpExcelDetail.setCustomerSubjectId(customer.getId());
-        //        if (cpExcelDetail.getSex() == null && customer.getRecordType().equals("身份证")) {
-        //            if (Integer.valueOf(customer.getRecordNumber().substring(16, 17)) % 2 == 0) {
-        //                cpExcelDetail.setSex("女");
-        //            } else {
-        //                cpExcelDetail.setSex("男");
-        //            }
-        //        }
-        //        if (cpExcelDetail.getAge() == null && customer.getRecordType() == 1) {
-        //            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        //            Date dt = null;
-        //            try {
-        //                dt = df.parse(customer.getRecordNumber().substring(6, 14));
-        //                cpExcelDetail.setAge(getAge(dt) + "");
-        //            } catch (Exception e) {
-        //                e.printStackTrace();
-        //            }
-        //        }
-        //        if (cpExcelDetail.getLocation() == null && customer.getRecordType() == 1) {
-        //            cpExcelDetail.setLocation(getProvince(customer.getRecordNumber()));
-        //        }
-
         if (cpExcelDetail.getClosingDate().before(cpExcelDetail.getEffectiveDate())) {
             throw new CustomException(0, "结束日期早于开始日期");
         }

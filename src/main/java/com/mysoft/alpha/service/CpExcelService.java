@@ -19,7 +19,7 @@ public interface CpExcelService {
 
     void  saveAllDetails(List<CpExcelDetail> cpExcelDetails) ;
 
-     boolean isExistOutTradeNoe(String outTradeNo) ;
+     boolean isExistOutTradeNoe(String outTradeNo, Integer chargeId) ;
 
     boolean isExistOutTradeNoe( Integer customerId,Integer productId, Date effectiveDate , Date closingDate) ;
 

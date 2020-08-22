@@ -10,6 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 主体(AlphaSubject)表服务实现类
@@ -36,20 +37,33 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
     }
 
     @Override
-    public boolean isExistAlphaSubject(Integer subjectType, String recordType, String recordNumber) {
-        if (recordType != null && recordType.equals("身份证")) {
-            AlphaSubject alphaSubject = alphaSubjectDao
-                    .findBySubjectTypeAndRecordTypeAndRecordNumber(subjectType, recordType, recordNumber);
-            return null != alphaSubject;
+    public boolean isExistAlphaSubject( String recordType, String recordNumber) {
+//        if (recordType != null && recordType.equals("身份证")) {
+        if (recordType != null && recordNumber!=null) {
+            AlphaSubject alphaSubject = new AlphaSubject();
+            alphaSubject.setRecordType(recordType);
+            alphaSubject.setRecordNumber(recordNumber);
+            Example<AlphaSubject> example = Example.of(alphaSubject);
+            return alphaSubjectDao.exists(example);
         } else {
             return false;
         }
     }
 
     @Override
-    public AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(Integer subjectType, String recordType,
+    public AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(String recordType,
                                                                       String recordNumber) {
-        return alphaSubjectDao.findBySubjectTypeAndRecordTypeAndRecordNumber(subjectType, recordType, recordNumber);
+        AlphaSubject alphaSubject = new AlphaSubject();
+        alphaSubject.setRecordType(recordType);
+        alphaSubject.setRecordNumber(recordNumber);
+        Example<AlphaSubject> example = Example.of(alphaSubject);
+        Optional<AlphaSubject> alphaSubjectOptional =  alphaSubjectDao.findOne(example);
+        if (alphaSubjectOptional.isPresent()){
+            return alphaSubjectOptional.get();
+        }
+        else{
+           return null;
+        }
     }
 
     @Override
@@ -65,13 +79,14 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
 
     @Override
     public void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId) {
-
         AlphaSubject alphaSubject = alphaSubjectDao.findBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
-        CpExcelDetail cpExcelDetail = new CpExcelDetail();
-        cpExcelDetail.setCustomerSubjectId(alphaSubject.getId());
-        Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-        if (!cpExcelDetailDao.exists(example)) {
-            cpExcelDetailDao.deleteById(alphaSubject.getId());
+        if (alphaSubject != null) {
+            CpExcelDetail cpExcelDetail = new CpExcelDetail();
+            cpExcelDetail.setCustomerSubjectId(alphaSubject.getId());
+            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+            if (!cpExcelDetailDao.exists(example)) {
+                cpExcelDetailDao.deleteById(alphaSubject.getId());
+            }
         }
     }
 
