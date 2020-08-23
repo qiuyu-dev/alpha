@@ -56,6 +56,10 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(userName);
     }
 
+	public User findByUsernameAndEmail(String userName, String email) {
+		return  userDao.findByUsernameAndEmail(userName, email);
+	}
+
     public User getUserById(Integer id) {
         return userDao.getOne(id);
     }
@@ -110,7 +114,6 @@ public class UserServiceImpl implements UserService {
         int times = 2;
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
         user.setPassword(encodedPassword);
-
         User userNew = userDao.save(user);
 
         if (registerForm.getItype() == 1) {
@@ -118,7 +121,6 @@ public class UserServiceImpl implements UserService {
             AdminUserRole adminUserRole = new AdminUserRole();
             adminUserRole.setUid(userNew.getId());
             AlphaSubject enterprise = alphaSubjectDao.getOne(userNew.getAlphaSubjectId());
-
             switch (enterprise.getSubjectType()) {
                 case 2:
                     //2、保险商（产品企业）=采购-管理岗
@@ -243,6 +245,4 @@ public class UserServiceImpl implements UserService {
         AlphaSubject alphaSubject = alphaSubjectDao.findByRecordNumber(orgcode);
         return null != alphaSubject;
     }
-
-
 }

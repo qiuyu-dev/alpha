@@ -1,25 +1,53 @@
 package com.mysoft.alpha.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.mysoft.alpha.config.AlphaConfig;
-import com.mysoft.alpha.entity.*;
+import com.mysoft.alpha.entity.AlphaSubject;
+import com.mysoft.alpha.entity.CpExcelDetail;
+import com.mysoft.alpha.entity.CpExcelMst;
+import com.mysoft.alpha.entity.CustomerProduct;
+import com.mysoft.alpha.entity.Product;
+import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultCode;
 import com.mysoft.alpha.result.ResultFactory;
-import com.mysoft.alpha.service.*;
+import com.mysoft.alpha.service.AlphaSubjectService;
+import com.mysoft.alpha.service.BatchFeeService;
+import com.mysoft.alpha.service.CpExcelService;
+import com.mysoft.alpha.service.CustomerProductService;
+import com.mysoft.alpha.service.ProductService;
+import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
 import com.mysoft.alpha.util.IdNumUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * 客户-产品Excel主表(CpExcelMst)表控制层
@@ -183,6 +211,7 @@ public class CpExcelController {
     @Transactional
     public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file)
             throws Exception {
+    	HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         //操作员
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
@@ -191,7 +220,7 @@ public class CpExcelController {
         //收费企业
         String chargeId = map.get("chargeid");
         AlphaSubject chargeAS = alphaSubjectService.getAlphaSubjectById(Integer.parseInt(chargeId));
-        //文件
+        //文件上传目录
         String folder = alphaConfig.getUploadFolder();
         String fileURL = alphaConfig.getFileUrl();
         String oriFileName = file.getOriginalFilename();
@@ -202,22 +231,21 @@ public class CpExcelController {
         String prefix = oriFileName.substring(0, oriFileName.lastIndexOf('.'));
         File uploadFileFolder = new File(folder);
         File localFile = new File(uploadFileFolder, prefix + System.currentTimeMillis() + suffix);
-        if (!localFile.getParentFile().exists())
-            localFile.getParentFile().mkdirs();
-
-
+        if (!localFile.getParentFile().exists()) {
+        	localFile.getParentFile().mkdirs();
+        }
         fileURL += localFile.getName();
-
-        CpExcelMst cpExcelMst = cpExcelService.saveMst(new CpExcelMst());
+        //存储文件主表
+        CpExcelMst cpExcelMst = new CpExcelMst();
         cpExcelMst.setPaySubjectId(payAS.getId());
         cpExcelMst.setChargeSubjectId(chargeAS.getId());
         cpExcelMst.setFileName(file.getOriginalFilename());
         cpExcelMst.setUrl(fileURL);
+        cpExcelMst.setIp(request.getRemoteAddr());
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
         System.out.println("----------------------saveCpExcelMst");
-        //        try {
         //存储文件明细
         saveCpExcelDetail(file, cpExcelMst);
         System.out.println("----------------------saveCpExcelDetail");
@@ -387,15 +415,10 @@ public class CpExcelController {
                                 recordNumber.equals("空")) {
                             throw new CustomException(0, "第" + irows + "行，无法获取性别信息");
                         } else {
-                            if (Integer.valueOf(recordNumber.substring(16, 17)) % 2 == 0) {
-                                sex = "女";
-                            } else {
-                                sex = "男";
-                            }
+                            sex = IdNumUtils.getSex(recordNumber);
                         }
                     } else {
                         sex = str;
-
                     }
                     cpExcelDetail.setSex(sex);
                     break;
@@ -404,10 +427,7 @@ public class CpExcelController {
                         if ((!customerTypeName.equals("身份证")) || recordNumber == null || recordNumber.equals("")) {
                             throw new CustomException(0, "第" + (irows + 1) + "行，无法获取年龄信息");
                         } else {
-                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-                            Date dt = null;
-                            dt = df.parse(recordNumber.substring(6, 14));
-                            age = IdNumUtils.getAge(dt);
+                            age = IdNumUtils.getAge(recordNumber);
                         }
                     } else {
                         age = Integer.valueOf(str);

@@ -46,6 +46,12 @@ public class CpExcelMst implements Serializable {
      */
     @Column(name = "url")
     private String url;
+    
+    /**
+     * 上传客户端ip
+     */
+    @Column(name = "ip")
+    private String ip;
     /**
      * 备注
      */
@@ -117,9 +123,17 @@ public class CpExcelMst implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
+    }    
 
-    public String getRemark() {
+    public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getRemark() {
         return remark;
     }
 

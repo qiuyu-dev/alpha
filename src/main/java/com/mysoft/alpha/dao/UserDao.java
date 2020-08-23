@@ -13,8 +13,9 @@ import java.util.List;
  */
 public interface UserDao extends JpaRepository<User, Integer> {
     User findByUsername(String username);
+    
+    User findByUsernameAndEmail(String username, String email);
 
     List<User> findByAlphaSubjectIdOrderByIdDesc(Integer alphasubjectid);
-
 
 }
