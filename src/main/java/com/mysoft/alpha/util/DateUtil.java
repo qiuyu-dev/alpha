@@ -64,22 +64,19 @@ public class DateUtil {
     public static Date convertExcelToDate(String sdate, String format) {
         System.out.println("convertExcelToDate sdate:" + sdate + ",format:" + format);
         //		try {
-        Date dt = new Date();
+        Date dt ;
         try {
-
-
             if (format.contains("yy")) {
                 SimpleDateFormat df1 = new SimpleDateFormat("yyyy-mm-dd");
                 Date dt1 = df1.parse("1900-01-01");
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(dt1);
                 calendar.add(Calendar.DATE, Float.valueOf(sdate).intValue()-2);
+                calendar.set(Calendar.MINUTE, 0);
                 dt = calendar.getTime();
-
             } else {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 dt = df.parse(sdate);
-
             }
             return dt;
         } catch (Exception e) {

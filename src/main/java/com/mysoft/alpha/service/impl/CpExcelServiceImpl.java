@@ -154,7 +154,7 @@ public class CpExcelServiceImpl implements CpExcelService {
     }
 
     public CpExcelDetail getDetailById(Integer detailId) {
-        return cpExcelDetailDao.getOne(detailId);
+        return cpExcelDetailDao.findById(detailId).get();
     }
 
     public CpExcelMst getMstById(Integer mstId) {

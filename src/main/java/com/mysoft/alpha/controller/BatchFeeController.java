@@ -131,7 +131,8 @@ public class BatchFeeController {
             if (effectiveDate.before(cpExcelDetail.getEffectiveDate())) {
                 throw new CustomException(0, "付费开始日期早于服务开始日期");
             }
-            if (closingDate.after(DateUtil.addTime(cpExcelDetail.getEffectiveDate(), Calendar.YEAR, 1))) {
+            if (closingDate.after(DateUtil.addTime(DateUtil.addTime(cpExcelDetail.getEffectiveDate(), Calendar.YEAR,
+                    1),Calendar.DATE, -1))) {
                 throw new CustomException(0, "付费结束日期晚于服务结束日期");
             }
             List<BatchFeeDetail> batchFeeDetailList =
