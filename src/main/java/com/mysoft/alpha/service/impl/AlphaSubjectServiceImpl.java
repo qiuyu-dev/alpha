@@ -20,8 +20,6 @@ import java.util.Optional;
  */
 @Service
 public class AlphaSubjectServiceImpl implements AlphaSubjectService {
-
-
     /**
      * 服务对象
      */
@@ -72,7 +70,6 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
     }
 
     @Override
-
     public void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId) {
         alphaSubjectDao.deleteBySourceTypeAndSourceId(sourceType, sourceId);
     }

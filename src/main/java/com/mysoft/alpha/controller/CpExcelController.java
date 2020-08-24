@@ -29,6 +29,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysoft.alpha.common.CustomStatus;
+import com.mysoft.alpha.common.ProductType;
+import com.mysoft.alpha.common.SourceType;
+import com.mysoft.alpha.common.SubjectType;
 import com.mysoft.alpha.config.AlphaConfig;
 import com.mysoft.alpha.entity.AlphaSubject;
 import com.mysoft.alpha.entity.CpExcelDetail;
@@ -102,9 +106,9 @@ public class CpExcelController {
         cpExcelDetail.setConfirmRemark(reson);
 
         if ("1".equals(opt)) {// 1 通过
-            cpExcelDetail.setState(5);// ，5 = 审核通过可付费
+            cpExcelDetail.setState(CustomStatus.STATUS5.value());// ，5 = 审核通过可付费
         } else {// 2未通过
-            cpExcelDetail.setState(-5);//
+            cpExcelDetail.setState(CustomStatus.STATUS_5.value());//
         }
         List<CustomerProduct> customerProductList =
                 customerProductService.findBySourceDetailIdIsInOrderById(Arrays.asList(cpExcelDetail.getId()));
@@ -149,11 +153,11 @@ public class CpExcelController {
             switch (step) {
                 case 3:
                     cpExcelDetailList = cpExcelService
-                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(5));
+                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS5.value()));
                     break;
                 default:
                     cpExcelDetailList = cpExcelService
-                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(3,4,-5));
+                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS3.value(),CustomStatus.STATUS4.value(),CustomStatus.STATUS_5.value()));
                     break;
             }
             //1，2根据Excel 明细查询CustomerProduct
@@ -176,9 +180,9 @@ public class CpExcelController {
 
     @Transactional
     public Result deleteCpExcelMst(@RequestParam() Integer mstId) throws CustomException {
-        alphaSubjectService.deleteBySourceTypeAndSourceId(1, mstId);
-        productService.deleteBySourceTypeAndSourceId(1, mstId);
-        customerProductService.deleteBySourceTypeAndSourceId(1, mstId);
+        alphaSubjectService.deleteBySourceTypeAndSourceId(SubjectType.TYPE1.value(), mstId);
+        productService.deleteBySourceTypeAndSourceId(SubjectType.TYPE1.value(), mstId);
+        customerProductService.deleteBySourceTypeAndSourceId(SubjectType.TYPE1.value(), mstId);
         cpExcelService.deleteDetailByCpExcelMstId(mstId);
         cpExcelService.deleteMstById(mstId);
         return ResultFactory.buildSuccessResult("删除成功");
@@ -189,12 +193,12 @@ public class CpExcelController {
     @Transactional
     public Result deleteCpExcelDetail(@RequestParam() Integer detailId) throws CustomException {
         CpExcelDetail cpExcelDetail = cpExcelService.getDetailById(detailId);
-        if (cpExcelDetail.getState() > 4) {
+        if (cpExcelDetail.getState() > CustomStatus.STATUS4.value()) {
             throw new CustomException(0, "已审核通过，不可删除");
         } else {
-            productService.deleteBySourceTypeAndSourceDetailId(1, detailId);
-            alphaSubjectService.deleteBySourceTypeAndSourceDetailId(1, detailId);
-            customerProductService.deleteBySourceTypeAndSourceDetailId(1, detailId);
+            productService.deleteBySourceTypeAndSourceDetailId(SubjectType.TYPE1.value(), detailId);
+            alphaSubjectService.deleteBySourceTypeAndSourceDetailId(SubjectType.TYPE1.value(), detailId);
+            customerProductService.deleteBySourceTypeAndSourceDetailId(SubjectType.TYPE1.value(), detailId);
             cpExcelService.deleteDetailById(detailId);
             return ResultFactory.buildSuccessResult("删除成功");
         }
@@ -242,6 +246,7 @@ public class CpExcelController {
         cpExcelMst.setFileName(file.getOriginalFilename());
         cpExcelMst.setUrl(fileURL);
         cpExcelMst.setIp(request.getRemoteAddr());
+        cpExcelMst.setSourceType(SourceType.TYPE3.value());
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
@@ -463,8 +468,8 @@ public class CpExcelController {
             Product pnew = new Product();
             pnew.setName(productName);
             pnew.setAlphaSubjectId(cpExcelMst.getPaySubjectId());
-            pnew.setProductType(2);
-            pnew.setSourceType(1);
+            pnew.setProductType(ProductType.TYPE2.value());
+            pnew.setSourceType(SourceType.TYPE1.value());
             pnew.setSourceId(cpExcelMst.getId());
             pnew.setSourceDetailId(cpExcelDetail.getId());
             pnew.setEnabled(1);
@@ -478,12 +483,12 @@ public class CpExcelController {
                     alphaSubjectService.findBySubjectTypeAndRecordTypeAndRecordNumber(customerTypeName, recordNumber);
         } else {
             AlphaSubject cnew = new AlphaSubject();
-            cnew.setSubjectType(1);
+            cnew.setSubjectType(SubjectType.TYPE1.value());
             cnew.setRecordType(customerTypeName);
             cnew.setRecordNumber(recordNumber);
             cnew.setName(customerName);
             cnew.setPhone(cpExcelDetail.getCustomerPhone());
-            cnew.setSourceType(1);
+            cnew.setSourceType(SourceType.TYPE1.value());
             cnew.setSourceId(cpExcelMst.getId());
             cnew.setSourceDetailId(cpExcelDetail.getId());
             cnew.setEnabled(1);
@@ -502,7 +507,7 @@ public class CpExcelController {
         if (cpExcelDetail.getClosingDate().before(cpExcelDetail.getEffectiveDate())) {
             throw new CustomException(0, "结束日期早于开始日期");
         }
-        cpExcelDetail.setState(3);//3 = 申请通过待审核
+        cpExcelDetail.setState(CustomStatus.STATUS3.value());//3 = 申请通过待审核
         return cpExcelService.saveDetail(cpExcelDetail);
     }
 
@@ -527,7 +532,7 @@ public class CpExcelController {
                     customerProduct.setClosingDate(
                             DateUtil.addTime(DateUtil.addTime(cpExcelDetail.getEffectiveDate(), Calendar.YEAR, 1),
                                     Calendar.DATE, -1));
-                    customerProduct.setSourceType(1);
+                    customerProduct.setSourceType(SourceType.TYPE1.value());
                     customerProduct.setSourceId(cpExcelDetail.getCpExcelMstId());
                     customerProduct.setSourceDetailId(cpExcelDetail.getId());
                     customerProduct.setOperator(cpExcelDetail.getOperator());

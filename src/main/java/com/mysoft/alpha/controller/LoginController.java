@@ -10,6 +10,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 @RequestMapping("/api")
 public class LoginController {
+	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     UserService userService;
@@ -28,15 +31,16 @@ public class LoginController {
         username = HtmlUtils.htmlEscape(username);
 
         Subject subject = SecurityUtils.getSubject();
-//        subject.getSession().setTimeout(10000);
+//        subject.getSession().setTimeout(1);//没起作用
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, requestUser.getPassword());
         usernamePasswordToken.setRememberMe(true);
         try {
             subject.login(usernamePasswordToken);
             User user = userService.findByUsername(username);
-        	System.out.println("subject.isRemembered()="+subject.isRemembered());
-        	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
-        	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
+//        	System.out.println("subject.isRemembered()="+subject.isRemembered());
+//        	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
+//        	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
+        	log.info(subject.getPrincipal() + " login");
             if (user.getEnabled().toString().equals("0")) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }
@@ -51,9 +55,6 @@ public class LoginController {
     @PostMapping("/register")
     @Transactional
     public Result register(@RequestBody RegisterForm registerForm) {
-
-        System.out.println("register");
-
         int status = userService.register(registerForm);
         switch (status) {
             case 1:

@@ -52,6 +52,13 @@ public class CpExcelMst implements Serializable {
      */
     @Column(name = "ip")
     private String ip;
+    
+    /**
+     * 触发类型，1付费企业excel，2，系统维护 3.API上传
+     */
+    @Column(name = "source_type")
+    private Integer sourceType;
+    
     /**
      * 备注
      */
@@ -131,6 +138,14 @@ public class CpExcelMst implements Serializable {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public Integer getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public String getRemark() {

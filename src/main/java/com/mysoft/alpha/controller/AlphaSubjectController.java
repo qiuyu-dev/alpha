@@ -1,5 +1,6 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.common.SubjectType;
 import com.mysoft.alpha.entity.AlphaSubject;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
@@ -37,7 +38,7 @@ public class AlphaSubjectController {
 
     @GetMapping("/charge/list")
     public Result getAllCompanyService()  throws CustomException {
-        return ResultFactory.buildSuccessResult(alphaSubjectService.findAllBySubjectType(3));
+        return ResultFactory.buildSuccessResult(alphaSubjectService.findAllBySubjectType(SubjectType.TYPE3.value()));
     }
 
 

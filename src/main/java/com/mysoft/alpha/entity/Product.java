@@ -51,7 +51,7 @@ public class Product implements Serializable {
     @Column(name = "ordered")
     private Integer ordered;
     /**
-     * 触发类型，1付费企业excel，2，系统维护
+     * 触发类型，1付费企业excel，2，系统维护 3.API上传
      */
     @Column(name = "source_type")
     private Integer sourceType;
@@ -82,14 +82,8 @@ public class Product implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    /**
-     * 所属企业
-     */
-
     @Transient
     private AlphaSubject alphaSubject;
-
-
 
     public Product() {
     }

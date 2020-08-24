@@ -1,5 +1,8 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.common.ComplaintType;
+import com.mysoft.alpha.common.CustomStatus;
+import com.mysoft.alpha.common.SubjectType;
 import com.mysoft.alpha.entity.*;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
@@ -25,20 +28,21 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/admin/v1/pri/customerProduct")
 public class CustomerProductController {
-    /**
-     * 服务对象
-     */
-
     @Autowired
     UserService userService;
+    
     @Autowired
     private CustomerProductService customerProductService;
+    
     @Autowired
     private CpExcelService cpExcelService;
+    
     @Autowired
     private AlphaSubjectService alphaSubjectService;
+    
     @Autowired
     private ComplaintService complaintService;
+    
     @Autowired
     private ProductService productService;
 
@@ -55,7 +59,7 @@ public class CustomerProductController {
             //投诉
             Complaint complaint= new Complaint();
             complaint.setCustomerProductId(Integer.valueOf(map.get("id")));
-            complaint.setComplaintType(1);//不减扣费用
+            complaint.setComplaintType(ComplaintType.TYPE1.value());//不减扣费用
             complaint.setRemark(opt_zh+"："+remark);
             complaint.setOperator(operator);
             complaint.setCreateTime(new Date());
@@ -65,7 +69,7 @@ public class CustomerProductController {
             opt_zh = "评价";
             CustomerProduct customerProduct =  customerProductService.getOneById(Integer.valueOf(map.get("id")));
             customerProduct.setRemark(opt_zh+"："+remark);
-            customerProduct.setState(9);
+            customerProduct.setState(CustomStatus.STATUS9.value());
             customerProduct.setOperator(operator);
 //            customerProduct.setClosingDate(new Date());
         }
@@ -84,7 +88,7 @@ public class CustomerProductController {
         } else {
             User user = userService.findByUsername(operator);
             AlphaSubject alphaSubject = alphaSubjectService.getAlphaSubjectById(user.getAlphaSubjectId());
-            if (alphaSubject.getSubjectType() == 2) {
+            if (alphaSubject.getSubjectType() == SubjectType.TYPE2.value()) {
                 cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
             } else {
                 cpExcelMstList = cpExcelService.findMstByChargeSubjectIdOrderById(user.getAlphaSubjectId());

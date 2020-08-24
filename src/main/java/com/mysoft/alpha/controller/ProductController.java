@@ -1,5 +1,7 @@
 package com.mysoft.alpha.controller;
 
+import com.mysoft.alpha.common.ProductType;
+import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.entity.Product;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.exception.CustomException;
@@ -49,8 +51,8 @@ public class ProductController {
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User currUser = userService.findByUsername(operator);
         product.setAlphaSubjectId(currUser.getAlphaSubjectId());
-        product.setProductType(3);
-        product.setSourceType(2);
+        product.setProductType(ProductType.TYPE3.value());
+        product.setSourceType(SourceType.TYPE2.value());
         product.setEnabled(1);
         product.setOperator(operator);
         productService.save(product);

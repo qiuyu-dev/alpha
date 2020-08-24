@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.mysoft.alpha.common.CustomStatus;
+import com.mysoft.alpha.common.ProductType;
+import com.mysoft.alpha.common.SourceType;
+import com.mysoft.alpha.common.SubjectType;
 import com.mysoft.alpha.entity.AlphaSubject;
 import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.CpExcelMst;
@@ -121,7 +125,9 @@ public class RemoteOptController {
 		cpExcelMst.setPaySubjectId(payAS.getId());
 		cpExcelMst.setOperator(user.getUsername());
 		cpExcelMst.setCreateTime(new Date());
-		cpExcelMst.setIp(request.getRemoteAddr());
+		cpExcelMst.setIp(request.getRemoteAddr());//存ip
+		cpExcelMst.setChargeSubjectId(1);//为不限
+		cpExcelMst.setSourceType(SourceType.TYPE3.value());
 		cpExcelMst = cpExcelService.saveMst(cpExcelMst);
 		// 明细表
 		CpExcelDetail cpExcelDetail = new CpExcelDetail();
@@ -152,8 +158,8 @@ public class RemoteOptController {
 			Product pnew = new Product();
 			pnew.setName(productName);
 			pnew.setAlphaSubjectId(cpExcelMst.getPaySubjectId());
-			pnew.setProductType(2);
-			pnew.setSourceType(1);
+			pnew.setProductType(ProductType.TYPE2.value());
+			pnew.setSourceType(SourceType.TYPE3.value());
 			pnew.setSourceId(cpExcelMst.getId());
 			pnew.setSourceDetailId(cpExcelDetail.getId());
 			pnew.setEnabled(1);
@@ -167,12 +173,12 @@ public class RemoteOptController {
                     alphaSubjectService.findBySubjectTypeAndRecordTypeAndRecordNumber(customerTypeName, recordNumber);
         } else {
             AlphaSubject cnew = new AlphaSubject();
-            cnew.setSubjectType(1);
+            cnew.setSubjectType(SubjectType.TYPE1.value());
             cnew.setRecordType(customerTypeName);
             cnew.setRecordNumber(recordNumber);
             cnew.setName(customerName);
             cnew.setPhone(cpExcelDetail.getCustomerPhone());
-            cnew.setSourceType(1);
+            cnew.setSourceType(SourceType.TYPE3.value());
             cnew.setSourceId(cpExcelMst.getId());
             cnew.setSourceDetailId(cpExcelDetail.getId());
             cnew.setEnabled(1);
@@ -191,7 +197,7 @@ public class RemoteOptController {
         //存入productId和 customerId
         cpExcelDetail.setProductId(product.getId());
         cpExcelDetail.setCustomerSubjectId(customer.getId());
-        cpExcelDetail.setState(3);//3 = 申请通过待审核
+        cpExcelDetail.setState(CustomStatus.STATUS3.value());//3 = 申请通过待审核
         cpExcelService.saveDetail(cpExcelDetail);
 		return ResultFactory.buildSuccessResult("保存成功");
 	}
