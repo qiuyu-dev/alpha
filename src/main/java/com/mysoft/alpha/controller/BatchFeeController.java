@@ -80,7 +80,8 @@ public class BatchFeeController {
 	@GetMapping("/list")
 	public Result listBatchFeeMstbyUser() throws CustomException {
 		String operator = SecurityUtils.getSubject().getPrincipal().toString();
-		List<BatchFeeMst> batchFeeMstList = batchFeeService.findAllBatchFeeMstByUser(operator);
+		List<BatchFeeMst> batchFeeMstList = batchFeeService.findAllBatchFeeMstByUserAndStateIn(operator,
+				Arrays.asList(6));
 		for (BatchFeeMst batchFeeMst : batchFeeMstList) {
 			List<BatchFeeDetail> batchFeeDetailList = batchFeeService.findDetailsByBatchFeeMstId(batchFeeMst.getId());
 			for (BatchFeeDetail batchFeeDetail : batchFeeDetailList) {

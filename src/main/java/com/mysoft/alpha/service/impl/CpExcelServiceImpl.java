@@ -20,6 +20,7 @@ import java.util.List;
  */
 @Service
 public class CpExcelServiceImpl implements CpExcelService {
+
     /**
      * excel主表服务对象
      */
@@ -33,12 +34,35 @@ public class CpExcelServiceImpl implements CpExcelService {
     private AdminRoleDao adminRoleDao;
     @Autowired
     private AlphaSubjectDao alphaSubjectDao;
-
     /**
      * excel明细服务对象
      */
     @Autowired
     private CpExcelDetailDao cpExcelDetailDao;
+
+    @Override
+    public List<CpExcelDetail> findDetailByParamsOrderByIdAsc(Integer cpExcelMstId, List<Integer> status, String name,
+                                                              String recordNumber, String productName,
+                                                              String outTradeNo) {
+        System.out.println(cpExcelMstId);
+        System.out.println(status);
+        System.out.println(name);
+        System.out.println(recordNumber);
+        System.out.println(productName);
+        System.out.println(outTradeNo);
+        return cpExcelDetailDao
+                .findByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo);
+
+    }
+
+    @Override
+    public boolean isExistProductId(Integer productId) {
+        CpExcelDetail cpExcelDetail = new CpExcelDetail();
+        cpExcelDetail.setProductId(productId);
+        Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+        return cpExcelDetailDao.exists(example);
+    }
+
 
     public CpExcelMst saveMst(CpExcelMst cpExcelMst) {
         return cpExcelMstDao.save(cpExcelMst);
@@ -53,15 +77,14 @@ public class CpExcelServiceImpl implements CpExcelService {
     }
 
     @Override
-    public boolean isExistOutTradeNoe(String outTradeNo, Integer chargeId) {
+    public boolean isExistOutTradeNo(String outTradeNo, Integer chargeId) {
         CpExcelDetail cpExcelDetail = new CpExcelDetail();
         cpExcelDetail.setOutTradeNo(outTradeNo);
         Example<CpExcelDetail> example = Example.of(cpExcelDetail);
         List<CpExcelDetail> cpExcelDetailList = cpExcelDetailDao.findAll(example);
-        for(CpExcelDetail cpExcelDetail1:cpExcelDetailList){
+        for (CpExcelDetail cpExcelDetail1 : cpExcelDetailList) {
             CpExcelMst cpExcelMst = cpExcelMstDao.getOne(cpExcelDetail1.getCpExcelMstId());
-            if(cpExcelMst.getChargeSubjectId()!=null && cpExcelMst.getChargeSubjectId().compareTo(
-                    chargeId) ==0){
+            if (cpExcelMst.getChargeSubjectId() != null && cpExcelMst.getChargeSubjectId().compareTo(chargeId) == 0) {
                 return true;
             }
         }
@@ -69,17 +92,10 @@ public class CpExcelServiceImpl implements CpExcelService {
     }
 
     @Override
-    public boolean isExistOutTradeNoe(Integer customerId, Integer productId, Date effectiveDate, Date closingDate) {
+    public boolean isExistOutTradeNo(Integer customerId, Integer productId, Date effectiveDate, Date closingDate) {
         List<CpExcelDetail> cpExcelDetails =
                 cpExcelDetailDao.findByCustomerSubjectIdAndProductId(customerId, productId);
         for (CpExcelDetail cpExcelDetail : cpExcelDetails) {
-            //            String effective = DateUtil.getDateByFormat(effectiveDate.toString(), "yyyy-MM-dd");
-            //            String closing = DateUtil.getDateByFormat(closingDate.toString(), "yyyy-MM-dd");
-            //            String begin = DateUtil.getDateByFormat(cpExcelDetail.getEffectiveDate().toString(), "yyyy-MM-dd");
-            //            String end = DateUtil.getDateByFormat(cpExcelDetail.getClosingDate().toString(), "yyyy-MM-dd");
-
-            //            if (!((effective.compareTo(begin) < 0 && closing.compareTo(begin) < 0) ||
-            //                    (effective.compareTo(end) > 0 && closing.compareTo(end) > 0))) {
             if (!((effectiveDate.before(cpExcelDetail.getEffectiveDate()) &&
                     closingDate.before(cpExcelDetail.getEffectiveDate())) ||
                     (effectiveDate.after(cpExcelDetail.getClosingDate()) &&
@@ -145,12 +161,8 @@ public class CpExcelServiceImpl implements CpExcelService {
     public boolean isExistFileName(String fileName, String chargeId) {
         CpExcelMst cpExcelMst1 = new CpExcelMst();
         cpExcelMst1.setFileName(fileName);
-//        cpExcelMst1.setChargeSubjectId(Integer.valueOf(chargeId));
         Example<CpExcelMst> example = Example.of(cpExcelMst1);
-//        System.out.println("cpExcelMstDao.exists(example):" + cpExcelMstDao.exists(example));
         return cpExcelMstDao.exists(example);
-        //        CpExcelMst cpExcelMst = cpExcelMstDao.findByFileName(fileName);
-        //        return null != cpExcelMst;
     }
 
     public CpExcelDetail getDetailById(Integer detailId) {

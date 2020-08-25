@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -93,8 +90,8 @@ public class CustomerProductController {
             } else {
                 cpExcelMstList = cpExcelService.findMstByChargeSubjectIdOrderById(user.getAlphaSubjectId());
             }
-            returnList = customerProductService.findBySourceMstIdIsInOrderById(
-                    cpExcelMstList.stream().map(CpExcelMst::getId).collect(Collectors.toList()));
+            returnList = customerProductService.findBySourceMstIdInAndStatusIn(
+                    cpExcelMstList.stream().map(CpExcelMst::getId).collect(Collectors.toList()), Arrays.asList(7));
         }
         for(CustomerProduct customerProduct:returnList){
             customerProduct.setSourceMst(cpExcelService.getMstById(customerProduct.getSourceId()));

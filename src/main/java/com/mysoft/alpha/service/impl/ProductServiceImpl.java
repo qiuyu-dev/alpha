@@ -56,6 +56,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void deleteById(Integer id) {
+         productDao.deleteById(id);
+    }
+
+    @Override
     public void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId) {
         List<Product> porductList = productDao.findBySourceTypeAndSourceId(sourceType, sourceId);
         for (Product product : porductList) {

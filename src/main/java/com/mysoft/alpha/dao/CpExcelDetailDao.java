@@ -2,6 +2,8 @@ package com.mysoft.alpha.dao;
 
 import com.mysoft.alpha.entity.CpExcelDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,10 +18,20 @@ public interface CpExcelDetailDao extends JpaRepository<CpExcelDetail, Integer> 
 
     List<CpExcelDetail> findByCustomerSubjectIdAndProductId(Integer customerSubjectId, Integer productId);
 
+    @Query(value = "select * from cp_excel_detail ced where ced.cp_excel_mst_id =:cpExcelMstId and ced.state in(:status)" +
+            " and (ced.customer_name like %:cname% and ced.product_name like %:productName%  and ced.out_trade_no " +
+            "like %:outTradeNo%) order by ced.id asc", nativeQuery = true)
+    List<CpExcelDetail> findByParamsAndSort(@Param(value = "cpExcelMstId") Integer cpExcelMstId,
+                                            @Param(value = "status") List<Integer> status,
+                                            @Param(value = "cname") String name,
+                                            @Param(value = "productName") String productName,
+                                            @Param(value = "outTradeNo") String outTradeNo);
+
     void deleteByCpExcelMstId(Integer cpExcelMstId);
 
     List<CpExcelDetail> findByCpExcelMstId(Integer cpExcelMstId);
 
-    List<CpExcelDetail> findByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId,List<Integer> status);
+    List<CpExcelDetail> findByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId, List<Integer> status);
+
 
 }

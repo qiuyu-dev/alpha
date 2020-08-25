@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@EnableCaching
 @EnableTransactionManagement
 @SpringBootApplication
+//@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class AlphaApplication {
 
 	public static void main(String[] args) {

@@ -9,6 +9,7 @@ import com.mysoft.alpha.service.AlphaSubjectService;
 import com.mysoft.alpha.service.CustomerProductService;
 import com.mysoft.alpha.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +38,24 @@ public class CustomerProductServiceImpl implements CustomerProductService {
     private ComplaintDao complaintDao;
 
 
+    @Override
+    public boolean isExistProductId(Integer productId) {
+        CustomerProduct customerProduct = new CustomerProduct();
+        customerProduct.setProductId(productId);
+        Example<CustomerProduct> example = Example.of(customerProduct);
+        return customerProductDao.exists(example);
+    }
+
+
     public  CustomerProduct  getOneById(Integer id){
         return customerProductDao.getOne(id);
     }
 
 
     @Override
-    public List<CustomerProduct> findBySourceMstIdIsInOrderById(List<Integer> sourceMstIds) {
-        return customerProductDao.findBySourceIdIsInOrderById(sourceMstIds);
+    public List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds,
+                                                                      List<Integer> status) {
+        return customerProductDao.findBySourceIdInAndStateInOrderById(sourceMstIds,status);
     }
 
     public  List<CustomerProduct>  findAll(){

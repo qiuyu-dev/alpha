@@ -19,6 +19,7 @@ public interface ProductService {
     Product save(Product product);
 
     void deleteBySourceTypeAndSourceId(Integer sourceType,Integer sourceId);
+    void deleteById(Integer id);
 
     List<Product> findByAlphaSubjectId(Integer alphaSubjectId);
 

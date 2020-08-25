@@ -14,14 +14,21 @@ import java.util.List;
  */
 public interface CpExcelService {
 
-      List<CpExcelMst> findMstAll();
-     CpExcelMst saveMst(CpExcelMst cpExcelMst) ;
+    List<CpExcelDetail> findDetailByParamsOrderByIdAsc(Integer cpExcelMstId, List<Integer> status, String name,
+                                                       String recordNumber, String productName, String outTradeNo);
 
-    void  saveAllDetails(List<CpExcelDetail> cpExcelDetails) ;
 
-     boolean isExistOutTradeNoe(String outTradeNo, Integer chargeId) ;
+    boolean isExistProductId(Integer productId);
 
-    boolean isExistOutTradeNoe( Integer customerId,Integer productId, Date effectiveDate , Date closingDate) ;
+    List<CpExcelMst> findMstAll();
+
+    CpExcelMst saveMst(CpExcelMst cpExcelMst);
+
+    void saveAllDetails(List<CpExcelDetail> cpExcelDetails);
+
+    boolean isExistOutTradeNo(String outTradeNo, Integer chargeId);
+
+    boolean isExistOutTradeNo(Integer customerId, Integer productId, Date effectiveDate, Date closingDate);
 
     CpExcelMst findMstByFileName(String fileName);
 
@@ -30,19 +37,21 @@ public interface CpExcelService {
     void deleteMstById(Integer cpExcelMstId);
 
     List<CpExcelDetail> findDetailByCpExcelMstId(Integer cpExcelMstId);
-    List<CpExcelDetail> findDetailByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId,List<Integer> status);
+
+    List<CpExcelDetail> findDetailByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId, List<Integer> status);
 
     CpExcelDetail saveDetail(CpExcelDetail cpExceldetail);
 
-//    List<CpExcelMst> findCpExcelMstByUser(String username);
+    //    List<CpExcelMst> findCpExcelMstByUser(String username);
 
-    boolean isExistFileName(String fileName, String chargeId) ;
+    boolean isExistFileName(String fileName, String chargeId);
 
-     List<CpExcelMst> findMstByChargeSubjectIdOrderById(Integer chargeSubjectId  );
+    List<CpExcelMst> findMstByChargeSubjectIdOrderById(Integer chargeSubjectId);
 
-    List<CpExcelMst> findMstByPaySubjectIdOrderById(Integer paySubjectId  );
+    List<CpExcelMst> findMstByPaySubjectIdOrderById(Integer paySubjectId);
 
-     CpExcelDetail getDetailById(Integer detailId);
+    CpExcelDetail getDetailById(Integer detailId);
+
     CpExcelMst getMstById(Integer mstId);
 
     void deleteDetailById(Integer cpExcelDetailId);

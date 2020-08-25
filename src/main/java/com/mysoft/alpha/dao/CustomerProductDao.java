@@ -19,6 +19,8 @@ public interface CustomerProductDao extends JpaRepository<CustomerProduct, Integ
      List<CustomerProduct> findBySourceDetailIdIsInOrderById(List<Integer>  detailIds);
 
     List<CustomerProduct> findBySourceIdIsInOrderById(List<Integer>  sourceIds);
+
+    List<CustomerProduct> findBySourceIdInAndStateInOrderById(List<Integer>  sourceIds,List<Integer> status);
     void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId );
 
 }

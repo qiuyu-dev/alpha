@@ -12,9 +12,13 @@ import java.util.List;
  * @since 2020-08-02 16:13:54
  */
 public interface CustomerProductService {
+
+    boolean isExistProductId(Integer productId);
     CustomerProduct getOneById(Integer id);
 
-    List<CustomerProduct> findBySourceMstIdIsInOrderById(List<Integer> sourceMstIds);
+//    List<CustomerProduct> findBySourceMstIdIsInOrderById(List<Integer> sourceMstIds);
+    List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds,
+                                                         List<Integer> status);
 
     List<CustomerProduct> findAll();
 

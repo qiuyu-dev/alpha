@@ -22,7 +22,7 @@ public interface BatchFeeService {
 
     BatchFeeDetail saveBatchFeeDetail(BatchFeeDetail batchFeeDetail);
 
-    List<BatchFeeMst> findAllBatchFeeMstByUser(String username);
+    List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username ,List<Integer> status);
 
     List<BatchFeeDetail> findDetailsByBatchFeeMstId(Integer batchFeeMstId);
 

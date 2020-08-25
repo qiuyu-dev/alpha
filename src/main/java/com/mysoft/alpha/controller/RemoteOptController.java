@@ -1,31 +1,10 @@
 package com.mysoft.alpha.controller;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import com.mysoft.alpha.common.CustomStatus;
 import com.mysoft.alpha.common.ProductType;
 import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.common.SubjectType;
-import com.mysoft.alpha.entity.AlphaSubject;
-import com.mysoft.alpha.entity.CpExcelDetail;
-import com.mysoft.alpha.entity.CpExcelMst;
-import com.mysoft.alpha.entity.Product;
-import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.entity.*;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
@@ -35,7 +14,17 @@ import com.mysoft.alpha.service.ProductService;
 import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
 import com.mysoft.alpha.util.IdNumUtils;
-import com.mysoft.alpha.util.RequestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/remote/opt")
@@ -135,7 +124,7 @@ public class RemoteOptController {
 		cpExcelDetail.setOperator(cpExcelMst.getOperator());
 		cpExcelDetail.setCreateTime(new Date());
 
-		if (cpExcelService.isExistOutTradeNoe(outTradeNo, cpExcelMst.getChargeSubjectId())) {
+		if (cpExcelService.isExistOutTradeNo(outTradeNo, cpExcelMst.getChargeSubjectId())) {
 			throw new CustomException(0, "保单号已经存在");
 		}
 		cpExcelDetail.setOutTradeNo(outTradeNo);

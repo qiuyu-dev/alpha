@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.SQLException;
+
 /**
  * Global exception handler.
  *
@@ -33,6 +35,15 @@ public class DefaultExceptionHandler {
 
         if (e instanceof UnauthorizedException) {
             message = "权限认证失败";
+        }
+        if (e instanceof SQLException) {
+            message = "数据异常："+((SQLException) e).getSQLState();
+        }
+        if (e instanceof NumberFormatException) {
+            message = "数字异常";
+        }
+        if (e instanceof NullPointerException) {
+            message = "空记录异常";
         }
         
         if (e instanceof CustomException) {

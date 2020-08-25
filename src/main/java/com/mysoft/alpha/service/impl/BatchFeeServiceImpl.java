@@ -61,13 +61,13 @@ public class BatchFeeServiceImpl implements BatchFeeService {
     }
 
     @Override
-    public List<BatchFeeMst> findAllBatchFeeMstByUser(String username) {
+    public List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username ,List<Integer> status) {
         List<BatchFeeMst>  retrunList = new ArrayList<>();
         if (username.equals("admin")) {
             retrunList = batchFeeMstDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
         } else {
             User user = userDao.findByUsername(username);
-            retrunList = batchFeeMstDao.findByChargeSubjectIdOrderByIdAsc(user.getAlphaSubjectId());
+            retrunList = batchFeeMstDao.findByChargeSubjectIdAndStateInOrderByIdAsc(user.getAlphaSubjectId(),status);
         }
 
         return retrunList;

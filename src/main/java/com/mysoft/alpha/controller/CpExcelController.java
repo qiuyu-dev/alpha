@@ -1,57 +1,31 @@
 package com.mysoft.alpha.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.mysoft.alpha.common.CustomStatus;
 import com.mysoft.alpha.common.ProductType;
 import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.common.SubjectType;
 import com.mysoft.alpha.config.AlphaConfig;
-import com.mysoft.alpha.entity.AlphaSubject;
-import com.mysoft.alpha.entity.CpExcelDetail;
-import com.mysoft.alpha.entity.CpExcelMst;
-import com.mysoft.alpha.entity.CustomerProduct;
-import com.mysoft.alpha.entity.Product;
-import com.mysoft.alpha.entity.User;
+import com.mysoft.alpha.entity.*;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultCode;
 import com.mysoft.alpha.result.ResultFactory;
-import com.mysoft.alpha.service.AlphaSubjectService;
-import com.mysoft.alpha.service.BatchFeeService;
-import com.mysoft.alpha.service.CpExcelService;
-import com.mysoft.alpha.service.CustomerProductService;
-import com.mysoft.alpha.service.ProductService;
-import com.mysoft.alpha.service.UserService;
+import com.mysoft.alpha.service.*;
 import com.mysoft.alpha.util.DateUtil;
 import com.mysoft.alpha.util.IdNumUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 客户-产品Excel主表(CpExcelMst)表控制层
@@ -126,7 +100,15 @@ public class CpExcelController {
      * @return
      */
     @GetMapping("/detailList")
-    public Result detailList(@RequestParam() Integer step) throws CustomException {
+    public Result detailList(//@RequestBody Map<String, String> map
+                             @RequestParam() Integer step, @RequestParam() String name, @RequestParam() String recordNumber,
+                             @RequestParam() String productName, @RequestParam() String outTradeNo) throws CustomException {
+//        Integer step = Integer.valueOf(map.get("step"));
+//        String name = map.get("name");
+//        String recordNumber = map.get("recordNumber");
+//        String productName = map.get("productName");
+//        String outTradeNo = map.get("outTradeNo");
+
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
         //根据付费方或收款方查询Excel主表
@@ -152,12 +134,25 @@ public class CpExcelController {
             List<CpExcelDetail> cpExcelDetailList = new ArrayList<>();
             switch (step) {
                 case 3:
-                    cpExcelDetailList = cpExcelService
-                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS5.value()));
+                    //                    cpExcelDetailList = cpExcelService
+                    //                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS5.value()));
+                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
+                            Arrays.asList(CustomStatus.STATUS5.value()), name, recordNumber, productName, outTradeNo);
+                    break;
+                case 2:
+                    //                    cpExcelDetailList = cpExcelService
+                    //                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(),
+                    //                                    Arrays.asList(CustomStatus.STATUS3.value(),CustomStatus.STATUS4.value()));
+                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
+                            Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), name,
+                            recordNumber, productName, outTradeNo);
                     break;
                 default:
-                    cpExcelDetailList = cpExcelService
-                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS3.value(),CustomStatus.STATUS4.value(),CustomStatus.STATUS_5.value()));
+                    //                    cpExcelDetailList = cpExcelService
+                    //                            .findDetailByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMst.getId(), Arrays.asList(CustomStatus.STATUS3.value(),CustomStatus.STATUS4.value(),CustomStatus.STATUS_5.value()));
+                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
+                            Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value(),
+                                    CustomStatus.STATUS_5.value()), name, recordNumber, productName, outTradeNo);
                     break;
             }
             //1，2根据Excel 明细查询CustomerProduct
@@ -215,7 +210,8 @@ public class CpExcelController {
     @Transactional
     public Result excelUpload(@RequestParam Map<String, String> map, @RequestParam("file") MultipartFile file)
             throws Exception {
-    	HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         //操作员
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
@@ -236,7 +232,7 @@ public class CpExcelController {
         File uploadFileFolder = new File(folder);
         File localFile = new File(uploadFileFolder, prefix + System.currentTimeMillis() + suffix);
         if (!localFile.getParentFile().exists()) {
-        	localFile.getParentFile().mkdirs();
+            localFile.getParentFile().mkdirs();
         }
         fileURL += localFile.getName();
         //存储文件主表
@@ -246,7 +242,7 @@ public class CpExcelController {
         cpExcelMst.setFileName(file.getOriginalFilename());
         cpExcelMst.setUrl(fileURL);
         cpExcelMst.setIp(request.getRemoteAddr());
-        cpExcelMst.setSourceType(SourceType.TYPE3.value());
+        cpExcelMst.setSourceType(SourceType.TYPE1.value());
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
@@ -345,7 +341,7 @@ public class CpExcelController {
                     if (str == null || str.trim().equals("")) {
                         throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，保单号不能为空");
                     } else {
-                        if (cpExcelService.isExistOutTradeNoe(str, cpExcelMst.getChargeSubjectId())) {
+                        if (cpExcelService.isExistOutTradeNo(str, cpExcelMst.getChargeSubjectId())) {
                             throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，保单号已经存在");
                         }
                         outTradeNo = str;
@@ -499,7 +495,7 @@ public class CpExcelController {
             cnew.setLocation(location);
             customer = alphaSubjectService.save(cnew);
         }
-        if (cpExcelService.isExistOutTradeNoe(customer.getId(), product.getId(), effectiveDate, closingDate)) {
+        if (cpExcelService.isExistOutTradeNo(customer.getId(), product.getId(), effectiveDate, closingDate)) {
             throw new CustomException(0, "第" + irows + "行，保单已经存在");
         }
         cpExcelDetail.setProductId(product.getId());
