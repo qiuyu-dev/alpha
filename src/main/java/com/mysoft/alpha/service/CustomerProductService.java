@@ -19,6 +19,7 @@ public interface CustomerProductService {
 //    List<CustomerProduct> findBySourceMstIdIsInOrderById(List<Integer> sourceMstIds);
     List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds,
                                                          List<Integer> status);
+    void save( CustomerProduct customerProduct);
 
     List<CustomerProduct> findAll();
 

@@ -123,6 +123,13 @@ public class CustomerProduct implements Serializable {
     private CpExcelDetail sourceDetail;
 
     /**
+     * 状态说明
+     */
+
+    @Transient
+    private String stateReason;
+
+    /**
      * 投诉
      */
     @Transient
@@ -296,30 +303,12 @@ public class CustomerProduct implements Serializable {
         this.complaints = complaints;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("CustomerProduct{");
-        sb.append("id=").append(id);
-        sb.append(", customerSubjectId=").append(customerSubjectId);
-        sb.append(", productId=").append(productId);
-        sb.append(", effectiveDate=").append(effectiveDate);
-        sb.append(", closingDate=").append(closingDate);
-        sb.append(", outTradeNo='").append(outTradeNo).append('\'');
-        sb.append(", remark='").append(remark).append('\'');
-        sb.append(", confirmRemark='").append(confirmRemark).append('\'');
-        sb.append(", sourceType=").append(sourceType);
-        sb.append(", sourceId=").append(sourceId);
-        sb.append(", sourceDetailId=").append(sourceDetailId);
-        sb.append(", state=").append(state);
-        sb.append(", payTimes=").append(payTimes);
-        sb.append(", operator='").append(operator).append('\'');
-        sb.append(", createTime=").append(createTime);
-        sb.append(", customerSubject=").append(customerSubject);
-        sb.append(", product=").append(product);
-        sb.append(", sourceMst=").append(sourceMst);
-        sb.append(", sourceDetail=").append(sourceDetail);
-        sb.append(", complaints=").append(complaints);
-        sb.append('}');
-        return sb.toString();
+
+    public String getStateReason() {
+        return stateReason;
+    }
+
+    public void setStateReason(String stateReason) {
+        this.stateReason = stateReason;
     }
 }

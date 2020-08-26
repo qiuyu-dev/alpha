@@ -68,6 +68,10 @@ public class CustomerProductServiceImpl implements CustomerProductService {
         return customerProductDao.findBySourceDetailIdIsInOrderById(detailIds);
     }
 
+    public void save( CustomerProduct customerProduct){
+        customerProductDao.save(customerProduct);
+    }
+
     public void saveAll(List<CustomerProduct> customerProductList){
         customerProductDao.saveAll(customerProductList);
     }

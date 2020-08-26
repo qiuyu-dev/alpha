@@ -148,6 +148,13 @@ public class CpExcelDetail implements Serializable {
 
 
     /**
+     * 状态说明
+     */
+
+    @Transient
+    private String stateReason;
+
+    /**
      * 主表
      */
 
@@ -380,5 +387,13 @@ public class CpExcelDetail implements Serializable {
 
     public void setBatchFeeMsts(List<BatchFeeMst> batchFeeMsts) {
         this.batchFeeMsts = batchFeeMsts;
+    }
+
+    public String getStateReason() {
+        return stateReason;
+    }
+
+    public void setStateReason(String stateReason) {
+        this.stateReason = stateReason;
     }
 }

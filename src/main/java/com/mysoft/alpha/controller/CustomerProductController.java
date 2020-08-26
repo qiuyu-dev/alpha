@@ -68,7 +68,22 @@ public class CustomerProductController {
             customerProduct.setRemark(opt_zh+"："+remark);
             customerProduct.setState(CustomStatus.STATUS9.value());
             customerProduct.setOperator(operator);
-//            customerProduct.setClosingDate(new Date());
+            customerProductService.save(customerProduct);
+            CpExcelDetail cpExcelDetail = cpExcelService.getDetailById(customerProduct.getSourceDetailId());
+            List<CustomerProduct> customerProductList =
+                    customerProductService.findBySourceDetailIdIsInOrderById(Arrays.asList(cpExcelDetail.getId()));
+            boolean isAll = true;
+            for(CustomerProduct customerProduct1:customerProductList){
+                 if(customerProduct1.getState()<CustomStatus.STATUS8.value()){
+                     isAll= false;
+                     break;
+                 }
+            }
+            if(isAll){
+                cpExcelDetail.setState(CustomStatus.STATUS8.value());
+                cpExcelService.saveDetail(cpExcelDetail);
+            }
+
         }
         return ResultFactory.buildSuccessResult(opt_zh+"成功");
     }
@@ -94,12 +109,21 @@ public class CustomerProductController {
                     cpExcelMstList.stream().map(CpExcelMst::getId).collect(Collectors.toList()), Arrays.asList(7));
         }
         for(CustomerProduct customerProduct:returnList){
-            customerProduct.setSourceMst(cpExcelService.getMstById(customerProduct.getSourceId()));
+            CpExcelMst cpExcelMst = cpExcelService.getMstById(customerProduct.getSourceId());
+            cpExcelMst.setPaySubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getPaySubjectId()));
+            cpExcelMst.setChargeSubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getChargeSubjectId()));
+            customerProduct.setSourceMst(cpExcelMst);
             customerProduct.setCustomerSubject(alphaSubjectService.getAlphaSubjectById(customerProduct.getCustomerSubjectId()));
             customerProduct.setProduct(productService.getProductById(customerProduct.getProductId()));
-            System.out.println("-------------------------customerProduct.getId():"+customerProduct.getId());
+            switch (customerProduct.getState()) {
+                case 7:
+                    customerProduct.setStateReason(CustomStatus.STATUS7.getReasonPhrase());
+                    break;
+                default:
+                    customerProduct.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
+                    break;
+            }
             customerProduct.setComplaints(complaintService.findByCustomerProductId(customerProduct.getId()));
-
         }
         return ResultFactory.buildSuccessResult(returnList);
     }

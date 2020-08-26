@@ -166,7 +166,28 @@ public class CpExcelController {
                 } else {
                     cpExcelDetail.setBatchFeeMsts(batchFeeService.findMstByCpExcelDetailId(cpExcelDetail.getId()));
                 }
+                cpExcelMst.setPaySubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getPaySubjectId()));
+                cpExcelMst.setChargeSubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getChargeSubjectId()));
                 cpExcelDetail.setCpExcelMst(cpExcelMst);
+                cpExcelDetail.setProduct(productService.getProductById(cpExcelDetail.getProductId()));
+                switch (cpExcelDetail.getState()) {
+                    case 3:
+                        cpExcelDetail.setStateReason(CustomStatus.STATUS3.getReasonPhrase());
+                        break;
+                    case 4:
+                        cpExcelDetail.setStateReason(CustomStatus.STATUS4.getReasonPhrase());
+                        break;
+                    case 5:
+                        cpExcelDetail.setStateReason(CustomStatus.STATUS5.getReasonPhrase());
+                        break;
+                    case -5:
+                        cpExcelDetail.setStateReason(CustomStatus.STATUS_5.getReasonPhrase());
+                        break;
+                    default:
+                        cpExcelDetail.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
+                        break;
+                }
+
                 returnList.add(cpExcelDetail);
             }
         }
