@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 //@Builder
 public class RegisterForm implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String orgcode;
 	private String crop;
 	private int ctype;

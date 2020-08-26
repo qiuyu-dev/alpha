@@ -8,7 +8,6 @@ import com.mysoft.alpha.entity.AdminRoleMenu;
 import com.mysoft.alpha.entity.AdminUserRole;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.service.AdminMenuService;
-import com.mysoft.alpha.service.AdminUserRoleService;
 import com.mysoft.alpha.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private AdminUserRoleService adminUserRoleService;
 
     @Autowired
     private AdminUserRoleDao adminUserRoleDao;

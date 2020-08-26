@@ -7,7 +7,6 @@ import com.mysoft.alpha.entity.BatchFeeDetail;
 import com.mysoft.alpha.entity.BatchFeeMst;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.service.BatchFeeService;
-import com.mysoft.alpha.service.CpExcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,57 +23,58 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BatchFeeServiceImpl implements BatchFeeService {
-    /**
-     * 服务对象
-     */
-    @Autowired
-    private BatchFeeMstDao batchFeeMstDao;
-    @Autowired
-    private CpExcelService cpExcelService;
-    @Autowired
-    private BatchFeeDetailDao batchFeeDetailDao;
-    @Autowired
-    private UserDao userDao;
+	/**
+	 * 服务对象
+	 */
+	@Autowired
+	private BatchFeeMstDao batchFeeMstDao;
 
-    @Override
-    public List<BatchFeeMst> findMstByCpExcelDetailId(Integer cpExcelDetailId) {
-        List<BatchFeeDetail> batchFeeDetailList =batchFeeDetailDao.findBySourceDetailIdOrderByIdAsc(cpExcelDetailId);
-       return batchFeeMstDao.findByIdInOrderByEffectiveDateDesc( batchFeeDetailList.stream().map(BatchFeeDetail::getBatchFeeMstId).collect(
-                Collectors.toList()));
-    }
+	@Autowired
+	private BatchFeeDetailDao batchFeeDetailDao;
 
-    public BatchFeeMst getMstById(Integer id){
-        return batchFeeMstDao.getOne(id);
-    }
+	@Autowired
+	private UserDao userDao;
 
-    public List<BatchFeeDetail> findDetailBySourceDetailIdOrderByIdDesc(Integer cpExcelDetailId){
+	@Override
+	public List<BatchFeeMst> findMstByCpExcelDetailId(Integer cpExcelDetailId) {
+		List<BatchFeeDetail> batchFeeDetailList = batchFeeDetailDao.findBySourceDetailIdOrderByIdAsc(cpExcelDetailId);
+		return batchFeeMstDao.findByIdInOrderByEffectiveDateDesc(
+				batchFeeDetailList.stream().map(BatchFeeDetail::getBatchFeeMstId).collect(Collectors.toList()));
+	}
 
-       return batchFeeDetailDao.findBySourceDetailIdOrderByIdAsc(cpExcelDetailId);
-    }
+	public BatchFeeMst getMstById(Integer id) {
+		return batchFeeMstDao.getOne(id);
+	}
 
-    public  BatchFeeMst saveBatchFeeMst(BatchFeeMst batchFeeMst){
-     return batchFeeMstDao.save(batchFeeMst);
-    }
+	public List<BatchFeeDetail> findDetailBySourceDetailIdOrderByIdDesc(Integer cpExcelDetailId) {
 
-    public  BatchFeeDetail saveBatchFeeDetail(BatchFeeDetail batchFeeDetail){
-        return batchFeeDetailDao.save(batchFeeDetail);
-    }
+		return batchFeeDetailDao.findBySourceDetailIdOrderByIdAsc(cpExcelDetailId);
+	}
 
-    @Override
-    public List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username ,List<Integer> status) {
-        List<BatchFeeMst>  retrunList = new ArrayList<>();
-        if (username.equals("admin")) {
-            retrunList = batchFeeMstDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        } else {
-            User user = userDao.findByUsername(username);
-            retrunList = batchFeeMstDao.findByChargeSubjectIdAndStateInOrderByIdAsc(user.getAlphaSubjectId(),status);
-        }
+	public BatchFeeMst saveBatchFeeMst(BatchFeeMst batchFeeMst) {
+		return batchFeeMstDao.save(batchFeeMst);
+	}
 
-        return retrunList;
-    }
-    @Override
-    public List<BatchFeeDetail> findDetailsByBatchFeeMstId(Integer batchFeeMstId) {
-    return  batchFeeDetailDao.findByBatchFeeMstIdOrderByIdAsc( batchFeeMstId);}
+	public BatchFeeDetail saveBatchFeeDetail(BatchFeeDetail batchFeeDetail) {
+		return batchFeeDetailDao.save(batchFeeDetail);
+	}
 
+	@Override
+	public List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username, List<Integer> status) {
+		List<BatchFeeMst> retrunList = new ArrayList<>();
+		if (username.equals("admin")) {
+			retrunList = batchFeeMstDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		} else {
+			User user = userDao.findByUsername(username);
+			retrunList = batchFeeMstDao.findByChargeSubjectIdAndStateInOrderByIdAsc(user.getAlphaSubjectId(), status);
+		}
+
+		return retrunList;
+	}
+
+	@Override
+	public List<BatchFeeDetail> findDetailsByBatchFeeMstId(Integer batchFeeMstId) {
+		return batchFeeDetailDao.findByBatchFeeMstIdOrderByIdAsc(batchFeeMstId);
+	}
 
 }

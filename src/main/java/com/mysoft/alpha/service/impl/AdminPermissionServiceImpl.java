@@ -6,7 +6,6 @@ import com.mysoft.alpha.entity.AdminPermission;
 import com.mysoft.alpha.entity.AdminRole;
 import com.mysoft.alpha.entity.AdminRolePermission;
 import com.mysoft.alpha.service.AdminPermissionService;
-import com.mysoft.alpha.service.AdminRolePermissionService;
 import com.mysoft.alpha.service.AdminRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
