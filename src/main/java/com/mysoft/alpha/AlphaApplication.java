@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class AlphaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AlphaApplication.class, args);
 	}
