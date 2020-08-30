@@ -3,6 +3,7 @@ package com.mysoft.alpha.controller;
 import com.mysoft.alpha.common.ChargeType;
 import com.mysoft.alpha.common.CustomStatus;
 import com.mysoft.alpha.common.PayType;
+import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.config.AlphaConfig;
 import com.mysoft.alpha.entity.*;
 import com.mysoft.alpha.exception.CustomException;
@@ -189,6 +190,7 @@ public class BatchFeeController {
         batchFeeMst.setPrepayment(prepayment1.intValue());
         batchFeeMst.setReceivable(prepayment1.intValue());
         batchFeeMst.setImg(payImg);
+        batchFeeMst.setUrl(payImg);//返回payImg已包含url,此处可以存成一样
         batchFeeMst.setRemark(remark);
         batchFeeMst.setOperator(operator);
         batchFeeMst.setCreateTime(new Date());
@@ -199,7 +201,7 @@ public class BatchFeeController {
 
             BatchFeeDetail batchFeeDetail = new BatchFeeDetail();
             batchFeeDetail.setBatchFeeMstId(batchFeeMst.getId());
-            batchFeeDetail.setSourceType(1);
+            batchFeeDetail.setSourceType(SourceType.TYPE1.value());
             batchFeeDetail.setSourceDetailId(cpExcelDetail.getId());
             batchFeeDetail.setEffectiveNumber(1);
             batchFeeDetail.setOperator(operator);
