@@ -206,6 +206,7 @@ DROP TABLE IF EXISTS `batch_fee_detail`;
 CREATE TABLE `batch_fee_detail`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `batch_fee_mst_id` int(11) NULL DEFAULT NULL COMMENT '批次付费主表id',
+  `customer_subject_id` int(11) NULL DEFAULT NULL COMMENT '客户主体ID，这里是客户id',
   `source_type` int(11) NULL DEFAULT NULL COMMENT '申请类型，1.申请（付费）企业excel，2.系统维护, 3.API上传',
   `source_detail_id` int(11) NULL DEFAULT NULL COMMENT '触发id，客户-产品excle明细ID, 之一',
   `effective_number` int(11) NULL DEFAULT NULL COMMENT '有效数，一般是1，有多次投诉可能是多个，按客户_企业计费时取一个客户_产品ID为1，其他为0',
