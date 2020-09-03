@@ -32,17 +32,27 @@ public class CpExcelServiceImpl implements CpExcelService {
 	 */
 	@Autowired
 	private CpExcelDetailDao cpExcelDetailDao;
+	
+	@Override
+	public List<CpExcelDetail> findDetailByCustomerSubjectId(Integer customerSubjectId) {
+		CpExcelDetail cpExcelDetail = new CpExcelDetail();
+		cpExcelDetail.setCustomerSubjectId(customerSubjectId);
+		Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+		return cpExcelDetailDao.findAll(example);
+
+	}
 
 	@Override
 	public List<CpExcelDetail> findDetailByParamsOrderByIdAsc(Integer cpExcelMstId, List<Integer> status, String name,
 			String recordNumber, String productName, String outTradeNo) {
-		System.out.println(cpExcelMstId);
-		System.out.println(status);
-		System.out.println(name);
-		System.out.println(recordNumber);
-		System.out.println(productName);
-		System.out.println(outTradeNo);
+//		System.out.println(cpExcelMstId);
+//		System.out.println(status);
+//		System.out.println(name);
+//		System.out.println(recordNumber);
+//		System.out.println(productName);
+//		System.out.println(outTradeNo);
 		return cpExcelDetailDao.findByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo);
+ 
 
 	}
 

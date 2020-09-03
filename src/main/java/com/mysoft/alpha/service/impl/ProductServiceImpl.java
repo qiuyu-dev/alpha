@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
             CpExcelDetail cpExcelDetail = new CpExcelDetail();
             cpExcelDetail.setProductId(product.getId());
             Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-            if (!cpExcelDetailDao.exists(example)) {
+            if (cpExcelDetailDao.exists(example)) {
                 productDao.deleteById(product.getId());
             }
         }

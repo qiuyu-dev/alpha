@@ -5,9 +5,11 @@ import com.mysoft.alpha.dao.BatchFeeMstDao;
 import com.mysoft.alpha.dao.UserDao;
 import com.mysoft.alpha.entity.BatchFeeDetail;
 import com.mysoft.alpha.entity.BatchFeeMst;
+import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.service.BatchFeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -41,20 +43,27 @@ public class BatchFeeServiceImpl implements BatchFeeService {
 		return batchFeeMstDao.findByIdInOrderByEffectiveDateDesc(
 				batchFeeDetailList.stream().map(BatchFeeDetail::getBatchFeeMstId).collect(Collectors.toList()));
 	}
-
+	@Override
 	public BatchFeeMst getMstById(Integer id) {
 		return batchFeeMstDao.getOne(id);
 	}
-
+	@Override
 	public List<BatchFeeDetail> findDetailBySourceDetailIdOrderByIdDesc(Integer cpExcelDetailId) {
 
 		return batchFeeDetailDao.findBySourceDetailIdOrderByIdAsc(cpExcelDetailId);
 	}
-
+	@Override
+	public List<BatchFeeDetail> findDetailByCustomerSubjectId(Integer customerSubjectId) {
+		BatchFeeDetail batchFeeDetail = new BatchFeeDetail();
+		batchFeeDetail.setCustomerSubjectId(customerSubjectId);
+		Example<BatchFeeDetail> example = Example.of(batchFeeDetail);
+		return batchFeeDetailDao.findAll(example);
+	}
+	@Override
 	public BatchFeeMst saveBatchFeeMst(BatchFeeMst batchFeeMst) {
 		return batchFeeMstDao.save(batchFeeMst);
 	}
-
+	@Override
 	public BatchFeeDetail saveBatchFeeDetail(BatchFeeDetail batchFeeDetail) {
 		return batchFeeDetailDao.save(batchFeeDetail);
 	}

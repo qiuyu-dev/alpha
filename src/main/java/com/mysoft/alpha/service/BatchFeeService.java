@@ -28,4 +28,6 @@ public interface BatchFeeService {
 
     List<BatchFeeMst> findMstByCpExcelDetailId(Integer cpExcelDetailId);
 
+	List<BatchFeeDetail> findDetailByCustomerSubjectId(Integer customerSubjectId);
+
 }

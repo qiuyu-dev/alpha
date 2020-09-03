@@ -144,6 +144,14 @@ public class BatchFeeMst implements Serializable {
     @Transient
     private List<BatchFeeDetail> batchFeeDetails;
 
+
+    /**
+     * 状态说明
+     */
+
+    @Transient
+    private String stateReason;
+    
     public BatchFeeMst() {
     }
 
@@ -330,4 +338,14 @@ public class BatchFeeMst implements Serializable {
     public void setBatchFeeDetails(List<BatchFeeDetail> batchFeeDetails) {
         this.batchFeeDetails = batchFeeDetails;
     }
+
+	public String getStateReason() {
+		return stateReason;
+	}
+
+	public void setStateReason(String stateReason) {
+		this.stateReason = stateReason;
+	}
+    
+    
 }

@@ -56,4 +56,7 @@ public interface CpExcelService {
 
     void deleteDetailById(Integer cpExcelDetailId);
 
+
+	List<CpExcelDetail> findDetailByCustomerSubjectId(Integer customerSubjectId);
+
 }

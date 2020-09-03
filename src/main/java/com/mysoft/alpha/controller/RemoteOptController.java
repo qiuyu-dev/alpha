@@ -157,9 +157,10 @@ public class RemoteOptController {
 			product = productService.save(pnew);
 		}
 
-        if (alphaSubjectService.isExistAlphaSubject(customerTypeName, recordNumber)) {
-            customer =
-                    alphaSubjectService.findBySubjectTypeAndRecordTypeAndRecordNumber(customerTypeName, recordNumber);
+		if (alphaSubjectService.isExistCustomerSubject(customerTypeName, recordNumber,customerName,  sex,
+	     		cpExcelDetail.getCustomerPhone())) {
+				 customer =
+                 alphaSubjectService.findByParams(customerTypeName, recordNumber, customerName, sex, cpExcelDetail.getCustomerPhone());
         } else {
             AlphaSubject cnew = new AlphaSubject();
             cnew.setSubjectType(SubjectType.TYPE1.value());

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 主体(AlphaSubject)实体类
@@ -67,7 +68,7 @@ public class AlphaSubject implements Serializable {
     @Column(name = "phone")
     private String phone;
     /**
-     * 触发类型，1付费企业excel，2，系统维护
+     * 触发类型，1.付费企业excel，2.系统维护, 3.API上传
      */
     @Column(name = "source_type")
     private Integer sourceType;
@@ -97,6 +98,13 @@ public class AlphaSubject implements Serializable {
     @Transient
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
+    
+    /**
+     * 客户-企业-产品订单明细
+     */
+    @Transient
+    private List<CpExcelDetail> cpExcelDetails;
+
 
     public AlphaSubject() {
     }
@@ -224,4 +232,14 @@ public class AlphaSubject implements Serializable {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
+	public List<CpExcelDetail> getCpExcelDetails() {
+		return cpExcelDetails;
+	}
+
+	public void setCpExcelDetails(List<CpExcelDetail> cpExcelDetails) {
+		this.cpExcelDetails = cpExcelDetails;
+	}
+    
+    
 }

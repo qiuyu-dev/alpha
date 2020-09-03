@@ -2,6 +2,8 @@ package com.mysoft.alpha.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.mysoft.alpha.exception.CustomException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,10 +59,10 @@ public class IdNumUtils {
      */
     public static String getProvince(String idNum) throws Exception {
         if (StringUtils.isEmpty(idNum) || idNum.length() != 18) {
-            throw new IllegalArgumentException("请输入18位身份证号");
+            throw new CustomException(0, "请输入18位身份证号");
         } else {
             if (!validate18Idcard(idNum)) {
-                throw new IllegalArgumentException("身份证号不正确");
+                throw new CustomException(0, "身份证号不正确");
             }
         }
 
@@ -82,10 +84,10 @@ public class IdNumUtils {
     public static int getAge(String idNum) throws Exception {
         int ret = 0;
         if (StringUtils.isEmpty(idNum) || idNum.length() != 18) {
-            throw new IllegalArgumentException("请输入18位身份证号");
+            throw new CustomException(0, "请输入18位身份证号");
         } else {
             if (!validate18Idcard(idNum)) {
-                throw new IllegalArgumentException("身份证号不正确");
+                throw new CustomException(0, "身份证号不正确");
             }
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -97,7 +99,7 @@ public class IdNumUtils {
 
     public static int getAge(Date birthDay) throws Exception {
         if (birthDay == null) {
-            throw new IllegalArgumentException("请输入出生日期");
+            throw new CustomException(0, "请输入出生日期");
         }
         Calendar cal = Calendar.getInstance();
         if (cal.before(birthDay)) { // 出生日期晚于当前时间，无法计算
@@ -125,10 +127,10 @@ public class IdNumUtils {
     public static String getSex(String idNum) throws Exception {
         String sex = "未知";
         if (StringUtils.isEmpty(idNum) || idNum.length() != 18) {
-            throw new IllegalArgumentException("请输入18位身份证号");
+            throw new CustomException(0, "请输入18位身份证号");
         } else {
             if (!validate18Idcard(idNum)) {
-                throw new IllegalArgumentException("身份证号不正确");
+                throw new CustomException(0, "身份证号不正确");
             }
         }
         if (Integer.valueOf(idNum.substring(16, 17)) % 2 == 0) {
@@ -253,6 +255,7 @@ public class IdNumUtils {
         if (null == checkCode) {
             return false;
         }
+      System.out.println("------------------------------ checkCode ："+checkCode);
         // 将身份证的第18位与算出来的校码进行匹配，不相等就为假
         return idcard18Code.equalsIgnoreCase(checkCode);//System.out.println("正确");
     }
