@@ -20,7 +20,7 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 @RequestMapping("/api")
 public class LoginController {
-	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     UserService userService;
@@ -31,16 +31,13 @@ public class LoginController {
         username = HtmlUtils.htmlEscape(username);
 
         Subject subject = SecurityUtils.getSubject();
-//        subject.getSession().setTimeout(1);//没起作用
+        //        subject.getSession().setTimeout(1);//没起作用
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, requestUser.getPassword());
         usernamePasswordToken.setRememberMe(true);
         try {
             subject.login(usernamePasswordToken);
             User user = userService.findByUsername(username);
-//        	System.out.println("subject.isRemembered()="+subject.isRemembered());
-//        	System.out.println("subject.isAuthenticated()="+subject.isAuthenticated());
-//        	System.out.println("subject.getPrincipal()="+subject.getPrincipal());
-        	log.info(subject.getPrincipal() + " login");
+            log.info(subject.getPrincipal() + " login");
             if (user.getEnabled().toString().equals("0")) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }
@@ -62,23 +59,23 @@ public class LoginController {
             case 2:
                 return ResultFactory.buildFailResult("用户已存在");
             case 3:
-            	return ResultFactory.buildFailResult("组织机构代码不能为空");
+                return ResultFactory.buildFailResult("组织机构代码不能为空");
             case 4:
-            	return ResultFactory.buildFailResult("组织机构代码已存在");
+                return ResultFactory.buildFailResult("组织机构代码已存在");
             case 5:
-            	return ResultFactory.buildFailResult("公司名称不能为空"); 
+                return ResultFactory.buildFailResult("公司名称不能为空");
             case 6:
-            	return ResultFactory.buildFailResult("请选择公司类型"); 
+                return ResultFactory.buildFailResult("请选择公司类型");
             case 7:
-            	return ResultFactory.buildFailResult("用户不能为空");
+                return ResultFactory.buildFailResult("用户不能为空");
             case 8:
-            	return ResultFactory.buildFailResult("密码不能为空");             	
+                return ResultFactory.buildFailResult("密码不能为空");
             case 9:
-            	return ResultFactory.buildFailResult("姓名不能为空");  
+                return ResultFactory.buildFailResult("姓名不能为空");
             case 10:
-            	return ResultFactory.buildFailResult("联系电话不能为空");   
+                return ResultFactory.buildFailResult("联系电话不能为空");
             case 11:
-            	return ResultFactory.buildFailResult("email不能为空");               	
+                return ResultFactory.buildFailResult("email不能为空");
         }
         return ResultFactory.buildFailResult("未知错误");
     }

@@ -2,13 +2,11 @@ package com.mysoft.alpha.service.impl;
 
 import com.mysoft.alpha.dao.CpExcelDetailDao;
 import com.mysoft.alpha.dao.ProductDao;
-import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.Product;
 import com.mysoft.alpha.service.AlphaSubjectService;
 import com.mysoft.alpha.service.CpExcelService;
 import com.mysoft.alpha.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Autowired
     private ProductDao productDao;
-
+    @Override
     public Product getProductById(Integer id) {
         return productDao.getOne(id);
     }
@@ -55,37 +53,37 @@ public class ProductServiceImpl implements ProductService {
         return productDao.save(product);
     }
 
-    @Override
-    public void deleteById(Integer id) {
-         productDao.deleteById(id);
-    }
+//    @Override
+//    public void deleteById(Integer id) {
+//         productDao.deleteById(id);
+//    }
 
-    @Override
-    public void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId) {
-        List<Product> porductList = productDao.findBySourceTypeAndSourceId(sourceType, sourceId);
-        for (Product product : porductList) {
-            CpExcelDetail cpExcelDetail = new CpExcelDetail();
-            cpExcelDetail.setProductId(product.getId());
-            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-            if (!cpExcelDetailDao.exists(example)) {
-                productDao.deleteById(product.getId());
-            }
-        }
-    }
+//    @Override
+//    public void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId) {
+//        List<Product> porductList = productDao.findBySourceTypeAndSourceId(sourceType, sourceId);
+//        for (Product product : porductList) {
+//            CpExcelDetail cpExcelDetail = new CpExcelDetail();
+//            cpExcelDetail.setProductId(product.getId());
+//            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+//            if (!cpExcelDetailDao.exists(example)) {
+//                productDao.deleteById(product.getId());
+//            }
+//        }
+//    }
 
-    @Override
-    public void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId) {
-        Product product = productDao.findBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
-        if (product != null) {
-            CpExcelDetail cpExcelDetail = new CpExcelDetail();
-            cpExcelDetail.setProductId(product.getId());
-            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-            if (cpExcelDetailDao.exists(example)) {
-                productDao.deleteById(product.getId());
-            }
-        }
-    }
-
+//    @Override
+//    public void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId) {
+//        Product product = productDao.findBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
+//        if (product != null) {
+//            CpExcelDetail cpExcelDetail = new CpExcelDetail();
+//            cpExcelDetail.setProductId(product.getId());
+//            Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+//            if (cpExcelDetailDao.exists(example)) {
+//                productDao.deleteById(product.getId());
+//            }
+//        }
+//    }
+@Override
     public List<Product> findByAlphaSubjectId(Integer alphaSubjectId) {
         List<Sort.Order> orders = new ArrayList<>();
         orders.add(new Sort.Order(Sort.Direction.DESC, "productType"));
@@ -100,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         return productList;
 
     }
-
+    @Override
     public List<Product> findAll() {
         List<Sort.Order> orders = new ArrayList<>();
         orders.add(new Sort.Order(Sort.Direction.DESC, "productType"));

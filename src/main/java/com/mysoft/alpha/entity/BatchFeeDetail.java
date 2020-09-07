@@ -15,131 +15,163 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "batch_fee_detail")
-@JsonIgnoreProperties({ "handler", "hibernateLazyInitializer" })
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class BatchFeeDetail implements Serializable {
-	private static final long serialVersionUID = 101413331465179121L;
-	/**
-	 * 主键
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
-	/**
-	 * 批次付费主表id
-	 */
-	@Column(name = "batch_fee_mst_id")
-	private Integer batchFeeMstId;
-	/**
-	 * 客户主体ID，这里是客户id
-	 */
-	@Column(name = "customer_subject_id")
-	private Integer customerSubjectId;
-	/**
-	 * 申请类型，1.申请（付费）企业excel，2.系统维护, 3.API上传
-	 */
-	@Column(name = "source_type")
-	private Integer sourceType;
-	/**
-	 * 触发id，客户-产品excle明细ID, 之一
-	 */
-	@Column(name = "source_detail_id")
-	private Integer sourceDetailId;
-	/**
-	 * 有效数，一般是1，有多次投诉可能是多个，按客户_企业计费时取一个客户_产品ID为1，其他为0
-	 */
-	@Column(name = "effective_number")
-	private Integer effectiveNumber;
-	/**
-	 * 操作员
-	 */
-	@Column(name = "operator")
-	private String operator;
-	/**
-	 * 创建时间
-	 */
-	@Column(name = "create_time")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createTime;
+    private static final long serialVersionUID = 101413331465179121L;
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    /**
+     * 批次付费主表id
+     */
+    @Column(name = "batch_fee_mst_id")
+    private Integer batchFeeMstId;
+    /**
+     * 客户主体ID，这里是客户id
+     */
+    @Column(name = "customer_subject_id")
+    private Integer customerSubjectId;
+    /**
+     * 申请类型，1.申请（付费）企业excel，2.系统维护, 3.API上传
+     */
+    @Column(name = "source_type")
+    private Integer sourceType;
+    /**
+     * 触发id，客户-产品excle明细ID, 之一
+     */
+    @Column(name = "source_detail_id")
+    private Integer sourceDetailId;
+    /**
+     * 有效数，一般是1，有多次投诉可能是多个，按客户_企业计费时取一个客户_产品ID为1，其他为0
+     */
+    @Column(name = "effective_number")
+    private Integer effectiveNumber;
+    /**
+     * 操作员
+     */
+    @Column(name = "operator")
+    private String operator;
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
 
-	/**
-	 * 保险明细
-	 */
-	@Transient
-	private CpExcelDetail cpExcelDetail;
+    /**
+     * 保险明细
+     */
+    @Transient
+    private CpExcelDetail cpExcelDetail;
 
-	public BatchFeeDetail() {
-	}
+    /**
+     * 客户主体
+     */
 
-	public Integer getId() {
-		return id;
-	}
+    @Transient
+    private AlphaSubject customerSubject;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public BatchFeeDetail() {
+    }
 
-	public Integer getBatchFeeMstId() {
-		return batchFeeMstId;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setBatchFeeMstId(Integer batchFeeMstId) {
-		this.batchFeeMstId = batchFeeMstId;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getCustomerSubjectId() {
-		return customerSubjectId;
-	}
+    public Integer getBatchFeeMstId() {
+        return batchFeeMstId;
+    }
 
-	public void setCustomerSubjectId(Integer customerSubjectId) {
-		this.customerSubjectId = customerSubjectId;
-	}
+    public void setBatchFeeMstId(Integer batchFeeMstId) {
+        this.batchFeeMstId = batchFeeMstId;
+    }
 
-	public Integer getSourceType() {
-		return sourceType;
-	}
+    public Integer getCustomerSubjectId() {
+        return customerSubjectId;
+    }
 
-	public void setSourceType(Integer sourceType) {
-		this.sourceType = sourceType;
-	}
+    public void setCustomerSubjectId(Integer customerSubjectId) {
+        this.customerSubjectId = customerSubjectId;
+    }
 
-	public Integer getSourceDetailId() {
-		return sourceDetailId;
-	}
+    public Integer getSourceType() {
+        return sourceType;
+    }
 
-	public void setSourceDetailId(Integer sourceDetailId) {
-		this.sourceDetailId = sourceDetailId;
-	}
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
+    }
 
-	public Integer getEffectiveNumber() {
-		return effectiveNumber;
-	}
+    public Integer getSourceDetailId() {
+        return sourceDetailId;
+    }
 
-	public void setEffectiveNumber(Integer effectiveNumber) {
-		this.effectiveNumber = effectiveNumber;
-	}
+    public void setSourceDetailId(Integer sourceDetailId) {
+        this.sourceDetailId = sourceDetailId;
+    }
 
-	public String getOperator() {
-		return operator;
-	}
+    public Integer getEffectiveNumber() {
+        return effectiveNumber;
+    }
 
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
+    public void setEffectiveNumber(Integer effectiveNumber) {
+        this.effectiveNumber = effectiveNumber;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public String getOperator() {
+        return operator;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
-	public CpExcelDetail getCpExcelDetail() {
-		return cpExcelDetail;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setCpExcelDetail(CpExcelDetail cpExcelDetail) {
-		this.cpExcelDetail = cpExcelDetail;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public CpExcelDetail getCpExcelDetail() {
+        return cpExcelDetail;
+    }
+
+    public void setCpExcelDetail(CpExcelDetail cpExcelDetail) {
+        this.cpExcelDetail = cpExcelDetail;
+    }
+
+    public AlphaSubject getCustomerSubject() {
+        return customerSubject;
+    }
+
+    public void setCustomerSubject(AlphaSubject customerSubject) {
+        this.customerSubject = customerSubject;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("BatchFeeDetail{");
+        sb.append("id=").append(id);
+        sb.append(", batchFeeMstId=").append(batchFeeMstId);
+        sb.append(", customerSubjectId=").append(customerSubjectId);
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", sourceDetailId=").append(sourceDetailId);
+        sb.append(", effectiveNumber=").append(effectiveNumber);
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", cpExcelDetail=").append(cpExcelDetail);
+        sb.append(", customerSubject=").append(customerSubject);
+        sb.append('}');
+        return sb.toString();
+    }
 }

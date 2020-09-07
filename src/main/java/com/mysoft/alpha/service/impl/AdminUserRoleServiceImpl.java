@@ -37,6 +37,5 @@ public class AdminUserRoleServiceImpl implements AdminUserRoleService {
             urs.add(ur);
         });
         adminUserRoleDao.saveAll(urs);
-
     }
 }

@@ -45,36 +45,30 @@ public class CpExcelServiceImpl implements CpExcelService {
 	@Override
 	public List<CpExcelDetail> findDetailByParamsOrderByIdAsc(Integer cpExcelMstId, List<Integer> status, String name,
 			String recordNumber, String productName, String outTradeNo) {
-//		System.out.println(cpExcelMstId);
-//		System.out.println(status);
-//		System.out.println(name);
-//		System.out.println(recordNumber);
-//		System.out.println(productName);
-//		System.out.println(outTradeNo);
 		return cpExcelDetailDao.findByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo);
  
 
 	}
-
-	@Override
-	public boolean isExistProductId(Integer productId) {
-		CpExcelDetail cpExcelDetail = new CpExcelDetail();
-		cpExcelDetail.setProductId(productId);
-		Example<CpExcelDetail> example = Example.of(cpExcelDetail);
-		return cpExcelDetailDao.exists(example);
-	}
-
+//
+//	@Override
+//	public boolean isExistProductId(Integer productId) {
+//		CpExcelDetail cpExcelDetail = new CpExcelDetail();
+//		cpExcelDetail.setProductId(productId);
+//		Example<CpExcelDetail> example = Example.of(cpExcelDetail);
+//		return cpExcelDetailDao.exists(example);
+//	}
+@Override
 	public CpExcelMst saveMst(CpExcelMst cpExcelMst) {
 		return cpExcelMstDao.save(cpExcelMst);
 	}
-
+	@Override
 	public CpExcelDetail saveDetail(CpExcelDetail cpExceldetail) {
 		return cpExcelDetailDao.save(cpExceldetail);
 	}
-
-	public void saveAllDetails(List<CpExcelDetail> cpExcelDetails) {
-		cpExcelDetailDao.saveAll(cpExcelDetails);
-	}
+//	@Override
+//	public void saveAllDetails(List<CpExcelDetail> cpExcelDetails) {
+//		cpExcelDetailDao.saveAll(cpExcelDetails);
+//	}
 
 	@Override
 	public boolean isExistOutTradeNo(String outTradeNo, Integer chargeId) {
@@ -106,10 +100,10 @@ public class CpExcelServiceImpl implements CpExcelService {
 		return false;
 	}
 
-	@Override
-	public CpExcelMst findMstByFileName(String fileName) {
-		return cpExcelMstDao.findByFileName(fileName);
-	}
+//	@Override
+//	public CpExcelMst findMstByFileName(String fileName) {
+//		return cpExcelMstDao.findByFileName(fileName);
+//	}
 
 	@Override
 	public List<CpExcelMst> findMstByPaySubjectIdOrderById(Integer paySubjectId) {
@@ -121,17 +115,17 @@ public class CpExcelServiceImpl implements CpExcelService {
 		return cpExcelMstDao.findByChargeSubjectIdOrderByIdDesc(chargeSubjectId);
 	}
 
-	@Override
-	public void deleteDetailByCpExcelMstId(Integer cpExcelMstId) {
-		cpExcelDetailDao.deleteByCpExcelMstId(cpExcelMstId);
+//	@Override
+//	public void deleteDetailByCpExcelMstId(Integer cpExcelMstId) {
+//		cpExcelDetailDao.deleteByCpExcelMstId(cpExcelMstId);
+//
+//	}
 
-	}
-
-	@Override
-	public void deleteMstById(Integer cpExcelMstId) {
-		cpExcelMstDao.deleteById(cpExcelMstId);
-
-	}
+//	@Override
+//	public void deleteMstById(Integer cpExcelMstId) {
+//		cpExcelMstDao.deleteById(cpExcelMstId);
+//
+//	}
 
 	@Override
 	public void deleteDetailById(Integer cpExcelDetailId) {
@@ -139,17 +133,17 @@ public class CpExcelServiceImpl implements CpExcelService {
 
 	}
 
-	@Override
-	public List<CpExcelDetail> findDetailByCpExcelMstId(Integer cpExcelMstId) {
+//	@Override
+//	public List<CpExcelDetail> findDetailByCpExcelMstId(Integer cpExcelMstId) {
+//
+//		return cpExcelDetailDao.findByCpExcelMstId(cpExcelMstId);
+//	}
 
-		return cpExcelDetailDao.findByCpExcelMstId(cpExcelMstId);
-	}
-
-	@Override
-	public List<CpExcelDetail> findDetailByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId,
-			List<Integer> status) {
-		return cpExcelDetailDao.findByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMstId, status);
-	}
+//	@Override
+//	public List<CpExcelDetail> findDetailByCpExcelMstIdAndStateInOrderByIdAsc(Integer cpExcelMstId,
+//			List<Integer> status) {
+//		return cpExcelDetailDao.findByCpExcelMstIdAndStateInOrderByIdAsc(cpExcelMstId, status);
+//	}
 
 	@Override
 	public List<CpExcelMst> findMstAll() {
@@ -163,11 +157,11 @@ public class CpExcelServiceImpl implements CpExcelService {
 		Example<CpExcelMst> example = Example.of(cpExcelMst1);
 		return cpExcelMstDao.exists(example);
 	}
-
+	@Override
 	public CpExcelDetail getDetailById(Integer detailId) {
 		return cpExcelDetailDao.findById(detailId).get();
 	}
-
+	@Override
 	public CpExcelMst getMstById(Integer mstId) {
 		return cpExcelMstDao.getOne(mstId);
 	}

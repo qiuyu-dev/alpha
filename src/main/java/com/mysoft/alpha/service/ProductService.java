@@ -12,21 +12,16 @@ import java.util.List;
  */
 public interface ProductService {
 
-    boolean isExistProduct(String productName) ;
+    boolean isExistProduct(String productName);
 
     Product findByName(String productName);
 
     Product save(Product product);
 
-    void deleteBySourceTypeAndSourceId(Integer sourceType,Integer sourceId);
-    void deleteById(Integer id);
-
     List<Product> findByAlphaSubjectId(Integer alphaSubjectId);
 
     List<Product> findAll();
 
-     Product getProductById(Integer id);
-
-    void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId);
+    Product getProductById(Integer id);
 
 }

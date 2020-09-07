@@ -11,7 +11,9 @@ import java.util.List;
  * @since 2020-08-02 16:13:58
  */
 public interface ComplaintService {
+
     Complaint save(Complaint complaint);
+
     List<Complaint> findByCustomerProductId(Integer customerProductId);
 
 }

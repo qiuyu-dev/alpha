@@ -12,24 +12,16 @@ import java.util.List;
  */
 public interface AlphaSubjectService {
 
-	AlphaSubject getAlphaSubjectById(int id);
+    AlphaSubject getAlphaSubjectById(int id);
 
-//	boolean isExistAlphaSubject(String recordType, String recordNumber);
+    boolean isExistCustomerSubject(String recordType, String recordNumber, String name, String sex, String phone);
 
-	boolean isExistCustomerSubject(String recordType, String recordNumber, String name, String sex, String phone);
+    AlphaSubject findByParams(String recordType, String recordNumber, String name, String sex, String phone);
 
-	AlphaSubject findByParams(String recordType, String recordNumber, String name, String sex, String phone);
+    AlphaSubject save(AlphaSubject alphaSubject);
 
-//	AlphaSubject findBySubjectTypeAndRecordTypeAndRecordNumber(String recordType, String recordNumber);
+    List<AlphaSubject> findAllBySubjectType(Integer subjectType);
 
-	AlphaSubject save(AlphaSubject alphaSubject);
-
-	void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId);
-
-	List<AlphaSubject> findAllBySubjectType(Integer subjectType);
-
-	void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId);
-
-	List<AlphaSubject> findAllById(List<Integer> ids);
+    List<AlphaSubject> findAllById(List<Integer> ids);
 
 }

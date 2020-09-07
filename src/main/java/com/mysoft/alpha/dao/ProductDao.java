@@ -17,14 +17,6 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
     @Override
     <S extends Product> S save(S s);
 
-    void deleteBySourceTypeAndSourceDetailId(Integer sourceType,Integer sourceDetailId);
-
     List<Product> findByAlphaSubjectId(Integer alphaSubjectId);
-
-    Product findBySourceTypeAndSourceDetailId(Integer sourceType,Integer sourceDetailId);
-
-    List<Product>  findBySourceTypeAndSourceId(Integer sourceType,Integer sourceId);
-
-
 
 }

@@ -137,6 +137,19 @@ public class BatchFeeMst implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
+    /**
+     * 支付主体
+     */
+
+    @Transient
+    private AlphaSubject paySubject;
+
+    /**
+     * 提供（收款）企业
+     */
+
+    @Transient
+    private AlphaSubject chargeSubject;
 
     /**
      * 明细
@@ -151,7 +164,7 @@ public class BatchFeeMst implements Serializable {
 
     @Transient
     private String stateReason;
-    
+
     public BatchFeeMst() {
     }
 
@@ -339,13 +352,60 @@ public class BatchFeeMst implements Serializable {
         this.batchFeeDetails = batchFeeDetails;
     }
 
-	public String getStateReason() {
-		return stateReason;
-	}
+    public String getStateReason() {
+        return stateReason;
+    }
 
-	public void setStateReason(String stateReason) {
-		this.stateReason = stateReason;
-	}
-    
-    
+    public void setStateReason(String stateReason) {
+        this.stateReason = stateReason;
+    }
+
+    public AlphaSubject getPaySubject() {
+        return paySubject;
+    }
+
+    public void setPaySubject(AlphaSubject paySubject) {
+        this.paySubject = paySubject;
+    }
+
+    public AlphaSubject getChargeSubject() {
+        return chargeSubject;
+    }
+
+    public void setChargeSubject(AlphaSubject chargeSubject) {
+        this.chargeSubject = chargeSubject;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("BatchFeeMst{");
+        sb.append("id=").append(id);
+        sb.append(", batchNumber='").append(batchNumber).append('\'');
+        sb.append(", paySubjectId=").append(paySubjectId);
+        sb.append(", chargeSubjectId=").append(chargeSubjectId);
+        sb.append(", effectiveDate=").append(effectiveDate);
+        sb.append(", closingDate=").append(closingDate);
+        sb.append(", payType=").append(payType);
+        sb.append(", chargeType=").append(chargeType);
+        sb.append(", effectiveNumber=").append(effectiveNumber);
+        sb.append(", price=").append(price);
+        sb.append(", prepayment=").append(prepayment);
+        sb.append(", receivable=").append(receivable);
+        sb.append(", img='").append(img).append('\'');
+        sb.append(", url='").append(url).append('\'');
+        sb.append(", payTime=").append(payTime);
+        sb.append(", chargeTime=").append(chargeTime);
+        sb.append(", remark='").append(remark).append('\'');
+        sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+        sb.append(", state=").append(state);
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", cashier='").append(cashier).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", paySubject=").append(paySubject);
+        sb.append(", chargeSubject=").append(chargeSubject);
+        sb.append(", batchFeeDetails=").append(batchFeeDetails);
+        sb.append(", stateReason='").append(stateReason).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

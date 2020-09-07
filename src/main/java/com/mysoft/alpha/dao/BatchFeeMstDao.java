@@ -13,10 +13,8 @@ import java.util.List;
  */
 public interface BatchFeeMstDao extends JpaRepository<BatchFeeMst, Integer> {
 
-    List<BatchFeeMst> findByChargeSubjectIdOrderByIdAsc(Integer chargeSubjectId);
     List<BatchFeeMst> findByIdInOrderByEffectiveDateDesc(List<Integer> idList);
-    List<BatchFeeMst> findByChargeSubjectIdAndStateInOrderByIdAsc(Integer chargeSubjectId,List<Integer> status);
 
-
+    List<BatchFeeMst> findByChargeSubjectIdAndStateInOrderByIdAsc(Integer chargeSubjectId, List<Integer> status);
 
 }

@@ -34,9 +34,10 @@ public class AdminPermissionServiceImpl implements AdminPermissionService {
     @Autowired
     private AdminRolePermissionDao adminRolePermissionDao;
 
+    @Override
     public Set<String> listPermissionURLsByUser(String username) {
-        List<Integer> rids = adminRoleService.listRolesByUser(username).stream().map(AdminRole::getId)
-                                             .collect(Collectors.toList());
+        List<Integer> rids =
+                adminRoleService.listRolesByUser(username).stream().map(AdminRole::getId).collect(Collectors.toList());
 
         List<Integer> pids = adminRolePermissionDao.findAllByRidIn(rids).stream().map(AdminRolePermission::getPid)
                                                    .collect(Collectors.toList());
@@ -54,6 +55,7 @@ public class AdminPermissionServiceImpl implements AdminPermissionService {
      * @param requestAPI API requested by client
      * @return true when requestAPI is found in the DB
      */
+    @Override
     public boolean needFilter(String requestAPI) {
         List<AdminPermission> ps = adminPermissionDao.findAll();
         for (AdminPermission p : ps) {
@@ -68,12 +70,12 @@ public class AdminPermissionServiceImpl implements AdminPermissionService {
     @Override
     public List<AdminPermission> listPermsByRoleId(Integer rid) {
         List<Integer> pids = adminRolePermissionDao.findAllByRid(rid).stream().map(AdminRolePermission::getPid)
-                                                       .collect(Collectors.toList());
+                                                   .collect(Collectors.toList());
         return adminPermissionDao.findAllById(pids);
     }
 
     @Override
-    public List<AdminPermission>  list() {
+    public List<AdminPermission> list() {
         return adminPermissionDao.findAll();
     }
 }

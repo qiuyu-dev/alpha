@@ -12,22 +12,18 @@ import java.util.List;
  * @since 2020-08-02 16:13:49
  */
 public interface BatchFeeService {
-//    BatchFeeMst saveBatchFee(BatchFeeMst batchFeeMst);
-
-    List<BatchFeeDetail> findDetailBySourceDetailIdOrderByIdDesc(Integer cpExcelDetailId);
-
     BatchFeeMst getMstById(Integer id);
 
     BatchFeeMst saveBatchFeeMst(BatchFeeMst batchFeeMst);
 
     BatchFeeDetail saveBatchFeeDetail(BatchFeeDetail batchFeeDetail);
 
-    List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username ,List<Integer> status);
+    List<BatchFeeMst> findAllBatchFeeMstByUserAndStateIn(String username, List<Integer> status);
 
     List<BatchFeeDetail> findDetailsByBatchFeeMstId(Integer batchFeeMstId);
 
     List<BatchFeeMst> findMstByCpExcelDetailId(Integer cpExcelDetailId);
 
-	List<BatchFeeDetail> findDetailByCustomerSubjectId(Integer customerSubjectId);
+    List<BatchFeeDetail> findDetailByCustomerSubjectId(Integer customerSubjectId);
 
 }

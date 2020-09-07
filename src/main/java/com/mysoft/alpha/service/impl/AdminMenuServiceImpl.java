@@ -39,28 +39,28 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Autowired
     private AdminRoleMenuDao adminRoleMenuDao;
 
-    public List<AdminMenu> findAll(){
+    @Override
+    public List<AdminMenu> findAll() {
 
-        List<Integer> menuIds = adminMenuDao.findAll().stream().map(AdminMenu::getId)
-                                            .collect(Collectors.toList());
+        List<Integer> menuIds = adminMenuDao.findAll().stream().map(AdminMenu::getId).collect(Collectors.toList());
         List<AdminMenu> menus = adminMenuDao.findAllById(menuIds);
         handleMenus(menus);
         return menus;
     }
 
+    @Override
     public List<AdminMenu> getMenusByCurrentUser() {
         // Get current user in DB.
-//
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(username);
 
         // Get roles' ids of current user.
         List<Integer> rids = adminUserRoleDao.findAllByUid(user.getId()).stream().map(AdminUserRole::getRid)
-                                                 .collect(Collectors.toList());
+                                             .collect(Collectors.toList());
 
         // Get menu items of these roles.
-        List<Integer> menuIds = adminRoleMenuDao.findAllByRidIn(rids).stream().map(AdminRoleMenu::getMid)
-                                                    .collect(Collectors.toList());
+        List<Integer> menuIds =
+                adminRoleMenuDao.findAllByRidIn(rids).stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
         List<AdminMenu> menus = adminMenuDao.findAllById(menuIds).stream().distinct().collect(Collectors.toList());
 
         // Adjust the structure of the menu.
@@ -68,9 +68,10 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         return menus;
     }
 
+    @Override
     public List<AdminMenu> getMenusByRoleId(int rid) {
-        List<Integer> menuIds = adminRoleMenuDao.findAllByRid(rid).stream().map(AdminRoleMenu::getMid)
-                                                    .collect(Collectors.toList());
+        List<Integer> menuIds =
+                adminRoleMenuDao.findAllByRid(rid).stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
         List<AdminMenu> menus = adminMenuDao.findAllById(menuIds);
         handleMenus(menus);
         return menus;
@@ -81,7 +82,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
      *
      * @param menus Menu items list without structure
      */
-    public void handleMenus(List<AdminMenu> menus) {
+    private void handleMenus(List<AdminMenu> menus) {
         menus.forEach(m -> {
             List<AdminMenu> children = adminMenuDao.findAllByParentId(m.getId());
             m.setChildren(children);

@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserService {
 
     User findByUsername(String userName);
-    
+
     User findByUsernameAndEmail(String userName, String email);
 
     int register(RegisterForm registerForm);
@@ -27,6 +27,4 @@ public interface UserService {
     User resetPassword(User requestUser);
 
     void editUser(User requestUser);
-    
-    User getUserById(Integer id);
 }

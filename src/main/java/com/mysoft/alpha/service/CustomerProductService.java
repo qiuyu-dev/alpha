@@ -13,21 +13,17 @@ import java.util.List;
  */
 public interface CustomerProductService {
 
-    boolean isExistProductId(Integer productId);
     CustomerProduct getOneById(Integer id);
 
-//    List<CustomerProduct> findBySourceMstIdIsInOrderById(List<Integer> sourceMstIds);
-    List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds,
-                                                         List<Integer> status);
-    void save( CustomerProduct customerProduct);
+    List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds, List<Integer> status);
+
+    void save(CustomerProduct customerProduct);
 
     List<CustomerProduct> findAll();
 
     void saveAll(List<CustomerProduct> customerProductList);
 
     boolean isExistOutTradeNoe(Integer customerId, Integer productId, Date effectiveDate, Date closingDate);
-
-    void deleteBySourceTypeAndSourceId(Integer sourceType, Integer sourceId);
 
     List<CustomerProduct> findBySourceDetailIdIsInOrderById(List<Integer> detailIds);
 

@@ -41,6 +41,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     @Autowired
     private AdminRolePermissionService adminRolePermissionService;
 
+    @Override
     public List<AdminRole> listRolesByUser(String username) {
         int uid = userService.findByUsername(username).getId();
         List<Integer> rids =

@@ -21,12 +21,12 @@ public class ComplaintServiceImpl implements ComplaintService {
      */
     @Autowired
     private ComplaintDao complaintDao;
-
+    @Override
     public Complaint save(Complaint complaint){
         return complaintDao.save(complaint);
     }
 
-
+    @Override
     public List<Complaint> findByCustomerProductId(Integer customerProductId){
         return complaintDao.findByCustomerProductIdOrderByIdDesc(customerProductId);
     }

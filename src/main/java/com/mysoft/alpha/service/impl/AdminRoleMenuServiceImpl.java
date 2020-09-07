@@ -24,7 +24,6 @@ public class AdminRoleMenuServiceImpl implements AdminRoleMenuService {
     @Autowired
     private AdminRoleMenuDao adminRoleMenuDao;
 
-
     @Override
     public void updateRoleMenu(int rid, Map<String, List<Integer>> menusIds) {
         adminRoleMenuDao.deleteAllByRid(rid);
@@ -36,8 +35,6 @@ public class AdminRoleMenuServiceImpl implements AdminRoleMenuService {
             rms.add(rm);
         }
         adminRoleMenuDao.saveAll(rms);
-
     }
-
 
 }

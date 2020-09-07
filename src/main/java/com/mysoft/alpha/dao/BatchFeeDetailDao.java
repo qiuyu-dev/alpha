@@ -13,10 +13,8 @@ import java.util.List;
  */
 public interface BatchFeeDetailDao extends JpaRepository<BatchFeeDetail, Integer> {
 
-     List<BatchFeeDetail> findBySourceDetailIdOrderByIdAsc(Integer cpExcelDetailId);
+    List<BatchFeeDetail> findBySourceDetailIdOrderByIdAsc(Integer cpExcelDetailId);
 
-     List<BatchFeeDetail> findByBatchFeeMstIdOrderByIdAsc(Integer batchFeeMstId);
-
-     List<BatchFeeDetail> findBySourceDetailIdOrderByIdDesc(Integer sourceDetailId);
+    List<BatchFeeDetail> findByBatchFeeMstIdOrderByIdAsc(Integer batchFeeMstId);
 
 }

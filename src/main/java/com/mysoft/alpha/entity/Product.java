@@ -192,5 +192,23 @@ public class Product implements Serializable {
         this.alphaSubject = alphaSubject;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Product{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", alphaSubjectId=").append(alphaSubjectId);
+        sb.append(", productType=").append(productType);
+        sb.append(", recordNumber='").append(recordNumber).append('\'');
+        sb.append(", ordered=").append(ordered);
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", sourceId=").append(sourceId);
+        sb.append(", sourceDetailId=").append(sourceDetailId);
+        sb.append(", enabled=").append(enabled);
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", alphaSubject=").append(alphaSubject);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -160,18 +160,12 @@ public class CpExcelDetail implements Serializable {
 
     @Transient
     private CpExcelMst cpExcelMst;
-
-    public CpExcelDetail() {
-    }
-
     /**
      * 触发的服务
      */
 
     @Transient
     private List<CustomerProduct> customerProducts;
-
-
     /**
      * 付费主表
      */
@@ -179,6 +173,9 @@ public class CpExcelDetail implements Serializable {
     @Transient
     private List<BatchFeeMst> batchFeeMsts;
 
+
+    public CpExcelDetail() {
+    }
 
     public Integer getId() {
         return id;
@@ -244,7 +241,7 @@ public class CpExcelDetail implements Serializable {
         this.seqNumber = seqNumber;
     }
 
-  public String getProductName() {
+    public String getProductName() {
         return productName;
     }
 
@@ -395,5 +392,39 @@ public class CpExcelDetail implements Serializable {
 
     public void setStateReason(String stateReason) {
         this.stateReason = stateReason;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CpExcelDetail{");
+        sb.append("id=").append(id);
+        sb.append(", cpExcelMstId=").append(cpExcelMstId);
+        sb.append(", customerSubjectId=").append(customerSubjectId);
+        sb.append(", productId=").append(productId);
+        sb.append(", effectiveDate=").append(effectiveDate);
+        sb.append(", closingDate=").append(closingDate);
+        sb.append(", outTradeNo='").append(outTradeNo).append('\'');
+        sb.append(", ordered=").append(ordered);
+        sb.append(", seqNumber='").append(seqNumber).append('\'');
+        sb.append(", customerType='").append(customerType).append('\'');
+        sb.append(", customerName='").append(customerName).append('\'');
+        sb.append(", customerPhone='").append(customerPhone).append('\'');
+        sb.append(", productName='").append(productName).append('\'');
+        sb.append(", location='").append(location).append('\'');
+        sb.append(", age='").append(age).append('\'');
+        sb.append(", sex='").append(sex).append('\'');
+        sb.append(", state=").append(state);
+        sb.append(", remark='").append(remark).append('\'');
+        sb.append(", confirmRemark='").append(confirmRemark).append('\'');
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", customerSubject=").append(customerSubject);
+        sb.append(", product=").append(product);
+        sb.append(", stateReason='").append(stateReason).append('\'');
+        sb.append(", cpExcelMst=").append(cpExcelMst);
+        sb.append(", customerProducts=").append(customerProducts);
+        sb.append(", batchFeeMsts=").append(batchFeeMsts);
+        sb.append('}');
+        return sb.toString();
     }
 }

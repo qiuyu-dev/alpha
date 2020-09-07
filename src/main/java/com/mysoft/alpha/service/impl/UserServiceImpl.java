@@ -51,18 +51,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AdminUserRoleService adminUserRoleService;
 
-
+    @Override
     public User findByUsername(String userName) {
         return userDao.findByUsername(userName);
     }
-
+    @Override
 	public User findByUsernameAndEmail(String userName, String email) {
 		return  userDao.findByUsernameAndEmail(userName, email);
 	}
-
-    public User getUserById(Integer id) {
-        return userDao.getOne(id);
-    }
+//    @Override
+//    public User getUserById(Integer id) {
+//        return userDao.getOne(id);
+//    }
     
     @Transactional
     public int register(RegisterForm registerForm) {
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         return 1;
     }
 
-
+    @Override
     public List<UserDTO> list(String username) {
         //根据登录用户，查询用户信息
         List<User> users = new ArrayList<>();
@@ -163,13 +163,13 @@ public class UserServiceImpl implements UserService {
         return userDTOs;
     }
 
-
+    @Override
     public void updateUserStatus(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
         userInDB.setEnabled(user.getEnabled());
         userDao.save(userInDB);
     }
-
+    @Override
     public User resetPassword(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
         userInDB.setPassword(encodedPassword);
         return userDao.save(userInDB);
     }
-
+    @Override
     public void editUser(User user) {
         User userInDB = userDao.findByUsername(user.getUsername());
         userInDB.setName(user.getName());
@@ -236,12 +236,12 @@ public class UserServiceImpl implements UserService {
         return 0;
     }
 
-    public boolean isExistUsername(String username) {
+    private boolean isExistUsername(String username) {
         User user = userDao.findByUsername(username);
         return null != user;
     }
 
-    public boolean isExistOrgcode(String orgcode) {
+    private boolean isExistOrgcode(String orgcode) {
         AlphaSubject alphaSubject = alphaSubjectDao.findByRecordNumber(orgcode);
         return null != alphaSubject;
     }

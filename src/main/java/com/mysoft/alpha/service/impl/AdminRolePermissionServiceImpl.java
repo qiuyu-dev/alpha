@@ -26,10 +26,7 @@ public class AdminRolePermissionServiceImpl implements AdminRolePermissionServic
 
     @Override
     public void savePermChanges(Integer rid, List<AdminPermission> perms) {
-        System.out.println("--------------------adminRolePermissionDAO.deleteAllByRid(rid);     begin----------------");
         adminRolePermissionDao.deleteAllByRid(rid);
-        System.out.println("--------------------adminRolePermissionDAO.deleteAllByRid(rid);     end----------------");
-
         List<AdminRolePermission> rps = new ArrayList<>();
         perms.forEach(p -> {
             AdminRolePermission rp = new AdminRolePermission();
@@ -37,16 +34,11 @@ public class AdminRolePermissionServiceImpl implements AdminRolePermissionServic
             rp.setPid(p.getId());
             rps.add(rp);
         });
-        System.out.println("--------------------adminRolePermissionDAO.saveAll(rps);     begin----------------");
-
         adminRolePermissionDao.saveAll(rps);
-        System.out.println("--------------------adminRolePermissionDAO.saveAll(rps);     end----------------");
-
-
     }
 
-//    @Override
-//    public List<AdminRolePermission> findAllByRid(Integer rid) {
-//        return adminRolePermissionDao.findAllByRid(rid);
-//    }
+    //    @Override
+    //    public List<AdminRolePermission> findAllByRid(Integer rid) {
+    //        return adminRolePermissionDao.findAllByRid(rid);
+    //    }
 }

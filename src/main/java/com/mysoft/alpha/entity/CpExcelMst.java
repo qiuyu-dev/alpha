@@ -46,19 +46,19 @@ public class CpExcelMst implements Serializable {
      */
     @Column(name = "url")
     private String url;
-    
+
     /**
      * 上传客户端ip
      */
     @Column(name = "ip")
     private String ip;
-    
+
     /**
      * 触发类型，1付费企业excel，2，系统维护 3.API上传
      */
     @Column(name = "source_type")
     private Integer sourceType;
-    
+
     /**
      * 备注
      */
@@ -130,25 +130,25 @@ public class CpExcelMst implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }    
+    }
 
     public String getIp() {
-		return ip;
-	}
+        return ip;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public Integer getSourceType() {
-		return sourceType;
-	}
+    public Integer getSourceType() {
+        return sourceType;
+    }
 
-	public void setSourceType(Integer sourceType) {
-		this.sourceType = sourceType;
-	}
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
+    }
 
-	public String getRemark() {
+    public String getRemark() {
         return remark;
     }
 
@@ -204,7 +204,23 @@ public class CpExcelMst implements Serializable {
         this.cpExcelDetails = cpExcelDetails;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CpExcelMst{");
+        sb.append("id=").append(id);
+        sb.append(", paySubjectId=").append(paySubjectId);
+        sb.append(", chargeSubjectId=").append(chargeSubjectId);
+        sb.append(", fileName='").append(fileName).append('\'');
+        sb.append(", url='").append(url).append('\'');
+        sb.append(", ip='").append(ip).append('\'');
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", remark='").append(remark).append('\'');
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", paySubject=").append(paySubject);
+        sb.append(", chargeSubject=").append(chargeSubject);
+        sb.append(", cpExcelDetails=").append(cpExcelDetails);
+        sb.append('}');
+        return sb.toString();
+    }
 }

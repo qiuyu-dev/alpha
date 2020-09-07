@@ -98,7 +98,7 @@ public class AlphaSubject implements Serializable {
     @Transient
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
-    
+
     /**
      * 客户-企业-产品订单明细
      */
@@ -107,6 +107,10 @@ public class AlphaSubject implements Serializable {
 
 
     public AlphaSubject() {
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Integer getId() {
@@ -205,10 +209,6 @@ public class AlphaSubject implements Serializable {
         this.createTime = createTime;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -233,13 +233,34 @@ public class AlphaSubject implements Serializable {
         this.sex = sex;
     }
 
-	public List<CpExcelDetail> getCpExcelDetails() {
-		return cpExcelDetails;
-	}
+    public List<CpExcelDetail> getCpExcelDetails() {
+        return cpExcelDetails;
+    }
 
-	public void setCpExcelDetails(List<CpExcelDetail> cpExcelDetails) {
-		this.cpExcelDetails = cpExcelDetails;
-	}
-    
-    
+    public void setCpExcelDetails(List<CpExcelDetail> cpExcelDetails) {
+        this.cpExcelDetails = cpExcelDetails;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("AlphaSubject{");
+        sb.append("id=").append(id);
+        sb.append(", subjectType=").append(subjectType);
+        sb.append(", recordType='").append(recordType).append('\'');
+        sb.append(", recordNumber='").append(recordNumber).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", location='").append(location).append('\'');
+        sb.append(", age=").append(age);
+        sb.append(", sex='").append(sex).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", sourceId=").append(sourceId);
+        sb.append(", sourceDetailId=").append(sourceDetailId);
+        sb.append(", enabled=").append(enabled);
+        sb.append(", operator='").append(operator).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", cpExcelDetails=").append(cpExcelDetails);
+        sb.append('}');
+        return sb.toString();
+    }
 }
