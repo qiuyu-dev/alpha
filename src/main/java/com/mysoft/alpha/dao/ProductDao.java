@@ -13,10 +13,14 @@ import java.util.List;
  */
 public interface ProductDao extends JpaRepository<Product, Integer> {
     Product findByName(String name);
+    
+    Product findByRecordNumber(String recordNumber);
 
     @Override
     <S extends Product> S save(S s);
 
     List<Product> findByAlphaSubjectId(Integer alphaSubjectId);
+    
+    void deleteById(Integer id);
 
 }

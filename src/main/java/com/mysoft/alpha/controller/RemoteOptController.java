@@ -191,5 +191,52 @@ public class RemoteOptController {
         cpExcelService.saveDetail(cpExcelDetail);
 		return ResultFactory.buildSuccessResult("保存成功");
 	}
+	
+	/**
+	 * 建保维护
+	 * @param map
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/prodserv")
+	public Result productService(@RequestParam Map<String, String> map, HttpServletRequest request) throws Exception {
+		String username = map.get("username");
+		String email = map.get("email");
+		String productName = map.get("pName");// 产品名称
+		String recordNumber = map.get("recordNumber");// 备案编号
+		User user = userService.findByUsernameAndEmail(username, email);
+		if (user == null) {
+			throw new CustomException(0, "用户名或Email错误");
+		}
+		
+		if (StringUtils.isEmpty(productName)) {
+			throw new CustomException(0, "服务名不能为空");
+		}
+		
+		if (StringUtils.isEmpty(recordNumber)) {
+			throw new CustomException(0, "备案不能为空");
+		}
+		
+		if (productService.isExistProduct(productName)) {
+			throw new CustomException(0, "服务名已存在");
+		} 
+		
+		if (productService.isExistRecordNumber(recordNumber)) {
+			throw new CustomException(0, "备案编号已存在");
+		}
+		
+		Product product = new Product();
+		product.setName(productName);
+		product.setRecordNumber(recordNumber);
+        product.setAlphaSubjectId(user.getAlphaSubjectId());
+        product.setProductType(ProductType.TYPE3.value());
+        product.setSourceType(SourceType.TYPE3.value());
+        product.setEnabled(1);
+        product.setOperator(user.getUsername());
+        productService.save(product);		
+		
+		return ResultFactory.buildSuccessResult("保存成功");
+	}
 
 }

@@ -99,4 +99,9 @@ public class CustomerProductServiceImpl implements CustomerProductService {
         }
         customerProductDao.deleteBySourceTypeAndSourceDetailId(sourceType, sourceDetailId);
     }
+
+	@Override
+	public List<CustomerProduct> findByProductId(Integer productId) {
+		return customerProductDao.findByProductId(productId);
+	}
 }

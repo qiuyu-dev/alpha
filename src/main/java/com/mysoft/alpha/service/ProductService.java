@@ -13,6 +13,8 @@ import java.util.List;
 public interface ProductService {
 
     boolean isExistProduct(String productName);
+    
+    boolean isExistRecordNumber(String recordNumber);
 
     Product findByName(String productName);
 
@@ -23,5 +25,9 @@ public interface ProductService {
     List<Product> findAll();
 
     Product getProductById(Integer id);
+    
+    void deleteProductById(Integer id);
+    
+    
 
 }

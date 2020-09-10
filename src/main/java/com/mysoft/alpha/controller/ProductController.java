@@ -44,7 +44,7 @@ public class ProductController {
     @PostMapping("/save")
     //    @Transactional 直接存储，没有事务
     public Result excelUpload(@RequestBody @Valid Product product)  throws CustomException {
-        if (productService.isExistProduct(product.getName())) {
+        if (productService.isExistRecordNumber(product.getRecordNumber())) {
             return ResultFactory.buildFailResult("已有此产品");
         }
 
@@ -72,5 +72,11 @@ public class ProductController {
         }
         return ResultFactory.buildSuccessResult(productList);
     }
-
+    
+    @GetMapping("/deleteById")
+    public Result deleteService(Integer id) throws CustomException {
+    	productService.deleteProductById(id);
+    	return ResultFactory.buildSuccessResult("删除成功");
     }
+    
+}

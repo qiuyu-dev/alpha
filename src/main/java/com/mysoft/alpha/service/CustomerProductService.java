@@ -28,5 +28,7 @@ public interface CustomerProductService {
     List<CustomerProduct> findBySourceDetailIdIsInOrderById(List<Integer> detailIds);
 
     void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId);
+    
+    List<CustomerProduct> findByProductId(Integer productId);
 
 }

@@ -1,8 +1,11 @@
 package com.mysoft.alpha.service.impl;
 
 import com.mysoft.alpha.dao.CpExcelDetailDao;
+import com.mysoft.alpha.dao.CustomerProductDao;
 import com.mysoft.alpha.dao.ProductDao;
+import com.mysoft.alpha.entity.CustomerProduct;
 import com.mysoft.alpha.entity.Product;
+import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.service.AlphaSubjectService;
 import com.mysoft.alpha.service.CpExcelService;
 import com.mysoft.alpha.service.ProductService;
@@ -27,11 +30,15 @@ public class ProductServiceImpl implements ProductService {
     CpExcelService cpExcelService;
     @Autowired
     CpExcelDetailDao cpExcelDetailDao;
+    
+    @Autowired
+    private CustomerProductDao customerProductDao;
     /**
      * 服务对象
      */
     @Autowired
     private ProductDao productDao;
+    
     @Override
     public Product getProductById(Integer id) {
         return productDao.getOne(id);
@@ -90,12 +97,12 @@ public class ProductServiceImpl implements ProductService {
         orders.add(new Sort.Order(Sort.Direction.ASC, "alphaSubjectId"));
         orders.add(new Sort.Order(Sort.Direction.ASC, "id"));
         List<Product> productList = productDao.findByAlphaSubjectId(alphaSubjectId);
-        //        List<Product> returnList = new ArrayList<>();
-        //        for (Product product : productList) {
-        //            product.setAlphaSubject(alphaSubjectService.getAlphaSubjectById(product.getAlphaSubjectId()));
-        //            returnList.add(product);
-        //        }
-        return productList;
+        List<Product> returnList = new ArrayList<>();
+        for (Product product : productList) {
+            product.setAlphaSubject(alphaSubjectService.getAlphaSubjectById(product.getAlphaSubjectId()));
+            returnList.add(product);
+        }
+        return returnList;
 
     }
     @Override
@@ -112,4 +119,19 @@ public class ProductServiceImpl implements ProductService {
         }
         return returnList;
     }
+    
+    @Override
+    public void deleteProductById(Integer id) {
+    	List<CustomerProduct> customerProductList = customerProductDao.findByProductId(id);
+    	if(customerProductList != null && customerProductList.size() > 0) {
+    		throw new CustomException(0, "服务使用中，不可删除");
+    	}
+    	productDao.deleteById(id);
+    }
+
+	@Override
+	public boolean isExistRecordNumber(String recordNumber) {
+        Product product = productDao.findByRecordNumber(recordNumber);
+        return null != product;
+	}
 }
