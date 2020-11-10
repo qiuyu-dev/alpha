@@ -288,6 +288,11 @@ CREATE TABLE `cp_excel_detail`  (
   `state` int(1) NULL DEFAULT NULL COMMENT '状态：',
   `operator` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作员',
   `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `birthday` datetime(0) NULL DEFAULT NULL COMMENT '出生日期',
+  `product_code` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品代码',
+  `insurance_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '险种名称',
+  `insurance_code` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '险种代码',
+  `insurance_state` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '保单状态',  
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `excel_out_trade_no_UNIQUE`(`out_trade_no`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '客户-产品excle明细' ROW_FORMAT = DYNAMIC;
