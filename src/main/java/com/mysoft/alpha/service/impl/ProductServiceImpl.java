@@ -54,6 +54,11 @@ public class ProductServiceImpl implements ProductService {
     public Product findByName(String productName) {
         return productDao.findByName(productName);
     }
+    
+    @Override
+    public Product findByRecordNumber(String recordNumber) {
+    	return productDao.findByRecordNumber(recordNumber);
+    }
 
     @Override
     public Product save(Product product) {

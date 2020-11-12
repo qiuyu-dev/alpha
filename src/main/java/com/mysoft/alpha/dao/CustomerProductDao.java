@@ -1,6 +1,9 @@
 package com.mysoft.alpha.dao;
 
 import com.mysoft.alpha.entity.CustomerProduct;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -18,6 +21,8 @@ public interface CustomerProductDao extends JpaRepository<CustomerProduct, Integ
     List<CustomerProduct> findBySourceDetailIdIsInOrderById(List<Integer> detailIds);
 
     List<CustomerProduct> findBySourceIdInAndStateInOrderById(List<Integer> sourceIds, List<Integer> status);
+    
+    Page<CustomerProduct> findBySourceIdInAndStateInOrderById(List<Integer> sourceIds, List<Integer> status, Pageable pageable);
 
     void deleteBySourceTypeAndSourceDetailId(Integer sourceType, Integer sourceDetailId);
     

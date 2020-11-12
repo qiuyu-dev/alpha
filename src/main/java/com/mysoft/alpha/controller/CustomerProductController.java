@@ -8,8 +8,14 @@ import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
 import com.mysoft.alpha.service.*;
+import com.mysoft.alpha.util.MyPage;
+
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,14 +95,15 @@ public class CustomerProductController {
     }
 
 
-    @GetMapping("/list")
-    public Result listCustomerServices()  throws CustomException {
+    @GetMapping("/list/{size}/{page}")
+    public Result listCustomerServices(@PathVariable("size") int size, @PathVariable("page") int page)  throws CustomException {
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
-        List<CustomerProduct> returnList = new ArrayList<>();
-
+        MyPage<CustomerProduct> returnPage = new MyPage<CustomerProduct>();
+        Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
         List<CpExcelMst> cpExcelMstList = new ArrayList<>();
         if (operator.equals("admin")) {
-            returnList = customerProductService.findAll();
+        	Page<CustomerProduct>  customerProductPage = customerProductService.findAll(pageable);
+        	returnPage = new MyPage<CustomerProduct>(customerProductPage);
         } else {
             User user = userService.findByUsername(operator);
             AlphaSubject alphaSubject = alphaSubjectService.getAlphaSubjectById(user.getAlphaSubjectId());
@@ -105,10 +112,11 @@ public class CustomerProductController {
             } else {
                 cpExcelMstList = cpExcelService.findMstByChargeSubjectIdOrderById(user.getAlphaSubjectId());
             }
-            returnList = customerProductService.findBySourceMstIdInAndStatusIn(
-                    cpExcelMstList.stream().map(CpExcelMst::getId).collect(Collectors.toList()), Arrays.asList(7));
+            Page<CustomerProduct>  customerProductPage = customerProductService.findBySourceMstIdInAndStatusIn(
+                    cpExcelMstList.stream().map(CpExcelMst::getId).collect(Collectors.toList()), Arrays.asList(7),pageable);
+            returnPage = new MyPage<CustomerProduct>(customerProductPage);
         }
-        for(CustomerProduct customerProduct:returnList){
+        for(CustomerProduct customerProduct:returnPage.getContent()){
             CpExcelMst cpExcelMst = cpExcelService.getMstById(customerProduct.getSourceId());
             cpExcelMst.setPaySubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getPaySubjectId()));
             cpExcelMst.setChargeSubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getChargeSubjectId()));
@@ -125,7 +133,7 @@ public class CustomerProductController {
             }
             customerProduct.setComplaints(complaintService.findByCustomerProductId(customerProduct.getId()));
         }
-        return ResultFactory.buildSuccessResult(returnList);
+        return ResultFactory.buildSuccessResult(returnPage);
     }
 
 }

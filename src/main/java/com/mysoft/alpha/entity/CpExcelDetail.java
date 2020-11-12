@@ -89,6 +89,33 @@ public class CpExcelDetail implements Serializable {
      */
     @Column(name = "product_name")
     private String productName;
+    
+    /**
+     * 产品代码
+     */
+    @Column(name = "product_code")
+    private String productCode;    
+    /**
+     * 险种名称
+     */
+    @Column(name = "insurance_name")
+    private String insuranceName;    
+    /**
+     * 险种代码
+     */
+    @Column(name = "insurance_code")
+    private String insuranceCode;    
+    /**
+     * 出生日期
+     */
+    @Column(name = "birthday")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date birthday;
+    /**
+     * 保单状态
+     */
+    @Column(name = "insurance_state")
+    private String insuranceState;
     /**
      * 所在地,可以录入或来源于身份证号
      */
@@ -247,9 +274,49 @@ public class CpExcelDetail implements Serializable {
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
+    }    
 
-    public String getLocation() {
+    public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getInsuranceName() {
+		return insuranceName;
+	}
+
+	public void setInsuranceName(String insuranceName) {
+		this.insuranceName = insuranceName;
+	}
+
+	public String getInsuranceCode() {
+		return insuranceCode;
+	}
+
+	public void setInsuranceCode(String insuranceCode) {
+		this.insuranceCode = insuranceCode;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getInsuranceState() {
+		return insuranceState;
+	}
+
+	public void setInsuranceState(String insuranceState) {
+		this.insuranceState = insuranceState;
+	}
+
+	public String getLocation() {
         return location;
     }
 
@@ -410,6 +477,11 @@ public class CpExcelDetail implements Serializable {
         sb.append(", customerName='").append(customerName).append('\'');
         sb.append(", customerPhone='").append(customerPhone).append('\'');
         sb.append(", productName='").append(productName).append('\'');
+        sb.append(", productCode='").append(productCode).append('\'');
+        sb.append(", insuranceCode='").append(insuranceCode).append('\'');
+        sb.append(", insuranceName='").append(insuranceName).append('\'');
+        sb.append(", birthday='").append(birthday).append('\'');
+        sb.append(", insuranceState='").append(insuranceState).append('\'');
         sb.append(", location='").append(location).append('\'');
         sb.append(", age='").append(age).append('\'');
         sb.append(", sex='").append(sex).append('\'');

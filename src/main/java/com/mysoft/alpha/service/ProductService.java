@@ -17,6 +17,8 @@ public interface ProductService {
     boolean isExistRecordNumber(String recordNumber);
 
     Product findByName(String productName);
+    
+    Product findByRecordNumber(String recordNumber);
 
     Product save(Product product);
 

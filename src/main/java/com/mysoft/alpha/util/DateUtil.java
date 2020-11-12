@@ -62,8 +62,6 @@ public class DateUtil {
      * @return java.util.Date
      */
     public static Date convertExcelToDate(String sdate, String format) {
-        System.out.println("convertExcelToDate sdate:" + sdate + ",format:" + format);
-        //		try {
         Date dt ;
         try {
             if (format.contains("yy")) {

@@ -43,6 +43,9 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
 			alphaSubject.setSex(sex);
 			alphaSubject.setPhone(phone);
 		} else {
+			alphaSubject.setName(name);
+			alphaSubject.setSex(sex);
+			alphaSubject.setPhone(phone);
 			alphaSubject.setRecordType(recordType);
 			alphaSubject.setRecordNumber(recordNumber);
 		}
@@ -58,6 +61,9 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
 			alphaSubject.setSex(sex);
 			alphaSubject.setPhone(phone);
 		} else {
+			alphaSubject.setName(name);
+			alphaSubject.setSex(sex);
+			alphaSubject.setPhone(phone);
 			alphaSubject.setRecordType(recordType);
 			alphaSubject.setRecordNumber(recordNumber);
 		}

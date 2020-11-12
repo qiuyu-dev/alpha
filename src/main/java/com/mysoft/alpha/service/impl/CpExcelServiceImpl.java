@@ -4,8 +4,13 @@ import com.mysoft.alpha.dao.*;
 import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.CpExcelMst;
 import com.mysoft.alpha.service.CpExcelService;
+import com.mysoft.alpha.util.MyPage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +52,15 @@ public class CpExcelServiceImpl implements CpExcelService {
 			String recordNumber, String productName, String outTradeNo) {
 		return cpExcelDetailDao.findByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo);
  
-
 	}
+	
+	@Override
+	public Page<CpExcelDetail> findPageByParamsAndSort(Integer cpExcelMstId, List<Integer> status, String name,
+			String recordNumber, String productName, String outTradeNo,Pageable pageable){
+		Page<CpExcelDetail> page = cpExcelDetailDao.findPageByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo, pageable);
+		return page;
+	}
+	
 //
 //	@Override
 //	public boolean isExistProductId(Integer productId) {
@@ -165,5 +177,19 @@ public class CpExcelServiceImpl implements CpExcelService {
 	public CpExcelMst getMstById(Integer mstId) {
 		return cpExcelMstDao.getOne(mstId);
 	}
+	
+    /**
+     * 分页查询
+     * @param pageNum
+     * @param size
+     * @return
+     */
+    @Override
+    public Page<CpExcelDetail> findDetailByPage(Integer pageNum, Integer size) {
+    	Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, size, sort);
+        Page<CpExcelDetail> page= cpExcelDetailDao.findAll(pageRequest);
+        return page;
+    }
 
 }

@@ -41,10 +41,8 @@ public class RoleController {
     @GetMapping("/listbyuser")
     public Result listRolesByCurrUser()  throws CustomException {
 //        return ResultFactory.buildSuccessResult(adminRoleService.listWithPermsAndMenus());
-        System.out.println("---------------------------------------");
         String username =SecurityUtils.getSubject().getPrincipal().toString();
         List<AdminRole> list =   adminRoleService.listSubRolesByUser(username);
-        System.out.println("---------------------------------------"+list.size());
         return ResultFactory.buildSuccessResult(list);
     }
 

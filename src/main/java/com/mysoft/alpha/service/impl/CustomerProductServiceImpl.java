@@ -6,6 +6,8 @@ import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.service.CustomerProductService;
 import com.mysoft.alpha.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -44,11 +46,16 @@ public class CustomerProductServiceImpl implements CustomerProductService {
     public List<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds, List<Integer> status) {
         return customerProductDao.findBySourceIdInAndStateInOrderById(sourceMstIds, status);
     }
-
+    
     @Override
     public List<CustomerProduct> findAll() {
         return customerProductDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
+    
+	@Override
+	public Page<CustomerProduct> findAll(Pageable pageable) {
+		return customerProductDao.findAll(pageable);
+	}
 
     @Override
     public List<CustomerProduct> findBySourceDetailIdIsInOrderById(List<Integer> detailIds) {
@@ -104,4 +111,11 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 	public List<CustomerProduct> findByProductId(Integer productId) {
 		return customerProductDao.findByProductId(productId);
 	}
+
+	@Override
+	public Page<CustomerProduct> findBySourceMstIdInAndStatusIn(List<Integer> sourceMstIds, List<Integer> status,
+			Pageable pageable) {
+		return customerProductDao.findBySourceIdInAndStateInOrderById(sourceMstIds, status, pageable);
+	}
+
 }
