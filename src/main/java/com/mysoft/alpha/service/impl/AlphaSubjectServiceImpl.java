@@ -7,6 +7,8 @@ import com.mysoft.alpha.service.AlphaSubjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -135,5 +137,10 @@ public class AlphaSubjectServiceImpl implements AlphaSubjectService {
 	@Override
 	public List<AlphaSubject> findAllBySubjectType(Integer subjectType) {
 		return alphaSubjectDao.findAllBySubjectType(subjectType);
+	}
+
+	@Override
+	public Page<AlphaSubject> findPageByIds(List<Integer> ids, Pageable pageable) {
+		return alphaSubjectDao.findPageByIds(ids, pageable);
 	}
 }

@@ -86,9 +86,6 @@ public class CpExcelController {
     
     @Autowired
     PlatformTransactionManager platformTransactionManager;
-    @Autowired
-    TransactionDefinition transactionDefinition;
-
     /**
      * 采购单审核
      *
@@ -139,124 +136,102 @@ public class CpExcelController {
 
         String operator = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(operator);
-        // 根据付费方或收款方查询Excel主表
-        List<CpExcelMst> cpExcelMstList = new ArrayList<>();
+        //管理员无业务权限
         if (operator.equals("admin")) {
-            cpExcelMstList = cpExcelService.findMstAll();
-        } else {
-            switch (step) {
-                case 1:// 客户单维护
-                    cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
-                    break;
-                //                case 2://采购单维护-审核,改到AlphaSubject中
-                //                    cpExcelMstList = cpExcelService.findMstByChargeSubjectIdOrderById(user.getAlphaSubjectId());
-                //                    break;
-                case 3:// 采购单维护-付费
-                    cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
-                    break;
-            }
+        	  throw new CustomException(0, "系统管理员，无业务权限。");
         }
-        // 根据Excel主表状态查询Excel明细
+
         List<CpExcelDetail> returnList = new ArrayList<>();
-        MyPage<CpExcelDetail> returnPage = new MyPage<CpExcelDetail>();
-        for (CpExcelMst cpExcelMst : cpExcelMstList) {
-        	MyPage<CpExcelDetail> myPage = null;
-        	Page<CpExcelDetail> pageCpExcelDetail = null;
-//            List<CpExcelDetail> cpExcelDetailList = new ArrayList<>();
-            Sort sort = Sort.by(Sort.Direction.ASC,"id"); 
-            Pageable pageable = PageRequest.of(page-1,size,sort);
-            switch (step) {
-                case 3:
-//                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
-//                            Arrays.asList(CustomStatus.STATUS5.value()), name, recordNumber, productName, outTradeNo);
-                    pageCpExcelDetail = cpExcelService.findPageByParamsAndSort(cpExcelMst.getId(),
-                        Arrays.asList(CustomStatus.STATUS5.value()), name, recordNumber, productName, outTradeNo,pageable);
-                    
-                    break;
-                case 2:
-//                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
-//                            Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), name,
-//                            recordNumber, productName, outTradeNo);
-                    pageCpExcelDetail = cpExcelService.findPageByParamsAndSort(cpExcelMst.getId(),
+    	Page<CpExcelDetail> pageCpExcelDetail = null;
+    	MyPage<CpExcelDetail> myPage = new MyPage<CpExcelDetail>();
+        Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
+        switch (step) {
+            case 1:
+            	pageCpExcelDetail = cpExcelService.findDetailPageByParamsAndSort(user.getAlphaSubjectId(),
+                      Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value(),
+                              CustomStatus.STATUS_5.value()), name, recordNumber, productName, outTradeNo, pageable);
+            	break; 
+             case 2:
+            	 pageCpExcelDetail = cpExcelService.findDetailPageByParamsAndSort(user.getAlphaSubjectId(),
                             Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), name,
                             recordNumber, productName, outTradeNo, pageable);
-                    break;
-                case 1:
-//                    cpExcelDetailList = cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
-//                            Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value(),
-//                                    CustomStatus.STATUS_5.value()), name, recordNumber, productName, outTradeNo);
-                    pageCpExcelDetail = cpExcelService.findPageByParamsAndSort(cpExcelMst.getId(),
-                            Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value(),
-                                    CustomStatus.STATUS_5.value()), name, recordNumber, productName, outTradeNo, pageable);
-                    break;
-            }
-            
-            if(pageCpExcelDetail !=null && pageCpExcelDetail.getContent().size() > 0) {
-                myPage = new MyPage<CpExcelDetail>(pageCpExcelDetail);
-                returnPage = myPage;
-            // 1，2根据Excel 明细查询CustomerProduct
-            // 3根据Excel明细查询付费主表
-//            for (CpExcelDetail cpExcelDetail : cpExcelDetailList) {
-            for (CpExcelDetail cpExcelDetail : myPage.getContent()) {
-                if (step == 1 || step == 2) {
-                    cpExcelDetail.setCustomerSubject(
-                            alphaSubjectService.getAlphaSubjectById(cpExcelDetail.getCustomerSubjectId()));
-                    cpExcelDetail.setCustomerProducts(customerProductService
-                            .findBySourceDetailIdIsInOrderById(Arrays.asList(cpExcelDetail.getId())));
-                } else {
-                    List<BatchFeeMst> batchFeeMstList = batchFeeService.findMstByCpExcelDetailId(cpExcelDetail.getId());
-                    for (BatchFeeMst batchFeeMst : batchFeeMstList) {
-                        switch (batchFeeMst.getState()) {
-                            case 5:
-                                batchFeeMst.setStateReason(CustomStatus.STATUS5.getReasonPhrase());
-                                break;
-                            case 6:
-                                batchFeeMst.setStateReason(CustomStatus.STATUS6.getReasonPhrase());
-                                break;
-                            case 7:
-                                batchFeeMst.setStateReason(CustomStatus.STATUS7.getReasonPhrase());
-                                break;
-                            case -7:
-                                batchFeeMst.setStateReason(CustomStatus.STATUS_7.getReasonPhrase());
-                                break;
-                            default:
-                                batchFeeMst.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
-                                break;
-                        }
-                    }
-                    cpExcelDetail.setBatchFeeMsts(batchFeeMstList);
-                }
-                cpExcelMst.setPaySubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getPaySubjectId()));
-                cpExcelMst.setChargeSubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getChargeSubjectId()));
-                cpExcelDetail.setCpExcelMst(cpExcelMst);
-                cpExcelDetail.setProduct(productService.getProductById(cpExcelDetail.getProductId()));
-                switch (cpExcelDetail.getState()) {
-                    case 3:
-                        cpExcelDetail.setStateReason(CustomStatus.STATUS3.getReasonPhrase());
-                        break;
-                    case 4:
-                        cpExcelDetail.setStateReason(CustomStatus.STATUS4.getReasonPhrase());
-                        break;
-                    case 5:
-                        cpExcelDetail.setStateReason(CustomStatus.STATUS5.getReasonPhrase());
-                        break;
-                    case -5:
-                        cpExcelDetail.setStateReason(CustomStatus.STATUS_5.getReasonPhrase());
-                        break;
-                    default:
-                        cpExcelDetail.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
-                        break;
-                }
-                returnList.add(cpExcelDetail);                
-            }        
-            myPage.setContent(returnList);
-            returnPage.setContent(myPage.getContent());
-            }
-        }
-        return ResultFactory.buildSuccessResult(returnPage);
+            	 break;
+             case 3:
+            	 pageCpExcelDetail = cpExcelService.findDetailPageByParamsAndSort(user.getAlphaSubjectId(),
+                      Arrays.asList(CustomStatus.STATUS5.value()), name, recordNumber, productName, outTradeNo,pageable);
+            	 break;
+            default:
+            	break;
+            }            
+        
+			if (pageCpExcelDetail != null && pageCpExcelDetail.getContent().size() > 0) {
+				myPage = new MyPage<CpExcelDetail>(pageCpExcelDetail);
+				// 1，2根据Excel 明细查询CustomerProduct
+				// 3 根据Excel明细查询付费主表
+				for (CpExcelDetail cpExcelDetail : myPage.getContent()) {
+					if (step == 1 || step == 2) {
+						cpExcelDetail.setCustomerSubject(
+								alphaSubjectService.getAlphaSubjectById(cpExcelDetail.getCustomerSubjectId()));
+						cpExcelDetail.setCustomerProducts(customerProductService
+								.findBySourceDetailIdIsInOrderById(Arrays.asList(cpExcelDetail.getId())));
+					} else {
+						List<BatchFeeMst> batchFeeMstList = batchFeeService
+								.findMstByCpExcelDetailId(cpExcelDetail.getId());
+						for (BatchFeeMst batchFeeMst : batchFeeMstList) {
+							switch (batchFeeMst.getState()) {
+							case 5:
+								batchFeeMst.setStateReason(CustomStatus.STATUS5.getReasonPhrase());
+								break;
+							case 6:
+								batchFeeMst.setStateReason(CustomStatus.STATUS6.getReasonPhrase());
+								break;
+							case 7:
+								batchFeeMst.setStateReason(CustomStatus.STATUS7.getReasonPhrase());
+								break;
+							case -7:
+								batchFeeMst.setStateReason(CustomStatus.STATUS_7.getReasonPhrase());
+								break;
+							default:
+								batchFeeMst.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
+								break;
+							}
+						}
+						cpExcelDetail.setBatchFeeMsts(batchFeeMstList);
+					}
+					CpExcelMst cpExcelMst = cpExcelService.getMstById(cpExcelDetail.getCpExcelMstId());
+					cpExcelMst.setPaySubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getPaySubjectId()));
+					cpExcelMst.setChargeSubject(alphaSubjectService.getAlphaSubjectById(cpExcelMst.getChargeSubjectId()));
+					cpExcelDetail.setCpExcelMst(cpExcelMst);
+					cpExcelDetail.setProduct(productService.getProductById(cpExcelDetail.getProductId()));
+					switch (cpExcelDetail.getState()) {
+					case 3:
+						cpExcelDetail.setStateReason(CustomStatus.STATUS3.getReasonPhrase());
+						break;
+					case 4:
+						cpExcelDetail.setStateReason(CustomStatus.STATUS4.getReasonPhrase());
+						break;
+					case 5:
+						cpExcelDetail.setStateReason(CustomStatus.STATUS5.getReasonPhrase());
+						break;
+					case -5:
+						cpExcelDetail.setStateReason(CustomStatus.STATUS_5.getReasonPhrase());
+						break;
+					default:
+						cpExcelDetail.setStateReason(CustomStatus.STATUS_1.getReasonPhrase());
+						break;
+					}
+					returnList.add(cpExcelDetail);
+				}
+				myPage.setContent(returnList);
+			}
+
+        return ResultFactory.buildSuccessResult(myPage);
     }
 
-    @GetMapping("/deleteDetail/byId")
+    @Autowired
+	TransactionDefinition transactionDefinition;
+
+	@GetMapping("/deleteDetail/byId")
     @Transactional
     public Result deleteCpExcelDetail(@RequestParam() Integer detailId) throws CustomException {
         CpExcelDetail cpExcelDetail = cpExcelService.getDetailById(detailId);

@@ -60,6 +60,12 @@ public class CpExcelServiceImpl implements CpExcelService {
 		Page<CpExcelDetail> page = cpExcelDetailDao.findPageByParamsAndSort(cpExcelMstId, status, name, productName, outTradeNo, pageable);
 		return page;
 	}
+	@Override
+	public Page<CpExcelDetail> findDetailPageByParamsAndSort(Integer paySubjectId, List<Integer> status, String name,
+			String recordNumber, String productName, String outTradeNo,Pageable pageable){
+		Page<CpExcelDetail> page = cpExcelDetailDao.findDetailPageByParamsAndSort(paySubjectId, status, name, productName, outTradeNo, pageable);
+		return page;
+	}
 	
 //
 //	@Override

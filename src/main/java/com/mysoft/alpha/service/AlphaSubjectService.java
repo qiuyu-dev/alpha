@@ -4,6 +4,9 @@ import com.mysoft.alpha.entity.AlphaSubject;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 /**
  * 主体(AlphaSubject)表服务接口
  *
@@ -23,5 +26,7 @@ public interface AlphaSubjectService {
     List<AlphaSubject> findAllBySubjectType(Integer subjectType);
 
     List<AlphaSubject> findAllById(List<Integer> ids);
+    
+    Page<AlphaSubject> findPageByIds(List<Integer> ids, Pageable pageable);
 
 }

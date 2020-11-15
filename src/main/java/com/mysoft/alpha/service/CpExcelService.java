@@ -56,4 +56,7 @@ public interface CpExcelService {
      */
     Page<CpExcelDetail> findDetailByPage(Integer pageNum, Integer size);
 
+	Page<CpExcelDetail> findDetailPageByParamsAndSort(Integer paySubjectId, List<Integer> status, String name,
+			String recordNumber, String productName, String outTradeNo, Pageable pageable);
+
 }

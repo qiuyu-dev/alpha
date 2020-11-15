@@ -42,6 +42,23 @@ public interface CpExcelDetailDao extends JpaRepository<CpExcelDetail, Integer> 
             @Param(value = "productName") String productName,
             @Param(value = "outTradeNo") String outTradeNo, Pageable pageable);
 
+    
+    @Query(value = "select * from cp_excel_detail ced where ced.cp_excel_mst_id in "
+    		+ "( select id from cp_excel_mst cem where cem.pay_subject_id = :paySubjectId   ) and ced.state in(:status)" +
+            " and (ced.customer_name like %:cname% and ced.product_name like %:productName%  and ced.out_trade_no " +
+            "like %:outTradeNo%) order by ced.id asc", 
+            countQuery = "select count(*) from cp_excel_detail ced where ced.cp_excel_mst_id in " 
+            		 + "( select id from cp_excel_mst cem where cem.pay_subject_id = :paySubjectId   ) and ced.state in(:status)" +
+                    " and (ced.customer_name like %:cname% and ced.product_name like %:productName%  and ced.out_trade_no " +
+                    "like %:outTradeNo%) order by ced.id asc", nativeQuery = true)
+    Page<CpExcelDetail> findDetailPageByParamsAndSort(@Param(value = "paySubjectId") Integer paySubjectId,
+            @Param(value = "status") List<Integer> status,
+            @Param(value = "cname") String name,
+            @Param(value = "productName") String productName,
+            @Param(value = "outTradeNo") String outTradeNo, Pageable pageable);
+
+    
+    
     void deleteByCpExcelMstId(Integer cpExcelMstId);
 
     List<CpExcelDetail> findByCpExcelMstId(Integer cpExcelMstId);

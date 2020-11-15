@@ -7,7 +7,12 @@ import java.util.stream.Collectors;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +29,7 @@ import com.mysoft.alpha.result.ResultFactory;
 import com.mysoft.alpha.service.AlphaSubjectService;
 import com.mysoft.alpha.service.CpExcelService;
 import com.mysoft.alpha.service.UserService;
+import com.mysoft.alpha.util.MyPage;
 
 /**
  * 主体(AlphaSubject)表控制层
@@ -43,8 +49,8 @@ public class AlphaSubjectController {
 	@Autowired
 	private CpExcelService cpExcelService;
 
-	@GetMapping("/detailList")
-	public Result detailList(@RequestParam() Integer step, @RequestParam() String name,
+	@GetMapping("/detailList/{size}/{page}")
+	public Result detailList(@PathVariable("size") int size, @PathVariable("page") int page, @RequestParam() Integer step, @RequestParam() String name,
 			@RequestParam() String recordNumber, @RequestParam() String productName, @RequestParam() String outTradeNo)
 			throws CustomException {
 		String operator = SecurityUtils.getSubject().getPrincipal().toString();
@@ -52,7 +58,8 @@ public class AlphaSubjectController {
 		// 根据付费方或收款方查询Excel主表
 		List<CpExcelMst> cpExcelMstList = new ArrayList<>();
 		if (operator.equals("admin")) {
-			cpExcelMstList = cpExcelService.findMstAll();
+			throw new CustomException(0, "系统管理员，无业务权限。");
+//			cpExcelMstList = cpExcelService.findMstAll();
 		} else {
 			switch (step) {
 			case 2:// 采购单维护
@@ -60,6 +67,8 @@ public class AlphaSubjectController {
 				break;
 			case 3:// 采购单付费
 				cpExcelMstList = cpExcelService.findMstByPaySubjectIdOrderById(user.getAlphaSubjectId());
+				break;
+			default:
 				break;
 			}
 		}
@@ -76,12 +85,16 @@ public class AlphaSubjectController {
 				cpExcelDetailList.addAll(cpExcelService.findDetailByParamsOrderByIdAsc(cpExcelMst.getId(),
 						Arrays.asList(CustomStatus.STATUS5.value()), name, recordNumber, productName, outTradeNo));
 				break;
+			default:
+				break;
 			}
 		}
-		List<AlphaSubject> returnList = new ArrayList<>();
-		List<AlphaSubject> alphaSubjectList = alphaSubjectService.findAllById(
-				cpExcelDetailList.stream().map(CpExcelDetail::getCustomerSubjectId).collect(Collectors.toList()));
-		for (AlphaSubject alphaSubject : alphaSubjectList) {
+		List<AlphaSubject> returnList = new ArrayList<AlphaSubject>();
+        Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
+    	Page<AlphaSubject> pageAlphaSubject = alphaSubjectService.findPageByIds(cpExcelDetailList.stream().map(CpExcelDetail::getCustomerSubjectId).collect(Collectors.toList()), pageable);
+    	MyPage<AlphaSubject> myPage = new MyPage<AlphaSubject>(pageAlphaSubject);
+
+    	for (AlphaSubject alphaSubject : pageAlphaSubject.getContent()) {
 			switch (step) {
 			case 2:
 				if (alphaSubject.getSubjectType().intValue() == SubjectType.TYPE1.value()) {
@@ -112,8 +125,8 @@ public class AlphaSubjectController {
 						}
 					}
 					alphaSubject.setCpExcelDetails(setDetails);
-
 					returnList.add(alphaSubject);
+					myPage.setContent(returnList);
 				}
 				break;
 				
@@ -146,13 +159,15 @@ public class AlphaSubjectController {
 						}
 					}
 					alphaSubject.setCpExcelDetails(setDetails);
-
 					returnList.add(alphaSubject);
+					myPage.setContent(returnList);
 				}
+				break;
+			default:
 				break;
 			}
 		}
-		return ResultFactory.buildSuccessResult(returnList);
+		return ResultFactory.buildSuccessResult(myPage);
 	}
 
 	@GetMapping("/getNameById")
