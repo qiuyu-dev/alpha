@@ -65,15 +65,62 @@ public class DateUtil {
         Date dt ;
         try {
             if (format.contains("yy")) {
-                SimpleDateFormat df1 = new SimpleDateFormat("yyyy-mm-dd");
-                Date dt1 = df1.parse("1900-01-01");
+                SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date dt1 = df1.parse("1900-01-01 00:00:00");
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(dt1);
                 calendar.add(Calendar.DATE, Float.valueOf(sdate).intValue()-2);
-                calendar.set(Calendar.MINUTE, 0);
                 dt = calendar.getTime();
             } else {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dt = df.parse(sdate);
+            }
+            return dt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static Date convertExcelToDateBegin(String sdate, String format) {
+        Date dt ;
+        try {
+            if (format.contains("yy")) {
+                SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date dt1 = df1.parse("1900-01-01 00:00:00");
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(dt1);
+                calendar.add(Calendar.DATE, Float.valueOf(sdate).intValue()-2);
+                calendar.set(Calendar.HOUR, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                dt = calendar.getTime();
+            } else {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dt = df.parse(sdate);
+            }
+            return dt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static Date convertExcelToDateEnd(String sdate, String format) {
+        Date dt ;
+        try {
+            if (format.contains("yy")) {
+                SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date dt1 = df1.parse("1900-01-01 00:00:00");
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(dt1);
+                calendar.add(Calendar.DATE, Float.valueOf(sdate).intValue()-2);
+                calendar.set(Calendar.HOUR, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                dt = calendar.getTime();
+            } else {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 dt = df.parse(sdate);
             }
             return dt;
@@ -117,5 +164,5 @@ public class DateUtil {
         calendar.setTime(date);
         calendar.add(dateType, addend);
         return calendar.getTime();
-    }
+    }    
 }

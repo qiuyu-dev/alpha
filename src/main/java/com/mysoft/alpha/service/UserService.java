@@ -17,6 +17,8 @@ public interface UserService {
     User findByUsername(String userName);
 
     User findByUsernameAndEmail(String userName, String email);
+    
+    User findByNameAndPhone(String name, String phone);
 
     int register(RegisterForm registerForm);
 

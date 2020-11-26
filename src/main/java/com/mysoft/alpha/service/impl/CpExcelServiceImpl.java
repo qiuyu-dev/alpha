@@ -183,18 +183,10 @@ public class CpExcelServiceImpl implements CpExcelService {
 	public CpExcelMst getMstById(Integer mstId) {
 		return cpExcelMstDao.getOne(mstId);
 	}
-	
-    /**
-     * 分页查询
-     * @param pageNum
-     * @param size
-     * @return
-     */
+
     @Override
-    public Page<CpExcelDetail> findDetailByPage(Integer pageNum, Integer size) {
-    	Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        PageRequest pageRequest = PageRequest.of(pageNum - 1, size, sort);
-        Page<CpExcelDetail> page= cpExcelDetailDao.findAll(pageRequest);
+    public Page<CpExcelDetail> findDetailByPage(Integer paySubjectId, List<Integer> status,  Pageable pageable) {
+        Page<CpExcelDetail> page= cpExcelDetailDao.findDetailPageByParams(paySubjectId, status, pageable);
         return page;
     }
 

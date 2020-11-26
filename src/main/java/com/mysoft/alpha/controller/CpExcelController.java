@@ -52,9 +52,6 @@ import java.util.*;
  * @since 2020-08-02 16:14:07
  */
 
-/**
- * @author qiuyu
- */
 @RestController
 @RequestMapping("/api/admin/v1/pri/cpExcel")
 public class CpExcelController {
@@ -359,7 +356,7 @@ public class CpExcelController {
 //        	platformTransactionManager.rollback(transactionStatus);
 //        	transaction.rollback();
         	e.printStackTrace();
-           // throw new CustomException(0, "文件：" + file.getOriginalFilename() + "，存储异常");
+            throw new CustomException(0, "处理excel文件出错:"+e.getMessage());
         } finally {        	
             //6. 关闭EntityManager           
 //            entityManager.flush();
@@ -687,7 +684,7 @@ public class CpExcelController {
                         throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，" + title[icell] + "不能为空");
                     } else {
                         try {
-                            effectiveDate = DateUtil.convertExcelToDate(str, cell.getCellStyle().getDataFormatString());
+                            effectiveDate = DateUtil.convertExcelToDateBegin(str, cell.getCellStyle().getDataFormatString());
                         } catch (Exception e) {
                             throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，" + title[icell] + "不符合格式要求");
                         }
@@ -699,7 +696,7 @@ public class CpExcelController {
                         throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，" + title[icell] + "不能为空");
                     } else {
                         try {
-                            closingDate = DateUtil.convertExcelToDate(str, cell.getCellStyle().getDataFormatString());
+                            closingDate = DateUtil.convertExcelToDateEnd(str, cell.getCellStyle().getDataFormatString());
                         } catch (Exception e) {
                             throw new CustomException(0, "第" + (irows + 1) + "行，第" + (icell + 1) + "列，" + title[icell] + "不符合格式要求");
                         }

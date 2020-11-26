@@ -1,46 +1,72 @@
 package com.mysoft.alpha.controller;
 
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.mysoft.alpha.common.CustomStatus;
 import com.mysoft.alpha.common.ProductType;
 import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.common.SubjectType;
-import com.mysoft.alpha.entity.*;
+import com.mysoft.alpha.config.WeChatConfig;
+import com.mysoft.alpha.entity.AlphaSubject;
+import com.mysoft.alpha.entity.CpExcelDetail;
+import com.mysoft.alpha.entity.CpExcelMst;
+import com.mysoft.alpha.entity.Product;
+import com.mysoft.alpha.entity.RemoteOptLog;
+import com.mysoft.alpha.entity.User;
 import com.mysoft.alpha.exception.CustomException;
 import com.mysoft.alpha.result.Result;
 import com.mysoft.alpha.result.ResultFactory;
 import com.mysoft.alpha.service.AlphaSubjectService;
 import com.mysoft.alpha.service.CpExcelService;
 import com.mysoft.alpha.service.ProductService;
+import com.mysoft.alpha.service.RemoteOptLogService;
 import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
 import com.mysoft.alpha.util.IdNumUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
+import com.mysoft.alpha.util.MyPage;
+import com.mysoft.alpha.util.HttpUtils;
 
 @RestController
 @RequestMapping("/api/remote/opt")
 public class RemoteOptController {
+	private static final Logger log = LoggerFactory.getLogger(RemoteOptController.class);
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
-	AlphaSubjectService alphaSubjectService;
+	private AlphaSubjectService alphaSubjectService;
 
 	@Autowired
 	private CpExcelService cpExcelService;
 
 	@Autowired
-	ProductService productService;
+	private ProductService productService;
 	
+	@Autowired
+	private RemoteOptLogService remoteOptLogService;
+
+
 	@GetMapping("/urlupload")
 	@Transactional
 	public Result urlUpload(@RequestParam Map<String, String> map, HttpServletRequest request) throws Exception {
@@ -225,7 +251,7 @@ public class RemoteOptController {
 		if (productService.isExistRecordNumber(recordNumber)) {
 			throw new CustomException(0, "备案编号已存在");
 		}
-		
+		log.info(""+username + "调用接口"+request.getRequestURI());
 		Product product = new Product();
 		product.setName(productName);
 		product.setRecordNumber(recordNumber);
@@ -238,5 +264,37 @@ public class RemoteOptController {
 		
 		return ResultFactory.buildSuccessResult("保存成功");
 	}
+	
+	@GetMapping("/cpExcelList/{size}/{page}")
+	public Result cpExcelList(@PathVariable("size") int size, @PathVariable("page") int page, @RequestParam Map<String, String> map, HttpServletRequest request) throws Exception {
+		String username = map.get("username");
+		String email = map.get("email");
+		User user = userService.findByUsernameAndEmail(username, email);
+		if (user == null) {
+			throw new CustomException(0, "用户名或Email错误");
+		}
+		if(size < 0 || size > 1000 || page < 0) {
+			throw new CustomException(0, "请检查参数");
+		}
+		long begin = System.currentTimeMillis();
+		log.info(""+username + "调用接口"+request.getRequestURI());
+    	MyPage<CpExcelDetail> myPage = new MyPage<CpExcelDetail>();
+        Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
+        Page<CpExcelDetail> pageCpExcelDetail = cpExcelService.findDetailByPage(user.getAlphaSubjectId(),
+             Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), pageable);
+        if (pageCpExcelDetail != null && pageCpExcelDetail.getContent().size() > 0) {
+        	myPage = new MyPage<CpExcelDetail>(pageCpExcelDetail);
+        }
+        log.info("耗时:"+(System.currentTimeMillis() - begin) /1000+ "s");
+        RemoteOptLog remoteOptLog = new RemoteOptLog();
+        remoteOptLog.setUsername(username);
+        remoteOptLog.setIp(request.getRemoteHost());
+        remoteOptLog.setUrl(request.getRequestURI());
+        remoteOptLog.setOperate("2");
+        remoteOptLog.setCreateTime(new Date());
+        remoteOptLogService.save(remoteOptLog);
+		return ResultFactory.buildSuccessResult(myPage);
+	}
+	
 
 }

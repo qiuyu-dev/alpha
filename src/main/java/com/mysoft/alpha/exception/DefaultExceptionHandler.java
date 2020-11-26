@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLException;
 
@@ -28,7 +29,11 @@ public class DefaultExceptionHandler {
         if (e instanceof IllegalArgumentException) {
             message = "传入了错误的参数";
         }
-
+        
+        if(e instanceof MethodArgumentTypeMismatchException) {
+        	message = "传入了错误的参数类型";
+        }        
+        
         if (e instanceof MethodArgumentNotValidException) {
             message = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError().getDefaultMessage();
         }
