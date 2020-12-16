@@ -1,12 +1,12 @@
 package com.mysoft.alpha.controller;
 
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +27,6 @@ import com.mysoft.alpha.common.CustomStatus;
 import com.mysoft.alpha.common.ProductType;
 import com.mysoft.alpha.common.SourceType;
 import com.mysoft.alpha.common.SubjectType;
-import com.mysoft.alpha.config.WeChatConfig;
 import com.mysoft.alpha.entity.AlphaSubject;
 import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.CpExcelMst;
@@ -45,7 +44,6 @@ import com.mysoft.alpha.service.UserService;
 import com.mysoft.alpha.util.DateUtil;
 import com.mysoft.alpha.util.IdNumUtils;
 import com.mysoft.alpha.util.MyPage;
-import com.mysoft.alpha.util.HttpUtils;
 
 @RestController
 @RequestMapping("/api/remote/opt")
@@ -266,9 +264,15 @@ public class RemoteOptController {
 	}
 	
 	@GetMapping("/cpExcelList/{size}/{page}")
-	public Result cpExcelList(@PathVariable("size") int size, @PathVariable("page") int page, @RequestParam Map<String, String> map, HttpServletRequest request) throws Exception {
-		String username = map.get("username");
-		String email = map.get("email");
+	public Result cpExcelList(@PathVariable("size") int size,
+			                               @PathVariable("page") int page,
+			                               @RequestParam(value = "username", required = true) String username,
+					                       @RequestParam(value = "email", required = true) String email,
+					                       @RequestParam(value = "pnum", required = true) String pnum,
+					                       @RequestParam Map<String, String> map, HttpServletRequest request) throws Exception {
+//		String username = map.get("username");
+//		String email = map.get("email");
+//		String pnum = map.get("pnum");
 		User user = userService.findByUsernameAndEmail(username, email);
 		if (user == null) {
 			throw new CustomException(0, "用户名或Email错误");
@@ -276,11 +280,18 @@ public class RemoteOptController {
 		if(size < 0 || size > 1000 || page < 0) {
 			throw new CustomException(0, "请检查参数");
 		}
+		if(StringUtils.isEmpty(pnum)) {
+			throw new CustomException(0, "请检查参数");
+		}		
+		CpExcelMst mst = cpExcelService.findMstByChargeSubjectIdAndBatchNum(user.getAlphaSubjectId(), pnum);
+		if(mst == null) {
+			throw new CustomException(0, "无此批号记录");
+		}
 		long begin = System.currentTimeMillis();
-		log.info(""+username + "调用接口"+request.getRequestURI());
+		log.info(""+username + " 调用接口 "+request.getRequestURI());
     	MyPage<CpExcelDetail> myPage = new MyPage<CpExcelDetail>();
         Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
-        Page<CpExcelDetail> pageCpExcelDetail = cpExcelService.findDetailByPage(user.getAlphaSubjectId(),
+        Page<CpExcelDetail> pageCpExcelDetail = cpExcelService.findDetailByPage(mst.getId(),
              Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), pageable);
         if (pageCpExcelDetail != null && pageCpExcelDetail.getContent().size() > 0) {
         	myPage = new MyPage<CpExcelDetail>(pageCpExcelDetail);
@@ -296,5 +307,77 @@ public class RemoteOptController {
 		return ResultFactory.buildSuccessResult(myPage);
 	}
 	
+	/**
+	 * 
+	 * @param username 登录用户名
+	 * @param email        注册邮箱
+	 * @param pnum       批号
+	 * @param flag          是否审核通过
+	 * @param ids           excel明细表id
+	 * @param map     
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/updateExcelList")
+	public Result updateExcelList(@RequestParam(value = "username", required = true) String username,
+			                         @RequestParam(value = "email", required = true) String email,
+			                         @RequestParam(value = "pnum", required = true) String pnum,
+			                         @RequestParam(value = "flag", required = true) Boolean flag,
+			                         @RequestParam(value = "ids", required = true) String ids,
+			                         @RequestParam Map<String, Object> map, HttpServletRequest request) throws Exception {
+		User user = userService.findByUsernameAndEmail(username, email);
+		int count = 0;
+		if (user == null) {
+			throw new CustomException(0, "用户名或Email错误");
+		}
+		
+		if(StringUtils.isEmpty(pnum)) {
+			throw new CustomException(0, "请检查参数");
+		}
+		
+		CpExcelMst mst = cpExcelService.findMstByChargeSubjectIdAndBatchNum(user.getAlphaSubjectId(), pnum);
+		if(mst == null) {
+			throw new CustomException(0, "无此批号记录");
+		}
+		
+		List<Integer> idList = new ArrayList<Integer>();
+		if (StringUtils.isEmpty(ids)) {
+			throw new CustomException(0, "请检查参数");
+		}
+		
+		if(ids.indexOf(",")>0) {
+			String[] sids = ids.split(",");
+			for (int i = 0; i < sids.length; i++) {
+				idList.add(Integer.valueOf(sids[i]));
+			}
+		}
+		
+		long begin = System.currentTimeMillis();
+		log.info("" + username + " 调用接口 " + request.getRequestURI());
+		if (flag) {
+			if (ids.equalsIgnoreCase("all")) {
+				count = cpExcelService.updateDetailAll(mst.getId(), CustomStatus.STATUS5.value());
+			} else {
+				count = cpExcelService.updateDetail(mst.getId(), CustomStatus.STATUS5.value(), idList);
+			}
+		} else {
+			if (ids.equalsIgnoreCase("all")) {
+				count = cpExcelService.updateDetailAll(mst.getId(), CustomStatus.STATUS_5.value());
+			} else {
+				count = cpExcelService.updateDetail(mst.getId(), CustomStatus.STATUS_5.value(), idList);
+			}
+		}
+		
+		log.info("耗时:" + (System.currentTimeMillis() - begin) / 1000 + "s 更新"+count +"条记录");
+		RemoteOptLog remoteOptLog = new RemoteOptLog();
+		remoteOptLog.setUsername(username);
+		remoteOptLog.setIp(request.getRemoteHost());
+		remoteOptLog.setUrl(request.getRequestURI());
+		remoteOptLog.setOperate("1");
+		remoteOptLog.setCreateTime(new Date());
+		remoteOptLogService.save(remoteOptLog);
+		return ResultFactory.buildSuccessResult("更新"+count +"条记录");
+	}
 
 }

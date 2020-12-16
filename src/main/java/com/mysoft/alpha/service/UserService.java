@@ -17,8 +17,6 @@ public interface UserService {
     User findByUsername(String userName);
 
     User findByUsernameAndEmail(String userName, String email);
-    
-    User findByNameAndPhone(String name, String phone);
 
     int register(RegisterForm registerForm);
 
@@ -29,4 +27,11 @@ public interface UserService {
     User resetPassword(User requestUser);
 
     void editUser(User requestUser);
+
+    User findById(Integer id);
+
+    User findByUserNameAndNameAndEnabled(String userName, String name,Integer enabled);
+
+    List<User> findSubUsers(Integer userId);
+
 }

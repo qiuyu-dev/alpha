@@ -58,10 +58,10 @@ public interface CpExcelDetailDao extends JpaRepository<CpExcelDetail, Integer> 
             @Param(value = "outTradeNo") String outTradeNo, Pageable pageable);
 
     @Query(value = "select * from cp_excel_detail ced where ced.cp_excel_mst_id in "
-    		+ "( select id from cp_excel_mst cem where cem.pay_subject_id = :paySubjectId ) and ced.state in(:status)", 
+    		+ "( select id from cp_excel_mst cem where cem.id = :mstId ) and ced.state in(:status)", 
             countQuery = "select count(*) from cp_excel_detail ced where ced.cp_excel_mst_id in " 
-            		 + "( select id from cp_excel_mst cem where cem.pay_subject_id = :paySubjectId ) and ced.state in(:status)", nativeQuery = true)
-    Page<CpExcelDetail> findDetailPageByParams(@Param(value = "paySubjectId") Integer paySubjectId,
+            		 + "( select id from cp_excel_mst cem where cem.id = :mstId ) and ced.state in(:status)", nativeQuery = true)
+    Page<CpExcelDetail> findDetailPageByParams(@Param(value = "mstId") Integer mstId,
             @Param(value = "status") List<Integer> status, Pageable pageable);
     
     

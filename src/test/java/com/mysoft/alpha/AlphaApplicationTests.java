@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.mysoft.alpha.util.DateUtil;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AlphaApplicationTests {
@@ -21,6 +23,7 @@ public class AlphaApplicationTests {
 
 	
 	public static void main(String[] args) {
+		System.out.println(DateUtil.getCurrentYearAndMonth());
         SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dt1;
 		try {

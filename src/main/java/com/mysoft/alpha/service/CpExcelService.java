@@ -44,12 +44,18 @@ public interface CpExcelService {
     CpExcelDetail getDetailById(Integer detailId);
 
     CpExcelMst getMstById(Integer mstId);
+    
+    CpExcelMst findMstByChargeSubjectIdAndBatchNum(Integer chargeSubjectId,String batchNum);
 
     void deleteDetailById(Integer cpExcelDetailId);
+    
+    int updateDetailAll(Integer mstId, Integer  status);
+    
+    int updateDetail(Integer mstId, Integer  status, List<Integer>  ids);
 
     List<CpExcelDetail> findDetailByCustomerSubjectId(Integer customerSubjectId);
     
-    Page<CpExcelDetail> findDetailByPage(Integer paySubjectId, List<Integer> status,Pageable pageable);
+    Page<CpExcelDetail> findDetailByPage(Integer mstId, List<Integer> status,Pageable pageable);
 
 	Page<CpExcelDetail> findDetailPageByParamsAndSort(Integer paySubjectId, List<Integer> status, String name,
 			String recordNumber, String productName, String outTradeNo, Pageable pageable);

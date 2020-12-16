@@ -147,12 +147,34 @@ public class DateUtil {
         }
         return null;
     }
+    
+    public static Date convertToDateTime(String sdate) throws Exception {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date dt = df.parse(sdate);
+            return dt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static String getCurrentDate() {
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String dt = df.format(new Date());
             return dt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    
+    public static String getCurrentYearAndMonth() {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+            String dt = df.format(new Date());            
+            return dt.substring(0, 6);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,43 +1,29 @@
 package com.mysoft.alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+/**
+ * (WxUser)实体类
+ *
+ * @author makejava
+ * @since 2020-11-29 14:12:49
+ */
 @Entity
 @Table(name = "wx_user")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class WxUser implements Serializable {
-	private static final long serialVersionUID = 1L;
-	/**
-     * 主键
+    private static final long serialVersionUID = 702565972614096704L;
+    /**
+     * 微信用户ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    /**
-     * 用户id
-     */
-    @Column(name = "userid")
-    private Integer userid;
-    
-    /**
-     * 用户姓名
-     */
-    @Column(name = "name")
-    private String name;
-    
     /**
      * 微信openid
      */
@@ -67,173 +53,174 @@ public class WxUser implements Serializable {
      * 用户性别 0未知,1男,2女
      */
     @Column(name = "gender")
-    private int gender;
+    private Integer gender;
     /**
      * 用户所在国家
      */
     @Column(name = "country")
-    private String country;  
+    private String country;
     /**
      * 用户所在省份
      */
     @Column(name = "province")
-    private String province;      
+    private String province;
     /**
      * 用户所在城市
      */
     @Column(name = "city")
-    private String city;     
-    
-    /**
-     * 用户所在城市
-     */
-    @Column(name = "language")
-    private String language;
+    private String city;
     /**
      * 创建时间
      */
     @Column(name = "create_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createTime;     
-    
+    private Date createTime;
+    /**
+     * 用户表id
+     */
+    @Column(name = "userid")
+    private Integer userid;
+    /**
+     * 姓名
+     */
+    @Column(name = "name")
+    private String name;
+    /**
+     * 显示 country，province，city 所用的语言
+     */
+    @Column(name = "language")
+    private String language;
 
-    
+
+    /**
+     * Transient property for storing role owned by current user.
+     */
     @Transient
     private User user;
-    
-    public WxUser() {
-    	
+
+
+    public User getUser() {
+        return user;
     }
 
-	public Integer getId() {
-		return id;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getOpenid() {
-		return openid;
-	}
+    public WxUser() {
+    }
 
-	public void setOpenid(String openid) {
-		this.openid = openid;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getUnionid() {
-		return unionid;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setUnionid(String unionid) {
-		this.unionid = unionid;
-	}
+    public String getOpenid() {
+        return openid;
+    }
 
-	public String getNickName() {
-		return nickName;
-	}
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
+    public String getUnionid() {
+        return unionid;
+    }
 
-	public String getAvatarUrl() {
-		return avatarUrl;
-	}
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
 
-	public void setAvatarUrl(String avatarUrl) {
-		this.avatarUrl = avatarUrl;
-	}
+    public String getNickName() {
+        return nickName;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
 
-	public int getGender() {
-		return gender;
-	}
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
 
-	public void setGender(int gender) {
-		this.gender = gender;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public Integer getGender() {
+        return gender;
+    }
 
-	public String getProvince() {
-		return province;
-	}
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 
-	public void setProvince(String province) {
-		this.province = province;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public String getProvince() {
+        return province;
+    }
 
-	public String getLanguage() {
-		return language;
-	}
+    public void setProvince(String province) {
+        this.province = province;
+    }
 
-	public void setLanguage(String language) {
-		this.language = language;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public Integer getUserid() {
+        return userid;
+    }
 
-	public Integer getUserid() {
-		return userid;
-	}
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
 
-	public void setUserid(Integer userid) {
-		this.userid = userid;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return "WxUser [id=" + id + ", openid=" + openid + ", unionid=" + unionid + ", nickName=" + nickName
-				+ ", avatarUrl=" + avatarUrl + ", phone=" + phone + ", gender=" + gender + ", country=" + country
-				+ ", province=" + province + ", city=" + city + ", createTime=" + createTime + ", userid=" + userid +", name=" + name + "]";
-	}
-        
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
 }

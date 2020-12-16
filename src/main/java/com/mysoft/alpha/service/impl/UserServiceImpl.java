@@ -59,10 +59,6 @@ public class UserServiceImpl implements UserService {
 	public User findByUsernameAndEmail(String userName, String email) {
 		return  userDao.findByUsernameAndEmail(userName, email);
 	}
-    @Override
-    public User findByNameAndPhone(String name, String phone) {
-    	return userDao.findByNameAndPhone(name, phone);
-    }
 //    @Override
 //    public User getUserById(Integer id) {
 //        return userDao.getOne(id);
@@ -248,5 +244,21 @@ public class UserServiceImpl implements UserService {
     private boolean isExistOrgcode(String orgcode) {
         AlphaSubject alphaSubject = alphaSubjectDao.findByRecordNumber(orgcode);
         return null != alphaSubject;
+    }
+
+    @Override
+    public User findById(Integer id) {
+        return (User)userDao.getOne(id);
+    }
+
+    @Override
+    public User findByUserNameAndNameAndEnabled(String userName, String name,Integer enabled) {
+        return userDao.findByUsernameAndNameAndEnabled(userName, name,enabled);
+    }
+
+
+    @Override
+    public List<User> findSubUsers(Integer userId) {
+        return userDao.findBySupUseridOrderByIdAsc(userId);
     }
 }

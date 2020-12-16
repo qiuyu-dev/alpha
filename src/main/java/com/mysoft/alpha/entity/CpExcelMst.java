@@ -76,6 +76,11 @@ public class CpExcelMst implements Serializable {
     @Column(name = "create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
+    
+    /**
+     * 批次号,用于标识上传excel的批次
+     */
+    private String batchNum;
 
     /**
      * 支付主体
@@ -167,12 +172,20 @@ public class CpExcelMst implements Serializable {
     public Date getCreateTime() {
         return createTime;
     }
-
+    
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    
+    public String getBatchNum() {
+		return batchNum;
+	}
 
-    public AlphaSubject getPaySubject() {
+	public void setBatchNum(String batchNum) {
+		this.batchNum = batchNum;
+	}
+
+	public AlphaSubject getPaySubject() {
         return paySubject;
     }
 
@@ -217,6 +230,7 @@ public class CpExcelMst implements Serializable {
         sb.append(", remark='").append(remark).append('\'');
         sb.append(", operator='").append(operator).append('\'');
         sb.append(", createTime=").append(createTime);
+        sb.append(", batchNum=").append(batchNum);
         sb.append(", paySubject=").append(paySubject);
         sb.append(", chargeSubject=").append(chargeSubject);
         sb.append(", cpExcelDetails=").append(cpExcelDetails);

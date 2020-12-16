@@ -296,6 +296,8 @@ public class CpExcelController {
         cpExcelMst.setSourceType(SourceType.TYPE1.value());
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
+        String batchNum = "P" + DateUtil.getCurrentYearAndMonth() + "_" + new Random().nextInt(1000);
+        cpExcelMst.setBatchNum(batchNum);
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
         // 存储文件明细
         InputStream inputStream = new FileInputStream(localFile.getPath());//从本地读取

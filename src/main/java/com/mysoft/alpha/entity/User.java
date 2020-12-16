@@ -26,6 +26,9 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "sup_userid")
+    private Integer supUserid;
     /**
      * 账户名，验证，唯一
      */
@@ -198,11 +201,20 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
+    public Integer getSupUserid() {
+        return supUserid;
+    }
+
+    public void setSupUserid(Integer supUserid) {
+        this.supUserid = supUserid;
+    }
+
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("User{");
         sb.append("id=").append(id);
+        sb.append(", supUserid=").append(supUserid);
         sb.append(", username='").append(username).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", salt='").append(salt).append('\'');

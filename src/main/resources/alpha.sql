@@ -312,6 +312,7 @@ CREATE TABLE `cp_excel_mst`  (
    `ip` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传客户端ip',
   `source_type` int(11) NULL DEFAULT NULL COMMENT '申请类型，1.申请（付费）企业excel，2.系统维护, 3.API上传',   
   `remark` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+   `batch_num` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次号，标识excel文件批次',
   `operator` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作员',
   `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -417,41 +418,6 @@ CREATE TABLE `wx_user`  (
   `language` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '显示 country，province，city 所用的语言',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `userid` int(11) NULL DEFAULT NULL COMMENT '用户ID',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for bx_task
--- ----------------------------
-DROP TABLE IF EXISTS `bx_task`;
-CREATE TABLE `bx_task`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `userid` int(11) NULL DEFAULT NULL COMMENT '用户ID',
-  `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
-  `batch_num` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次号',
-  `begin_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
-  `amount` int(11) NULL DEFAULT NULL COMMENT '数量',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',  
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for bx_promotion
--- ----------------------------
-DROP TABLE IF EXISTS `bx_promotion`;
-CREATE TABLE `bx_promotion`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `batch_num` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次号',
-  `fr` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关系',
-  `ch` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '推广名',
-  `url` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '访问url',
-  `status` int(1) NULL DEFAULT NULL COMMENT '状态',
-  `product_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品名称',
-  `product_code` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品代码',
-  `begin_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',  
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

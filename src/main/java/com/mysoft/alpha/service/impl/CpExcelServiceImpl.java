@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -185,9 +186,27 @@ public class CpExcelServiceImpl implements CpExcelService {
 	}
 
     @Override
-    public Page<CpExcelDetail> findDetailByPage(Integer paySubjectId, List<Integer> status,  Pageable pageable) {
-        Page<CpExcelDetail> page= cpExcelDetailDao.findDetailPageByParams(paySubjectId, status, pageable);
+    public Page<CpExcelDetail> findDetailByPage(Integer mstId, List<Integer> status,  Pageable pageable) {
+        Page<CpExcelDetail> page= cpExcelDetailDao.findDetailPageByParams(mstId, status, pageable);
         return page;
     }
+
+	@Override
+	public CpExcelMst findMstByChargeSubjectIdAndBatchNum(Integer chargeSubjectId, String batchNum) {
+		CpExcelMst mst =cpExcelMstDao.findMstByChargeSubjectIdAndBatchNum(chargeSubjectId, batchNum);
+		return  mst;
+	}
+	
+	@Override
+	public int updateDetailAll(Integer mstId, Integer  status) {
+		int count = cpExcelMstDao.updateDetailAll(mstId, status);
+		return count;
+	 }
+	
+	@Override
+	public int updateDetail(Integer mstId, Integer  status, List<Integer>  ids) {
+		int count = cpExcelMstDao.updateDetail(mstId, status, ids);
+		return count;
+	}
 
 }
