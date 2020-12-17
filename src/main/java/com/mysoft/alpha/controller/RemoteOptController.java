@@ -46,7 +46,7 @@ import com.mysoft.alpha.util.IdNumUtils;
 import com.mysoft.alpha.util.MyPage;
 
 @RestController
-@RequestMapping("/api/remote/opt")
+@RequestMapping("/api/v1/remote/opt")
 public class RemoteOptController {
 	private static final Logger log = LoggerFactory.getLogger(RemoteOptController.class);
 	@Autowired
@@ -288,15 +288,15 @@ public class RemoteOptController {
 			throw new CustomException(0, "无此批号记录");
 		}
 		long begin = System.currentTimeMillis();
-		log.info(""+username + " 调用接口 "+request.getRequestURI());
-    	MyPage<CpExcelDetail> myPage = new MyPage<CpExcelDetail>();
+		log.info(" "+username + " 调用接口 "+request.getRequestURI());
+    	MyPage<Map> myPage = new MyPage<Map>();
         Pageable pageable = PageRequest.of(page-1,size,Sort.by(Sort.Direction.ASC,"id"));
-        Page<CpExcelDetail> pageCpExcelDetail = cpExcelService.findDetailByPage(mst.getId(),
+        Page<Map> pageCpExcelDetail = cpExcelService.findDetailDTOPageByParams(mst.getId(),
              Arrays.asList(CustomStatus.STATUS3.value(), CustomStatus.STATUS4.value()), pageable);
         if (pageCpExcelDetail != null && pageCpExcelDetail.getContent().size() > 0) {
-        	myPage = new MyPage<CpExcelDetail>(pageCpExcelDetail);
+        	myPage = new MyPage<Map>(pageCpExcelDetail);
         }
-        log.info("耗时:"+(System.currentTimeMillis() - begin) /1000+ "s");
+        log.info("耗时:"+(System.currentTimeMillis() - begin) /1000+ "s 获取"+myPage.getNumberOfElements() +"条记录");
         RemoteOptLog remoteOptLog = new RemoteOptLog();
         remoteOptLog.setUsername(username);
         remoteOptLog.setIp(request.getRemoteHost());

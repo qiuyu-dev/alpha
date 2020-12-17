@@ -296,7 +296,7 @@ public class CpExcelController {
         cpExcelMst.setSourceType(SourceType.TYPE1.value());
         cpExcelMst.setOperator(operator);
         cpExcelMst.setCreateTime(new Date());
-        String batchNum = "P" + DateUtil.getCurrentYearAndMonth() + "_" + new Random().nextInt(1000);
+        String batchNum = "P" + DateUtil.getCurrentYearAndMonth();
         cpExcelMst.setBatchNum(batchNum);
         cpExcelMst = cpExcelService.saveMst(cpExcelMst);
         // 存储文件明细

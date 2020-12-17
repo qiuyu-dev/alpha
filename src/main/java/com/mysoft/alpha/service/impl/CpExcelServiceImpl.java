@@ -1,6 +1,7 @@
 package com.mysoft.alpha.service.impl;
 
 import com.mysoft.alpha.dao.*;
+import com.mysoft.alpha.dto.CpExcelDetailDTO;
 import com.mysoft.alpha.entity.CpExcelDetail;
 import com.mysoft.alpha.entity.CpExcelMst;
 import com.mysoft.alpha.service.CpExcelService;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户-产品Excel主表(CpExcelMst)表服务实现类
@@ -184,6 +186,13 @@ public class CpExcelServiceImpl implements CpExcelService {
 	public CpExcelMst getMstById(Integer mstId) {
 		return cpExcelMstDao.getOne(mstId);
 	}
+	
+    @Override
+    public Page<Map> findDetailDTOPageByParams(Integer mstId, List<Integer> status,  Pageable pageable) {
+    	Page<Map> page= cpExcelDetailDao.findDetailDTOPageByParams(mstId, status, pageable);
+    	
+        return page;
+    }
 
     @Override
     public Page<CpExcelDetail> findDetailByPage(Integer mstId, List<Integer> status,  Pageable pageable) {
