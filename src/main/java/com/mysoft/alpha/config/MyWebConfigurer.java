@@ -47,7 +47,8 @@ public class MyWebConfigurer implements WebMvcConfigurer {
         factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
             @Override
             public void customize(Connector connector) {
-                connector.setProperty("relaxedQueryChars", "|{}[]");
+            	connector.setProperty("relaxedPathChars", "\"<>[\\]^`{|}");
+                connector.setProperty("relaxedQueryChars", "\"<>[\\]^`{|}");
             }
         });
         return factory;
